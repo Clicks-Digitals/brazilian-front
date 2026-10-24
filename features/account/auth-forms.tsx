@@ -8,6 +8,7 @@ import { Field, Input } from "@/components/ui/field";
 import { loginWithPassword, registerAccount } from "@/features/account/auth-api";
 import { api } from "@/lib/api";
 import { errorMessage } from "@/lib/http";
+import { cn } from "@/lib/cn";
 
 function nextPath(search: ReturnType<typeof useSearchParams>, fallback: string) {
   const value = search.get("next");
@@ -38,7 +39,10 @@ export function LoginForm({ admin = false }: { admin?: boolean }) {
   }
 
   return (
-    <form onSubmit={submit} className="mx-auto max-w-md space-y-4 px-6 pb-24">
+    <form
+      onSubmit={submit}
+      className={cn("mx-auto space-y-4", admin ? "mt-8 max-w-none px-0 pb-0" : "max-w-md px-6 pb-24")}
+    >
       <Field label="Email">
         <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
       </Field>
@@ -46,7 +50,7 @@ export function LoginForm({ admin = false }: { admin?: boolean }) {
         <Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
       </Field>
       {error ? <p className="text-sm text-red-800">{error}</p> : null}
-      <Button type="submit" className="w-full" disabled={busy}>
+      <Button type="submit" className="w-full rounded-lg" disabled={busy}>
         {busy ? "Signing in…" : "Sign in"}
       </Button>
       {!admin ? (

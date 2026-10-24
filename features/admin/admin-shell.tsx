@@ -7,6 +7,13 @@ import { Menu, Store, X } from "lucide-react";
 import { logoutSession } from "@/features/account/auth-api";
 import { useAuthStore } from "@/features/account/auth-store";
 import { ADMIN_NAV } from "@/features/admin/admin-nav";
+
+function currentNavLabel(pathname: string) {
+  const match = [...ADMIN_NAV]
+    .sort((a, b) => b.href.length - a.href.length)
+    .find((item) => pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href)));
+  return match?.label ?? "Console";
+}
 import { BRAND } from "@/lib/brand";
 import { cn } from "@/lib/cn";
 
@@ -110,6 +117,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }
 
   const name = [user?.first_name, user?.last_name].filter(Boolean).join(" ") || "Staff";
+  const section = currentNavLabel(pathname);
 
   const sidebar = (
     <>
@@ -161,18 +169,22 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
         <aside className="no-print hidden flex-col bg-forest-dark lg:flex">{sidebar}</aside>
 
         <div className="min-w-0">
-          <header className="no-print sticky top-0 z-40 flex items-center justify-between gap-3 bg-linen/90 px-4 py-3 backdrop-blur sm:px-6">
+          <header className="no-print sticky top-0 z-40 flex items-center justify-between gap-3 border-b border-ink/6 bg-linen/95 px-4 py-3 backdrop-blur sm:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <button
                 type="button"
-                className="grid size-10 place-items-center rounded-xl bg-white text-ink lg:hidden"
+                className="grid size-10 place-items-center rounded-xl border border-ink/8 bg-white text-ink shadow-sm lg:hidden"
                 aria-label={open ? "Close menu" : "Open menu"}
                 onClick={() => setOpen((value) => !value)}
               >
                 {open ? <X className="size-5" /> : <Menu className="size-5" />}
               </button>
-              <p className="hidden truncate font-subtitle text-sm text-muted sm:block">{user?.email}</p>
+              <div className="min-w-0">
+                <p className="text-[10px] uppercase tracking-[0.18em] text-muted">House Admin</p>
+                <p className="truncate font-display text-lg leading-tight text-ink">{section}</p>
+              </div>
             </div>
+            <p className="hidden max-w-[14rem] truncate font-subtitle text-xs text-muted md:block">{user?.email}</p>
           </header>
 
           {open ? (
@@ -184,7 +196,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             </div>
           ) : null}
 
-          <div className="px-4 pb-8 sm:px-6 md:pb-10">{children}</div>
+          <div className="mx-auto max-w-6xl px-4 pb-8 pt-6 sm:px-6 md:pb-10">{children}</div>
         </div>
       </div>
     </div>

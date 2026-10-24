@@ -6,7 +6,7 @@ import { Checkbox, Field, Input, Textarea } from "@/components/ui/field";
 import { FileUpload } from "@/components/ui/file-upload";
 import { ConfirmModal, Drawer } from "@/components/ui/modal";
 import { ErrorState } from "@/components/ui/states";
-import { AdminHeader, AdminPager, AdminTable, AdminThumb } from "@/features/admin/admin-table";
+import { AdminHeader, AdminPager, AdminRowActions, AdminTable, AdminThumb } from "@/features/admin/admin-table";
 import { useAdminList } from "@/features/admin/use-list";
 import { useCan } from "@/features/admin/admin-shell";
 import { api } from "@/lib/api";
@@ -63,7 +63,11 @@ export default function CategoriesPage() {
 
   return (
     <div>
-      <AdminHeader title="Categories" action={canCreate ? <Button size="sm" onClick={() => start()}>New category</Button> : undefined} />
+      <AdminHeader
+        title="Categories"
+        subtitle="Shop navigation and category imagery."
+        action={canCreate ? <Button size="sm" className="rounded-lg" onClick={() => start()}>New category</Button> : undefined}
+      />
       {list.error ? <ErrorState description={list.error} onRetry={list.reload} /> : null}
       <AdminTable
         columns={["Category", "Slug", "Nav", ""]}
@@ -74,10 +78,13 @@ export default function CategoriesPage() {
           </span>,
           c.slug,
           c.show_in_nav === false ? "Hidden" : "Yes",
-          <span key="a" className="flex gap-3">
-            {canEdit ? <button type="button" onClick={() => start(c)}>Edit</button> : null}
-            {canDelete ? <button type="button" onClick={() => setRemoveId(c.id)}>Delete</button> : null}
-          </span>,
+          <AdminRowActions
+            key="a"
+            canEdit={canEdit}
+            canDelete={canDelete}
+            onEdit={() => start(c)}
+            onDelete={() => setRemoveId(c.id)}
+          />,
         ])}
       />
       <AdminPager page={list.page} pageSize={20} count={list.count} onPage={list.setPage} />

@@ -164,7 +164,7 @@ export default function AdminDashboardPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         {cards.map((card) => (
-          <div key={card.label} className="rounded-2xl bg-white p-5">
+          <div key={card.label} className="rounded-2xl border border-ink/6 bg-white p-5 shadow-sm">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.14em] text-muted">{card.label}</p>
@@ -180,13 +180,13 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[1.4fr_0.8fr]">
-        <section className="rounded-2xl bg-white p-5">
+        <section className="rounded-2xl border border-ink/6 bg-white p-5 shadow-sm">
           <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">Sales over time</h2>
           <div className="mt-4">
             <BarChart data={series} />
           </div>
         </section>
-        <section className="rounded-2xl bg-white p-5">
+        <section className="rounded-2xl border border-ink/6 bg-white p-5 shadow-sm">
           <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">Orders by status</h2>
           <div className="mt-6">
             {statuses.length === 0 ? (
@@ -199,7 +199,7 @@ export default function AdminDashboardPage() {
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <section className="rounded-2xl bg-white p-5">
+        <section className="rounded-2xl border border-ink/6 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">Best sellers</h2>
             <Link href="/admin/products" className="text-xs text-forest hover:text-forest-dark">
@@ -223,7 +223,7 @@ export default function AdminDashboardPage() {
           )}
         </section>
 
-        <section className="rounded-2xl bg-white p-5">
+        <section className="rounded-2xl border border-ink/6 bg-white p-5 shadow-sm">
           <div className="flex items-center justify-between gap-3">
             <h2 className="text-[11px] uppercase tracking-[0.14em] text-muted">Recent orders</h2>
             <Link href="/admin/orders" className="text-xs text-forest hover:text-forest-dark">

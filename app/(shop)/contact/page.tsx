@@ -54,9 +54,6 @@ export default async function ContactPage() {
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-20" data-reveal>
           <p className="eyebrow text-gold">Contact</p>
           <h1 className="font-display mt-4 text-[2rem] leading-tight text-ink sm:text-4xl md:text-5xl">Visit us</h1>
-          <p className="font-subtitle mt-3 text-sm text-muted" dir="rtl" lang="ar">
-            {settings.store_name_ar || BRAND.nameAr}
-          </p>
           <p className="font-subtitle mt-5 max-w-xl text-base leading-relaxed text-muted md:mt-6 md:text-lg">
             Questions about roast, wholesale, or a branch in Jordan. Call the house, send a note, or come in.
           </p>

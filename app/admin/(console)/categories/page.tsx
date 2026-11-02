@@ -7,6 +7,7 @@ import { FileUpload } from "@/components/ui/file-upload";
 import { ConfirmModal, Drawer } from "@/components/ui/modal";
 import { ErrorState } from "@/components/ui/states";
 import { AdminHeader, AdminPager, AdminRowActions, AdminTable, AdminThumb } from "@/features/admin/admin-table";
+import { categoryCover } from "@/lib/category-media";
 import { useAdminList } from "@/features/admin/use-list";
 import { useCan } from "@/features/admin/admin-shell";
 import { api } from "@/lib/api";
@@ -73,7 +74,7 @@ export default function CategoriesPage() {
         columns={["Category", "Slug", "Nav", ""]}
         rows={list.rows.map((c) => [
           <span key="n" className="flex items-center gap-3">
-            <AdminThumb src={c.image} alt={c.name} />
+            <AdminThumb src={categoryCover(c)} alt={c.name} wide />
             {c.name}
           </span>,
           c.slug,
@@ -91,7 +92,6 @@ export default function CategoriesPage() {
       <Drawer open={open} title={editing ? "Edit category" : "New category"} onClose={() => setOpen(false)}>
         <div className="space-y-3">
           <Field label="Name"><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></Field>
-          <Field label="Arabic"><Input value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })} /></Field>
           <Field label="Slug"><Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} /></Field>
           <Field label="Description"><Textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></Field>
           <Field label="Order"><Input value={form.display_order} onChange={(e) => setForm({ ...form, display_order: e.target.value })} /></Field>

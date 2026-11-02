@@ -79,7 +79,10 @@ export function MotionRoot({ children }: { children: ReactNode }) {
     return () => {
       window.clearTimeout(timer);
       observer.disconnect();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => {
+        if (trigger.vars.id === "hero-pack-scroll") return;
+        trigger.kill();
+      });
     };
   }, [pathname]);
 

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { SmartImage } from "@/components/ui/smart-image";
+import { categoryCover } from "@/lib/category-media";
 import { cn } from "@/lib/cn";
 import type { Category } from "@/types/api";
 
@@ -28,10 +29,11 @@ function CategoryTile({
       <div className="overflow-hidden">
         <div data-parallax-img data-speed={speed} className="will-change-transform">
           <SmartImage
-            src={category.image}
+            src={categoryCover(category)}
             alt={category.name}
-            className="aspect-[16/10] max-h-[28svh] w-full bg-transparent md:max-h-[52svh] md:aspect-[5/4]"
-            imgClassName="scale-[1.12] p-3 transition duration-700 ease-out group-hover:scale-[1.16] md:p-5"
+            fit="cover"
+            className="aspect-[16/10] max-h-[28svh] w-full bg-forest-dark md:max-h-[52svh] md:aspect-[5/4]"
+            imgClassName="scale-[1.08] transition duration-700 ease-out group-hover:scale-[1.12]"
           />
         </div>
       </div>
@@ -41,13 +43,6 @@ function CategoryTile({
           <h3 className="font-display mt-1 text-2xl leading-tight text-ink transition group-hover:text-forest md:text-5xl">
             {category.name}
           </h3>
-          {category.name_ar ? (
-            <p className="font-subtitle mt-1 text-sm text-muted">
-              <span dir="rtl" lang="ar">
-                {category.name_ar}
-              </span>
-            </p>
-          ) : null}
           {category.description ? (
             <p className="font-subtitle mt-3 hidden max-w-md text-sm leading-relaxed text-muted md:line-clamp-2 md:block">
               {category.description}

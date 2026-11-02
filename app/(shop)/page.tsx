@@ -1,5 +1,6 @@
 import { ReloadError } from "@/components/ui/reload-error";
 import { HeroSlider } from "@/features/storefront/hero-slider";
+import { PackJourney } from "@/features/storefront/pack-journey";
 import {
   BrandIntro,
   CategoryGrid,
@@ -38,7 +39,6 @@ export default async function HomePage() {
               "@context": "https://schema.org",
               "@type": "Organization",
               name: BRAND.name,
-              alternateName: BRAND.nameAr,
               url: BRAND.website,
               telephone: BRAND.phone,
               email: BRAND.email,
@@ -47,13 +47,15 @@ export default async function HomePage() {
             }),
           }}
         />
-        <div data-home-page>
-          <HeroSlider banners={heroes} />
-        </div>
-        <BrandIntro settings={settings} />
-        <CategoryGrid categories={categories} />
-        <FeaturedShelf products={data.featured_products || []} />
-        <PromoBanner banners={promos} />
+        <PackJourney>
+          <div data-home-page>
+            <HeroSlider banners={heroes} />
+          </div>
+          <BrandIntro settings={settings} />
+          <CategoryGrid categories={categories} />
+          <FeaturedShelf products={data.featured_products || []} />
+          <PromoBanner banners={promos} />
+        </PackJourney>
         <ProductRail
           eyebrow="Just in"
           title="New arrivals"

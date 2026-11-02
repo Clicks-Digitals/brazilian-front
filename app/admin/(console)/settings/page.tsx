@@ -79,7 +79,6 @@ export default function SettingsPage() {
     <form onSubmit={save} className="max-w-3xl space-y-4">
       <AdminHeader title="Store settings" />
       <Field label="Store name"><Input value={form.store_name} onChange={(e) => setForm({ ...form, store_name: e.target.value })} /></Field>
-      <Field label="Arabic name"><Input value={form.store_name_ar} onChange={(e) => setForm({ ...form, store_name_ar: e.target.value })} /></Field>
       <Field label="Phone"><Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></Field>
       <Field label="Email"><Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></Field>
       <Field label="About"><Textarea value={form.about} onChange={(e) => setForm({ ...form, about: e.target.value })} /></Field>

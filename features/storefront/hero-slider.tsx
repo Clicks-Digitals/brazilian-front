@@ -1,218 +1,126 @@
-"use client";
-
-import { useEffect, useState, type ReactNode } from "react";
-import { ChevronLeft, ChevronRight, Coffee, Droplets, Flame, Landmark } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Clock3, Droplets, Landmark } from "lucide-react";
 import { BRAND } from "@/lib/brand";
-import { cn } from "@/lib/cn";
 import type { Banner } from "@/types/api";
 
-const PACKS = [
-  {
-    src: "/assets/hero/hero-espresso.png",
-    alt: "Espresso coffee",
-    left: {
-      icon: Flame,
-      title: "For the machine",
-      body: "100% Arabica espresso with chocolate and orange — the house shot.",
-    },
-    right: {
-      icon: Coffee,
-      title: "Crema first",
-      body: "Roasted for a thick, lasting crema in the cup you pull at home.",
-    },
-  },
-  {
-    src: "/assets/hero/hero-turkish.png",
-    alt: "Turkish coffee",
-    left: {
-      icon: Landmark,
-      title: "With cardamom",
-      body: "Medium Turkish roast, packed for a proper cezve at home.",
-    },
-    right: {
-      icon: Coffee,
-      title: "As it should be",
-      body: "Fine grind, slow foam, and the cup the house has made for decades.",
-    },
-  },
-  {
-    src: "/assets/hero/hero-filter.png",
-    alt: "Filter coffee",
-    left: {
-      icon: Droplets,
-      title: "Origin lots",
-      body: "Brazil, Colombia, Kenya, and Ethiopia — roasted for pour-over and drip.",
-    },
-    right: {
-      icon: Coffee,
-      title: "Clear cup",
-      body: "A brighter brew for the filter, with the sweetness still in the cup.",
-    },
-  },
+const STATS = [
+  { icon: Droplets, label: "100% Arabica" },
+  { icon: Landmark, label: "Roasted in Jordan" },
+  { icon: Clock3, label: `Est. ${BRAND.established}` },
 ];
 
+const MARQUEE = [
+  "Turkish roast",
+  "Filter coffee",
+  "Espresso",
+  "Arabic coffee",
+  "Capsules",
+  "100% Arabica",
+  "Slow roasted",
+  `Since ${BRAND.established}`,
+];
 
-export function HeroSlider({ banners }: { banners: Banner[] }) {
-  const [index, setIndex] = useState(0);
-  const count = Math.max(PACKS.length, banners.length || 0);
-  const pack = PACKS[index % PACKS.length];
-
-  useEffect(() => {
-    if (count < 2) return;
-    const timer = window.setInterval(() => setIndex((i) => (i + 1) % count), 8000);
-    return () => window.clearInterval(timer);
-  }, [count]);
-
-  function go(next: number) {
-    setIndex((next + count) % count);
-  }
-
+export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
   return (
-    <section
-      data-hero
-      className="home-hero hero-stage relative isolate overflow-hidden"
-      aria-roledescription="carousel"
-      aria-label="Featured"
-    >
-      <div className="hero-beans hero-beans-left" aria-hidden>
-        <div className="hero-beans-in">
-          <img src="/assets/hero/beans-left.png" alt="" />
+    <>
+      <section data-hero className="home-hero hero-stage relative flex min-h-[100svh] flex-col">
+        <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
+          <div className="hero-ember" />
         </div>
-      </div>
-      <div className="hero-beans hero-beans-right" aria-hidden>
-        <div className="hero-beans-in hero-beans-in-delay">
-          <img src="/assets/hero/beans-right.png" alt="" />
-        </div>
-      </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-7xl flex-col items-center px-6 pb-8 pt-[calc(var(--nav-h)+5.5rem)] md:px-10 md:pb-10 md:pt-[calc(var(--nav-h)+6.75rem)]">
-        <div className="flex max-w-3xl flex-col items-center text-center">
-          <p className="eyebrow hero-copy-in text-forest">
-            Est. {BRAND.established} · Jordan {BRAND.jordanSince}
-          </p>
-          <h1 className="font-display mt-5 text-[2.55rem] leading-[1.02] tracking-[-0.03em] text-ink md:text-6xl lg:text-[4.75rem]">
-            Coffee from Brazil, roasted for Jordan.
-          </h1>
-          <p className="font-subtitle mt-5 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-            {BRAND.nameAr} — Turkish, filter, espresso, and capsule coffees from a house established in 1955.
-          </p>
-          <div className="hero-copy-in mt-8 flex flex-wrap items-center justify-center gap-3" style={{ animationDelay: "0.25s" }}>
-            <Button href="/shop" variant="primary" size="lg" className="rounded-full px-8">
-              Shop the collection
-            </Button>
-            <Button href="/categories" variant="secondary" size="lg" className="rounded-full px-8">
-              Browse categories
-            </Button>
+        <div className="relative mx-auto flex w-full max-w-[80rem] flex-1 flex-col px-6 md:px-10">
+          <div className="relative z-20 flex justify-center pt-[4vh] md:pt-[5vh]">
+            <p className="text-center text-[15px] text-gold md:text-[17px]">Coffee from Brazil. Roasted for Jordan.</p>
           </div>
-        </div>
 
-        <div className="mt-14 grid w-full flex-1 grid-cols-1 items-end gap-6 md:mt-20 lg:grid-cols-[1fr_minmax(17rem,28rem)_1fr] lg:gap-8">
-          <HeroNote
-            side="left"
-            icon={<pack.left.icon className="size-4" strokeWidth={1.5} />}
-            title={pack.left.title}
-            body={pack.left.body}
-            noteKey={`left-${index}`}
-          />
+          <h1 className="relative z-0 mt-[1.5vh] select-none whitespace-nowrap text-center font-display text-[16vw] font-bold leading-[0.82] tracking-[-0.055em] text-forest md:text-[14.5vw] lg:text-[13.5vw]">
+            Brazilian
+          </h1>
 
-          <div className="hero-pack relative mx-auto w-full max-w-md lg:max-w-none">
-            <div className="hero-pack-glow" aria-hidden />
-            <div className="relative mx-auto h-[min(48svh,32rem)] w-full md:h-[min(54svh,36rem)]">
-              {PACKS.map((item, i) => (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={item.src}
-                  src={item.src}
-                  alt={item.alt}
-                  className={cn(
-                    "absolute inset-0 m-auto h-full w-auto max-w-full object-contain drop-shadow-[0_28px_50px_rgba(36,31,26,0.18)] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                    i === index
-                      ? "z-10 translate-y-0 scale-100 opacity-100"
-                      : "pointer-events-none z-0 translate-y-8 scale-95 opacity-0",
-                  )}
-                />
+          <div className="hero-pack-slot">
+            <div id="pack-dock-hero" className="pack-dock pack-dock-hero" aria-hidden />
+          </div>
+
+          <div className="relative z-20 mt-auto grid grid-cols-12 items-end gap-x-6 gap-y-10 pt-6 pb-2 lg:pt-[4vh]">
+            <div className="col-span-12 flex flex-col gap-8 md:col-span-6 lg:col-span-3">
+              <p className="font-subtitle max-w-[290px] text-[17px] leading-[1.47] text-muted">
+                Turkish, filter, espresso, and capsule coffees from a house established in {BRAND.established}. No bitterness in the story — just the cup the house has roasted for decades.
+              </p>
+              <Link
+                href="/shop"
+                className="group inline-flex items-center justify-center gap-2 self-start rounded-full bg-forest px-8 py-4 text-sm font-medium text-white transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-gold hover:text-forest-dark"
+              >
+                Shop the collection
+                <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </Link>
+            </div>
+
+            <div className="hidden lg:col-span-5 lg:block" />
+
+            <div className="col-span-12 flex flex-col gap-2.5 md:col-span-6 md:items-end lg:col-span-4">
+              {STATS.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="flex items-center gap-3 rounded-xl bg-white/70 py-1.5 pl-1.5 pr-5 backdrop-blur-sm"
+                >
+                  <span className="grid size-11 shrink-0 place-items-center rounded-[9px] bg-white text-gold">
+                    <stat.icon className="size-5" strokeWidth={1.5} />
+                  </span>
+                  <span className="text-sm font-medium text-ink">{stat.label}</span>
+                </div>
               ))}
             </div>
           </div>
-
-          <HeroNote
-            side="right"
-            icon={<pack.right.icon className="size-4" strokeWidth={1.5} />}
-            title={pack.right.title}
-            body={pack.right.body}
-            noteKey={`right-${index}`}
-          />
         </div>
 
-        {count > 1 ? (
-          <div className="mt-4 flex items-center gap-5">
-            <p className="text-[11px] tracking-[0.22em] text-muted">
-              <span className="text-forest">{String(index + 1).padStart(2, "0")}</span>
-              <span className="mx-2 text-ink/20">/</span>
-              {String(count).padStart(2, "0")}
-            </p>
-            <div className="flex items-center">
-              <button
-                type="button"
-                aria-label="Previous slide"
-                onClick={() => go(index - 1)}
-                className="grid size-10 place-items-center text-ink/70 transition hover:text-forest"
-              >
-                <ChevronLeft className="size-5" strokeWidth={1.25} />
-              </button>
-              <button
-                type="button"
-                aria-label="Next slide"
-                onClick={() => go(index + 1)}
-                className="grid size-10 place-items-center text-ink/70 transition hover:text-forest"
-              >
-                <ChevronRight className="size-5" strokeWidth={1.25} />
-              </button>
+        <div className="absolute right-6 top-[14.5vh] z-20 hidden text-ink md:block lg:right-10">
+          <div className="relative size-[92px]">
+            <svg viewBox="0 0 100 100" className="hero-seal-spin absolute inset-0 h-full w-full">
+              <defs>
+                <path id="hero-seal-path" d="M50,50 m-36,0 a36,36 0 1,1 72,0 a36,36 0 1,1 -72,0" fill="none" />
+              </defs>
+              <circle cx="50" cy="50" r="47" fill="none" stroke="currentColor" strokeWidth="0.7" opacity="0.45" />
+              <circle cx="50" cy="50" r="30.5" fill="none" stroke="currentColor" strokeWidth="0.7" opacity="0.45" />
+              <text fontSize="7.4" letterSpacing="2.1" fill="currentColor">
+                <textPath href="#hero-seal-path" startOffset="0">
+                  ROASTED IN JORDAN · SINCE {BRAND.established} · ROASTED IN JORDAN ·
+                </textPath>
+              </text>
+            </svg>
+            <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-none">
+              <span className="text-[15px] font-bold tracking-[-0.03em]">100%</span>
+              <span className="mt-0.5 text-[10px] tracking-[0.04em] text-muted">Arabica</span>
             </div>
           </div>
-        ) : null}
-      </div>
-    </section>
-  );
-}
+        </div>
 
-function HeroNote({
-  side,
-  icon,
-  title,
-  body,
-  noteKey,
-}: {
-  side: "left" | "right";
-  icon: ReactNode;
-  title: string;
-  body: string;
-  noteKey: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "relative hidden pb-16 lg:block",
-        side === "left" ? "justify-self-end text-right" : "justify-self-start text-left",
-      )}
-    >
-      <div className={cn("flex max-w-[14rem] items-start gap-3", side === "left" && "flex-row-reverse")}>
-        <span className="grid size-10 shrink-0 place-items-center rounded-full border border-forest/20 text-forest">
-          {icon}
-        </span>
-        <div key={noteKey} className="hero-note-copy">
-          <p className="font-display text-xl leading-tight text-ink">{title}</p>
-          <p className="font-subtitle mt-2 text-sm leading-relaxed text-muted">{body}</p>
+        <div className="relative z-20 mt-8 flex justify-center pb-6">
+          <a
+            href="#home-about"
+            className="hero-nudge flex flex-col items-center gap-2 text-[12px] tracking-[0.08em] text-muted uppercase transition-colors hover:text-ink"
+          >
+            Scroll to brew
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
+              <path d="M12 4.8v14.4M6.6 13.8 12 19.2l5.4-5.4" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+        </div>
+      </section>
+
+      <div className="hero-marquee-wrap overflow-hidden border-y border-forest/10 bg-white py-4">
+        <div className="hero-marquee flex w-max items-center gap-10 pr-10">
+          {[0, 1].map((copy) => (
+            <div key={copy} className="flex items-center gap-10" aria-hidden={copy === 1}>
+              {MARQUEE.map((item) => (
+                <div key={`${copy}-${item}`} className="flex items-center gap-10">
+                  <span className="whitespace-nowrap text-sm uppercase tracking-[0.14em] text-ink/80">{item}</span>
+                  <span className="size-[5px] shrink-0 rounded-full bg-gold" />
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
-      <span
-        className={cn(
-          "absolute top-5 h-px w-16 bg-ink/15",
-          side === "left" ? "left-full ml-3" : "right-full mr-3",
-        )}
-        aria-hidden
-      />
-    </div>
+    </>
   );
 }

@@ -1,0 +1,70 @@
+import type { Metadata } from "next";
+import { EmptyState, ErrorState } from "@/components/ui/states";
+import { ProductGrid } from "@/features/shop/product-card";
+import { errorMessage } from "@/lib/http";
+import { serverGet } from "@/lib/server-get";
+import { asPaginated, categorySlug } from "@/lib/settings";
+import type { Category, Product } from "@/types/api";
+
+export const metadata: Metadata = {
+  title: "Export collection",
+  description: "A showcase of Brazilian Coffee House products without retail prices.",
+};
+
+export default async function ExportPage() {
+  try {
+    const [categoryData, productData] = await Promise.all([
+      serverGet("/categories/").catch(() => ({ results: [] as Category[] })),
+      serverGet("/products/", { page_size: 100, availability: "all" }),
+    ]);
+    const categories = asPaginated<Category>(categoryData).results.filter((c) => c.is_active !== false);
+    const products = asPaginated<Product>(productData).results;
+    const ordered = [...categories].sort((a, b) => (a.display_order ?? 99) - (b.display_order ?? 99));
+    const sections = ordered
+      .map((category) => ({
+        category,
+        products: products.filter((product) => categorySlug(product) === category.slug),
+      }))
+      .filter((section) => section.products.length > 0);
+
+    return (
+      <div className="bg-white pb-24">
+        <header className="bg-white">
+          <div className="mx-auto max-w-7xl px-6 py-12 md:py-16" data-reveal>
+            <p className="eyebrow text-gold">Export</p>
+            <h1 className="font-display mt-3 text-4xl tracking-tight text-forest md:text-5xl">Product showcase</h1>
+            <p className="font-subtitle mt-4 max-w-xl text-muted">
+              The house collection, presented without prices — for export, wholesale, and tasting notes.
+            </p>
+          </div>
+        </header>
+
+        {products.length === 0 ? (
+          <div className="mx-auto max-w-7xl px-6 pt-12">
+            <EmptyState title="No products yet" description="The showcase will fill when coffees are published." />
+          </div>
+        ) : sections.length === 0 ? (
+          <div className="mx-auto max-w-7xl px-6 py-16">
+            <ProductGrid products={products} hidePrice />
+          </div>
+        ) : (
+          sections.map((section, index) => (
+            <section key={section.category.slug} className="bg-white">
+              <div className="mx-auto max-w-7xl px-6 py-14 md:py-20">
+                <div data-reveal>
+                  <p className="eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
+                  <h2 className="font-display mt-2 text-3xl text-forest md:text-4xl">{section.category.name}</h2>
+                </div>
+                <div className="mt-10">
+                  <ProductGrid products={section.products} hidePrice />
+                </div>
+              </div>
+            </section>
+          ))
+        )}
+      </div>
+    );
+  } catch (error) {
+    return <ErrorState description={errorMessage(error)} />;
+  }
+}

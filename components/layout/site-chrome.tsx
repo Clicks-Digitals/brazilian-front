@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { WhatsAppFloat } from "@/components/layout/whatsapp-float";
 import { MotionRoot } from "@/components/motion/motion-root";
 import type { Announcement, Category, StoreSettings } from "@/types/api";
 
@@ -79,6 +80,7 @@ export function SiteChrome({
         <main className="flex-1">{children}</main>
       </MotionRoot>
       <Footer settings={settings} categories={categories} />
+      <WhatsAppFloat />
     </div>
   );
 }

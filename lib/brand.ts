@@ -5,13 +5,15 @@ export const BRAND = {
   jordanSince: 1995,
   phone: "06 222 3330",
   phoneHref: "tel:+96262223330",
+  whatsapp: "+96262223330",
+  whatsappHref: "https://wa.me/96262223330",
   email: "info@bch-coffee.com",
   website: "https://braziliancoffeehouse.com",
   logo: "/assets/brand/logo.png",
   currency: "JOD",
   currencySymbol: "JD",
   story:
-    "In 1955, International Mill began in Kuwait, roasting and blending coffee with a focus on quality and hospitality. In 1995, the first international branch opened in Jordan as Brazilian Coffee House — بيت البن البرازيلي — bringing coffees from Brazil and other origins to Jordanian homes and cafés.",
+    "In 1955, International Mill began in Kuwait, roasting and blending coffee with a focus on quality and hospitality. In 1995, the first international branch opened in Jordan as Brazilian Coffee House, bringing coffees from Brazil and other origins to Jordanian homes and cafés.",
   about:
     "Brazilian Coffee House has roasted and served coffee in Jordan since 1995, with roots that reach back to International Mill in Kuwait in 1955. We source from Brazil and other origins, then roast for Turkish, filter, espresso, Arabic, and capsule brewing.",
   branches: [

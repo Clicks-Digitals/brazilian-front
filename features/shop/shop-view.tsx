@@ -120,6 +120,7 @@ export function ShopView({
   }, [query, lockedCategory, extraQuery]);
 
   return (
+    <div className="bg-white">
     <div className="mx-auto max-w-7xl px-6 pb-24">
       {title ? (
         <header className="max-w-2xl pb-10 pt-12 md:pt-16" data-reveal>
@@ -166,6 +167,7 @@ export function ShopView({
           onPage={(page) => write({ ...query, page: String(page) })}
         />
       </div>
+    </div>
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { SmartImage } from "@/components/ui/smart-image";
+import { categoryCover } from "@/lib/category-media";
 import { cn } from "@/lib/cn";
 import type { Category } from "@/types/api";
 
@@ -23,10 +24,10 @@ export function CategoryPreview({ categories }: { categories: Category[] }) {
           <li key={category.slug} className="border-t border-ink/10 last:border-b">
             <Link href={`/shop/${category.slug}`} className="flex items-center gap-4 py-4">
               <SmartImage
-                src={category.image}
+                src={categoryCover(category)}
                 alt=""
-                className="size-[4.5rem] shrink-0 bg-white sm:size-20"
-                imgClassName="p-2"
+                fit="cover"
+                className="size-[4.5rem] shrink-0 bg-forest-dark sm:size-20"
               />
               <span className="min-w-0 flex-1">
                 <span className="font-subtitle block text-xl font-normal leading-snug text-ink">
@@ -80,10 +81,11 @@ export function CategoryPreview({ categories }: { categories: Category[] }) {
 
         <div className="sticky top-[calc(var(--nav-h)+2rem)]">
           <SmartImage
-            src={current.image}
+            src={categoryCover(current)}
             alt={current.name}
-            className="aspect-[4/5] w-full bg-white"
-            imgClassName="p-8 transition duration-500"
+            fit="cover"
+            className="aspect-[4/5] w-full bg-forest-dark"
+            imgClassName="transition duration-500"
           />
           {current.description ? (
             <p className="font-subtitle mt-6 text-sm leading-relaxed text-muted">{current.description}</p>

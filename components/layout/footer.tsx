@@ -49,6 +49,16 @@ export function Footer({
           <p className="eyebrow text-gold">House</p>
           <ul className="mt-5 space-y-2.5 text-sm">
             <li>
+              <Link href="/about" className="hover:text-gold">
+                About us
+              </Link>
+            </li>
+            <li>
+              <Link href="/export" className="hover:text-gold">
+                Export collection
+              </Link>
+            </li>
+            <li>
               <Link href="/categories" className="hover:text-gold">
                 Categories
               </Link>

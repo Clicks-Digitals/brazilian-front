@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { EmptyState, ErrorState } from "@/components/ui/states";
-import { CategoryIndex } from "@/features/storefront/category-index";
+import { CategoryCards } from "@/features/storefront/category-cards";
 import { errorMessage } from "@/lib/http";
 import { serverGet } from "@/lib/server-get";
 import { asList } from "@/lib/settings";
@@ -17,10 +17,10 @@ export default async function CategoriesPage() {
     const categories = asList<Category>(data).filter((c) => c.is_active !== false);
 
     return (
-      <div className="bg-white">
-        <header className="mx-auto max-w-7xl px-6 pb-8 pt-12 md:pt-16" data-reveal>
+      <div className="bg-white pb-20">
+        <header className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pb-12 md:pt-16" data-reveal>
           <p className="eyebrow text-gold">Shop</p>
-          <h1 className="font-display mt-3 text-4xl tracking-tight text-ink md:text-5xl">Categories</h1>
+          <h1 className="font-display mt-3 text-4xl tracking-tight text-forest md:text-5xl">Categories</h1>
           <p className="font-subtitle mt-4 max-w-xl text-muted">
             Choose a brew and go through to the coffees in that collection.
           </p>
@@ -28,7 +28,9 @@ export default async function CategoriesPage() {
         {categories.length === 0 ? (
           <EmptyState title="No categories yet" description="Collections will appear here once they are published." />
         ) : (
-          <CategoryIndex categories={categories} />
+          <div className="mx-auto max-w-7xl px-4 sm:px-6">
+            <CategoryCards categories={categories} />
+          </div>
         )}
       </div>
     );

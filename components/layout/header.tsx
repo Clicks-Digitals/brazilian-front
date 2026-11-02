@@ -13,7 +13,9 @@ import type { Category } from "@/types/api";
 
 const STATIC_NAV = [
   { href: "/shop", label: "Shop" },
+  { href: "/export", label: "Export" },
   { href: "/categories", label: "Categories" },
+  { href: "/about", label: "About" },
   { href: "/articles", label: "Articles" },
   { href: "/contact", label: "Contact" },
 ];
@@ -24,10 +26,10 @@ function LogoMark({ overlay }: { overlay: boolean }) {
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={BRAND.logo} alt="" className={cn("nav-logo", overlay && "nav-logo-overlay")} />
       <span className="nav-wordmark">
-        <span className="nav-brand-name">{BRAND.name}</span>
-        <span className="nav-brand-ar" dir="rtl">
-          {BRAND.nameAr}
+        <span className="nav-brand-ar" dir="rtl" lang="ar">
+          بيت البن البرازيلي
         </span>
+        <span className="nav-brand-name">Brazilian Coffee House</span>
       </span>
     </Link>
   );
@@ -36,7 +38,7 @@ function LogoMark({ overlay }: { overlay: boolean }) {
 export function Header({
   categories,
   isHome = false,
-  solid = false,
+  solid: _solid = false,
 }: {
   categories: Category[];
   isHome?: boolean;
@@ -48,7 +50,7 @@ export function Header({
   const [searchOpen, setSearchOpen] = useState(false);
   const count = useCartStore((s) => s.itemCount);
   const user = useAuthStore((s) => s.user);
-  const overlay = isHome && !solid && !open;
+  const overlay = false;
 
   const navCategories = categories.filter((c) => c.show_in_nav !== false && c.is_active !== false).slice(0, 8);
 
@@ -66,7 +68,7 @@ export function Header({
       observer.disconnect();
       window.removeEventListener("resize", apply);
     };
-  }, [open, overlay, solid]);
+  }, [open, overlay, isHome]);
 
   useEffect(() => {
     document.body.classList.toggle("nav-open", open);
@@ -107,7 +109,7 @@ export function Header({
     <header
       ref={headerRef}
       data-nav={overlay ? "overlay" : "solid"}
-      className={cn("site-header z-50", overlay ? "is-overlay is-light" : "is-solid")}
+      className={cn("site-header z-50 is-solid", isHome && "is-home")}
     >
       <div className="nav-shell">
         <div className="nav-mobile">
@@ -172,6 +174,16 @@ export function Header({
       ) : null}
 
       <div className={cn("nav-drawer", open ? "is-open" : "")} aria-hidden={!open}>
+        <div className="nav-drawer-top">
+          <button type="button" aria-label="Close menu" className="nav-icon" onClick={() => setOpen(false)}>
+            <X className="size-[18px]" strokeWidth={1.5} />
+          </button>
+          <Link href="/" className="nav-logo-center" aria-label={BRAND.name} onClick={() => setOpen(false)}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={BRAND.logo} alt="" className="nav-logo" />
+          </Link>
+          <span />
+        </div>
         <nav className="nav-drawer-inner" aria-label="Mobile">
           {STATIC_NAV.map((item) => (
             <Link key={item.href} href={item.href} className="nav-drawer-link" onClick={() => setOpen(false)}>

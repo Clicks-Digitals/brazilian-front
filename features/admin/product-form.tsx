@@ -150,9 +150,6 @@ export function ProductForm({ productId }: { productId?: string }) {
         <Field label="Name">
           <Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
         </Field>
-        <Field label="Arabic name">
-          <Input value={form.name_ar} onChange={(e) => setForm({ ...form, name_ar: e.target.value })} />
-        </Field>
         <Field label="Slug">
           <Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} />
         </Field>

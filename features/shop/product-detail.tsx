@@ -83,11 +83,6 @@ export function ProductDetail({ product }: { product: Product }) {
         <div>
           <p className="eyebrow text-gold">{product.roast_level ? `${titleCase(product.roast_level)} roast` : "House roast"}</p>
           <h1 className="font-display mt-3 text-4xl md:text-5xl">{product.name}</h1>
-          {product.name_ar ? (
-            <p className="font-subtitle mt-2 text-muted" dir="rtl">
-              {product.name_ar}
-            </p>
-          ) : null}
           <p className="mt-4 text-xl">
             {selected?.price ? formatMoney(selected.price) : "Price unavailable"}
             {selected?.compare_at_price ? (

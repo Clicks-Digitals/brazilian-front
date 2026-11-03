@@ -155,8 +155,8 @@ export function PromoBanner({ banners }: { banners: Banner[] }) {
   const banner = banners[0];
   return (
     <section id="home-banner" className="relative my-8 w-full overflow-x-clip bg-[#eff5f1] text-ink">
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-6 px-6 py-16 grid-cols-[minmax(0,1fr)_16rem] sm:grid-cols-[minmax(0,1fr)_20rem] md:grid-cols-[minmax(0,1fr)_min(36rem,52%)] md:gap-8 md:py-36">
-        <div className="max-w-xl">
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 grid-cols-1 md:grid-cols-[minmax(0,1fr)_min(36rem,52%)] md:gap-8 md:py-36">
+        <div className="relative z-20 max-w-xl">
           <p className="eyebrow text-gold">Season</p>
           <span className="mt-4 block h-px w-10 bg-gold/80" />
           <h2 className="font-display mt-5 text-4xl leading-[1.08] text-forest md:text-6xl">

@@ -78,6 +78,8 @@ export function PackJourney({ children }: { children: ReactNode }) {
 
       const travel = { duration: 1.15, ease: "power2.inOut" };
       const settle = { duration: 0.8, ease: "power1.inOut" };
+      const compact = window.matchMedia("(max-width: 767px)").matches;
+      const bannerScale = compact ? scaleFor(d.h, d.b) : Math.max(scaleFor(d.h, d.b) * 1.35, 1.35);
 
       return gsap
         .timeline({
@@ -134,7 +136,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
         .to(pack, {
           x: d.b.x,
           y: d.b.y,
-          scale: Math.max(scaleFor(d.h, d.b) * 1.35, 1.35),
+          scale: bannerScale,
           rotate: 3,
           ...travel,
         })

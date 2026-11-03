@@ -134,7 +134,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
         .to(pack, {
           x: d.b.x,
           y: d.b.y,
-          scale: scaleFor(d.h, d.b),
+          scale: Math.max(scaleFor(d.h, d.b) * 1.35, 1.35),
           rotate: 3,
           ...travel,
         })

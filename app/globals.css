@@ -516,7 +516,7 @@ body:has(.announcement-bar) .site-header {
   position: relative;
   z-index: 0;
   width: 100%;
-  height: 16rem;
+  height: 28rem;
   justify-self: center;
 }
 
@@ -581,7 +581,7 @@ body:has(.announcement-bar) .site-header {
   }
 
   .pack-dock-banner {
-    height: 18rem;
+    height: 38rem;
   }
 }
 
@@ -598,7 +598,7 @@ body:has(.announcement-bar) .site-header {
   }
 
   .pack-dock-banner {
-    height: min(22rem, 62%);
+    height: min(48rem, 96%);
   }
 }
 
@@ -639,7 +639,7 @@ body:has(.announcement-bar) .site-header {
   }
 
   .pack-dock-banner {
-    height: 15rem;
+    height: 26rem;
   }
 
   #home-categories {

@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import { ProductCardSkeleton } from "@/components/ui/states";
 import { ShopView } from "@/features/shop/shop-view";
+import { localizedName, t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale-server";
 import { serverGet } from "@/lib/server-get";
 import type { Category } from "@/types/api";
 
@@ -22,11 +24,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CategoryShopPage({ params }: Props) {
   const { category } = await params;
+  const locale = await getLocale();
   let title = category.replace(/-/g, " ");
   let description: string | undefined;
   try {
     const data = await serverGet<Category>(`/categories/${category}/`);
-    title = data.name;
+    title = localizedName(locale, data);
     description = data.description;
   } catch {
     /* still render the grid; API errors show inside ShopView */
@@ -40,7 +43,7 @@ export default async function CategoryShopPage({ params }: Props) {
         </div>
       }
     >
-      <ShopView lockedCategory={category} eyebrow="Category" title={title} description={description} />
+      <ShopView lockedCategory={category} eyebrow={t(locale, "category")} title={title} description={description} />
     </Suspense>
   );
 }

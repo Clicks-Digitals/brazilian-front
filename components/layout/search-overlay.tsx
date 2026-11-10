@@ -6,11 +6,14 @@ import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/field";
 import { api } from "@/lib/api";
+import { useLocale } from "@/features/i18n/locale-provider";
+import { localizedName } from "@/lib/i18n";
 import { asList } from "@/lib/settings";
 import { formatMoney } from "@/lib/format";
 import type { Product } from "@/types/api";
 
 export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const { locale, t } = useLocale();
   const [q, setQ] = useState("");
   const [results, setResults] = useState<Product[]>([]);
   const [busy, setBusy] = useState(false);
@@ -58,8 +61,8 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
     <div className="fixed inset-0 z-[60] bg-white/95 p-6 pt-[max(1.5rem,env(safe-area-inset-top))] backdrop-blur-sm">
       <div className="mx-auto max-w-2xl pt-6">
         <div className="flex items-center justify-between">
-          <p className="eyebrow text-gold">Search the house</p>
-          <button type="button" onClick={onClose} aria-label="Close search">
+          <p className="eyebrow text-gold">{t("searchTheHouse")}</p>
+          <button type="button" onClick={onClose} aria-label={t("closeSearch")}>
             <X className="size-5" />
           </button>
         </div>
@@ -75,12 +78,12 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
             autoFocus
             value={q}
             onChange={(e) => setQ(e.target.value)}
-            placeholder="Search coffees, origins, machines…"
-            aria-label="Search products"
+            placeholder={t("searchPlaceholder")}
+            aria-label={t("search")}
           />
         </form>
         <div className="mt-6 space-y-3">
-          {busy ? <p className="text-sm text-muted">Searching…</p> : null}
+          {busy ? <p className="text-sm text-muted">{t("searching")}</p> : null}
           {results.map((product) => (
             <Link
               key={product.id}
@@ -88,7 +91,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
               onClick={onClose}
               className="flex items-center justify-between border-b border-ink/10 py-3 text-sm"
             >
-              <span>{product.name}</span>
+              <span>{localizedName(locale, product)}</span>
               <span className="text-muted">
                 {product.default_variant?.price || product.min_price
                   ? formatMoney(product.default_variant?.price || product.min_price || "")
@@ -97,7 +100,7 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
             </Link>
           ))}
           {q.trim().length >= 2 && !busy && results.length === 0 ? (
-            <p className="text-sm text-muted">No matches. Try another origin or roast.</p>
+            <p className="text-sm text-muted">{t("noMatches")}</p>
           ) : null}
         </div>
       </div>

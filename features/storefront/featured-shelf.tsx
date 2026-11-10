@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 import { ProductCard } from "@/features/shop/product-card";
+import { useLocale } from "@/features/i18n/locale-provider";
 import type { Product } from "@/types/api";
 
 function isEspresso(product: Product) {
@@ -7,21 +10,22 @@ function isEspresso(product: Product) {
 }
 
 export function FeaturedShelf({ products }: { products: Product[] }) {
+  const { t } = useLocale();
   const usable = products.filter((product) => product?.slug || product?.name);
   const espresso = usable.find(isEspresso) || usable[0];
   const items = usable.filter((product) => product.slug !== espresso?.slug).slice(0, 5);
 
   return (
-    <section id="home-featured" className="bg-white py-20 md:py-24">
+    <section id="home-featured" className="bg-forest py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4" data-reveal>
           <div>
-            <p className="eyebrow text-gold">The shelf</p>
-            <h2 className="font-display mt-3 text-3xl md:text-4xl">Featured coffees</h2>
+            <p className="eyebrow text-gold">{t("theShelf")}</p>
+            <h2 className="font-display mt-3 text-3xl text-cream md:text-4xl">{t("featuredCoffees")}</h2>
           </div>
           <Link href="/shop" className="link-arrow">
-            Shop all
-            <span aria-hidden>→</span>
+            {t("shopAll")}
+            <span aria-hidden className="rtl:inline-block rtl:rotate-180">→</span>
           </Link>
         </div>
 
@@ -29,10 +33,14 @@ export function FeaturedShelf({ products }: { products: Product[] }) {
           {espresso ? (
             <ProductCard
               product={espresso}
-              title="Espresso coffee"
+              title={t("espressoCoffee")}
               media={
-                <div className="aspect-square w-full bg-white p-3 ring-1 ring-forest/10 sm:p-5 md:p-8">
-                  <div id="pack-dock-featured" className="pack-dock pack-dock-featured h-full w-full" />
+                <div className="relative aspect-square w-full overflow-hidden bg-white ring-1 ring-forest/10">
+                  <div
+                    id="pack-dock-featured"
+                    className="pack-dock pack-dock-featured pointer-events-none absolute inset-[16%] sm:inset-[18%] md:inset-[20%]"
+                    aria-hidden
+                  />
                 </div>
               }
             />

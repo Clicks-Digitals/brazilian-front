@@ -33,7 +33,7 @@ export function mediaUrl(
     return stripped;
   }
   const normalized = stripped.startsWith("/") ? stripped : `/${stripped}`;
-  if (normalized.startsWith("/assets/")) return normalized;
+  if (normalized.startsWith("/assets/") || normalized.startsWith("/media/")) return normalized;
   return `${mediaOrigin()}${normalized}`;
 }
 

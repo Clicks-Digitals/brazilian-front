@@ -6,6 +6,7 @@ import { EmptyState, ErrorState, ProductCardSkeleton } from "@/components/ui/sta
 import { Pagination } from "@/components/ui/pagination";
 import { ProductGrid } from "@/features/shop/product-card";
 import { CategoryChips, ShopToolbar, type ShopQuery } from "@/features/shop/filters";
+import { useLocale } from "@/features/i18n/locale-provider";
 import { api } from "@/lib/api";
 import { errorMessage } from "@/lib/http";
 import { asPaginated } from "@/lib/settings";
@@ -38,6 +39,7 @@ export function ShopView({
   lockedCategory?: string;
   extraQuery?: Record<string, string>;
 }) {
+  const { t } = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -109,7 +111,7 @@ export function ShopView({
         setCount(pageData.count);
       })
       .catch((err) => {
-        if (!ignore) setError(errorMessage(err, "The shop could not be loaded."));
+        if (!ignore) setError(errorMessage(err, t("shopCouldNotLoad")));
       })
       .finally(() => {
         if (!ignore) setLoading(false);
@@ -120,13 +122,13 @@ export function ShopView({
   }, [query, lockedCategory, extraQuery]);
 
   return (
-    <div className="bg-white">
+    <div className="bg-forest">
     <div className="mx-auto max-w-7xl px-6 pb-24">
       {title ? (
         <header className="max-w-2xl pb-10 pt-12 md:pt-16" data-reveal>
           {eyebrow ? <p className="eyebrow text-gold">{eyebrow}</p> : null}
-          <h1 className="font-display mt-3 text-4xl tracking-tight text-ink md:text-5xl">{title}</h1>
-          {description ? <p className="font-subtitle mt-4 max-w-xl text-muted">{description}</p> : null}
+          <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{title}</h1>
+          {description ? <p className="font-subtitle mt-4 max-w-xl text-cream/75">{description}</p> : null}
         </header>
       ) : (
         <div className="pt-8" />
@@ -155,8 +157,8 @@ export function ShopView({
         ) : null}
         {!loading && !error && products.length === 0 ? (
           <EmptyState
-            title="No coffees match these filters"
-            description="Try a broader roast, price range, or category."
+            title={t("noCoffeesMatch")}
+            description={t("tryBroaderFilters")}
           />
         ) : null}
         {!loading && !error && products.length > 0 ? <ProductGrid products={products} /> : null}

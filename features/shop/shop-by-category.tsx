@@ -6,6 +6,8 @@ import { EmptyState, ErrorState, ProductCardSkeleton } from "@/components/ui/sta
 import { ProductGrid } from "@/features/shop/product-card";
 import { api } from "@/lib/api";
 import { errorMessage } from "@/lib/http";
+import { useLocale } from "@/features/i18n/locale-provider";
+import { localizedName } from "@/lib/i18n";
 import { asPaginated, categorySlug } from "@/lib/settings";
 import type { Category, Product } from "@/types/api";
 
@@ -14,6 +16,7 @@ function sortCategories(categories: Category[]) {
 }
 
 export function ShopByCategory() {
+  const { locale, t } = useLocale();
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,7 +35,7 @@ export function ShopByCategory() {
         setProducts(asPaginated<Product>(productData).results);
       })
       .catch((err) => {
-        if (!ignore) setError(errorMessage(err, "The shop could not be loaded."));
+        if (!ignore) setError(errorMessage(err, t("shopCouldNotLoad")));
       })
       .finally(() => {
         if (!ignore) setLoading(false);
@@ -57,23 +60,24 @@ export function ShopByCategory() {
       grouped.push({
         category: {
           id: 0,
-          name: "More from the house",
+          name: t("moreFromTheHouse"),
+          name_ar: t("moreFromTheHouse"),
           slug: "other",
         },
         products: leftover,
       });
     }
     return grouped.filter((section) => section.products.length > 0);
-  }, [categories, products]);
+  }, [categories, products, t]);
 
   return (
-    <div className="bg-white pb-24">
-      <header className="bg-white">
+    <div className="bg-forest pb-24">
+      <header className="bg-forest">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16" data-reveal>
-          <p className="eyebrow text-gold">Collection</p>
-          <h1 className="font-display mt-3 text-4xl tracking-tight text-forest md:text-5xl">Shop coffee</h1>
-          <p className="font-subtitle mt-4 max-w-xl text-muted">
-            Roasts for cezve, filter, espresso, and capsule — grouped the way the house brews.
+          <p className="eyebrow text-gold">{t("collection")}</p>
+          <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t("shopCoffee")}</h1>
+          <p className="font-subtitle mt-4 max-w-xl text-cream/75">
+            {t("shopCoffeeBlurb")}
           </p>
         </div>
       </header>
@@ -96,7 +100,7 @@ export function ShopByCategory() {
 
       {!loading && !error && sections.length === 0 ? (
         <div className="mx-auto max-w-7xl px-6 pt-12">
-          <EmptyState title="No coffees on the shelf yet" description="Products will appear here once they are published." />
+          <EmptyState title={t("noCoffees")} description={t("productsWillAppear")} />
         </div>
       ) : null}
 
@@ -106,21 +110,21 @@ export function ShopByCategory() {
           <section
             key={section.category.slug}
             id={section.category.slug}
-            className="bg-white"
+            className="bg-forest"
           >
             <div className="mx-auto max-w-7xl px-6 py-14 md:py-20">
               <div className="flex items-end justify-between gap-4" data-reveal>
                 <div>
                   <p className="eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
-                  <h2 className="font-display mt-2 text-3xl text-forest md:text-4xl">{section.category.name}</h2>
+                  <h2 className="font-display mt-2 text-3xl text-cream md:text-4xl">{localizedName(locale, section.category)}</h2>
                   {section.category.description ? (
-                    <p className="font-subtitle mt-3 max-w-xl text-sm text-muted">{section.category.description}</p>
+                    <p className="font-subtitle mt-3 max-w-xl text-sm text-cream/75">{section.category.description}</p>
                   ) : null}
                 </div>
                 {section.category.slug !== "other" ? (
                   <Link href={`/shop/${section.category.slug}`} className="link-arrow shrink-0">
-                    View all
-                    <span aria-hidden>→</span>
+                    {t("viewAll")}
+                    <span aria-hidden className="rtl:inline-block rtl:rotate-180">→</span>
                   </Link>
                 ) : null}
               </div>

@@ -7,14 +7,27 @@ import { Quantity } from "@/components/ui/quantity";
 import { SmartImage } from "@/components/ui/smart-image";
 import { ProductGrid } from "@/features/shop/product-card";
 import { addToCart } from "@/features/cart/cart-api";
+import { useLocale } from "@/features/i18n/locale-provider";
 import { toast } from "@/features/ui/toast-store";
 import { formatMoney, titleCase } from "@/lib/format";
 import { errorMessage } from "@/lib/http";
-import { categoryName, categorySlug, pickImage } from "@/lib/settings";
+import { localizedName } from "@/lib/i18n";
+import { categorySlug, pickImage } from "@/lib/settings";
 import type { Product, ProductVariant } from "@/types/api";
 
+const ROAST_KEYS = {
+  light: "roastLight",
+  medium: "roastMedium",
+  "medium-dark": "roastMediumDark",
+  dark: "roastDark",
+} as const;
+
 export function ProductDetail({ product }: { product: Product }) {
+  const { locale, t } = useLocale();
   const variants = (product.variants || []).filter((item) => item.is_active !== false);
+  const displayName = localizedName(locale, product);
+  const category =
+    product.category && typeof product.category === "object" ? product.category : null;
   const [selectedId, setSelectedId] = useState(product.default_variant?.id || variants[0]?.id);
   const [qty, setQty] = useState(1);
   const [busy, setBusy] = useState(false);
@@ -36,15 +49,15 @@ export function ProductDetail({ product }: { product: Product }) {
 
   async function add() {
     if (!selected) {
-      toast("This product has no available size", undefined, "error");
+      toast(t("noAvailableSize"), undefined, "error");
       return;
     }
     setBusy(true);
     try {
-      await addToCart(selected.id, qty);
-      toast("Added to bag", `${qty} × ${product.name}`, "success");
+      await addToCart(selected.id, qty, product);
+      toast(t("addedToBag"), `${qty} × ${displayName}`, "success");
     } catch (error) {
-      toast("Could not add to bag", errorMessage(error), "error");
+      toast(t("couldNotAdd"), errorMessage(error), "error");
     } finally {
       setBusy(false);
     }
@@ -52,25 +65,27 @@ export function ProductDetail({ product }: { product: Product }) {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12" data-reveal>
-      <p className="text-sm text-muted">
-        <Link href="/shop">Shop</Link>
+      <p className="text-sm text-cream/70">
+        <Link href="/shop">{t("shop")}</Link>
         {categorySlug(product) ? (
           <>
             {" / "}
-            <Link href={`/shop/${categorySlug(product)}`}>{categoryName(product)}</Link>
+            <Link href={`/shop/${categorySlug(product)}`}>
+              {localizedName(locale, category) || categorySlug(product)}
+            </Link>
           </>
         ) : null}
       </p>
       <div className="mt-8 grid gap-12 lg:grid-cols-2">
         <div>
-          <SmartImage src={images[gallery]} alt={product.name} className="aspect-[4/5] w-full border border-ink/8 bg-white" />
+          <SmartImage src={images[gallery]} alt={displayName} className="aspect-[4/5] w-full border border-ink/8 bg-white" />
           {images.length > 1 ? (
             <div className="mt-3 grid grid-cols-5 gap-2">
               {images.map((src, i) => (
                 <button
                   key={src}
                   type="button"
-                  aria-label={`View image ${i + 1}`}
+                  aria-label={t("viewImage", { n: i + 1 })}
                   onClick={() => setGallery(i)}
                   className={i === gallery ? "ring-2 ring-gold" : ""}
                 >
@@ -81,24 +96,35 @@ export function ProductDetail({ product }: { product: Product }) {
           ) : null}
         </div>
         <div>
-          <p className="eyebrow text-gold">{product.roast_level ? `${titleCase(product.roast_level)} roast` : "House roast"}</p>
-          <h1 className="font-display mt-3 text-4xl md:text-5xl">{product.name}</h1>
+          <p className="eyebrow text-gold">
+            {product.roast_level
+              ? t("roastLevel", {
+                  level:
+                    ROAST_KEYS[product.roast_level as keyof typeof ROAST_KEYS]
+                      ? t(ROAST_KEYS[product.roast_level as keyof typeof ROAST_KEYS])
+                      : titleCase(product.roast_level),
+                })
+              : t("houseRoast")}
+          </p>
+          <h1 className="font-display mt-3 text-4xl md:text-5xl">{displayName}</h1>
           <p className="mt-4 text-xl">
-            {selected?.price ? formatMoney(selected.price) : "Price unavailable"}
+            {selected?.price ? formatMoney(selected.price) : t("priceUnavailable")}
             {selected?.compare_at_price ? (
-              <span className="ml-3 text-base text-muted line-through">
+              <span className="ml-3 text-base text-cream/55 line-through">
                 {formatMoney(selected.compare_at_price)}
               </span>
             ) : null}
           </p>
           {product.tasting_notes ? (
-            <p className="mt-4 text-muted">Tasting notes — {product.tasting_notes}</p>
+            <p className="mt-4 text-cream/75">{t("tastingNotesLine", { notes: product.tasting_notes })}</p>
           ) : null}
-          {product.short_description ? <p className="mt-4 leading-relaxed">{product.short_description}</p> : null}
+          {product.short_description ? (
+            <p className="font-subtitle mt-4 leading-relaxed text-cream/80">{product.short_description}</p>
+          ) : null}
 
           {variants.length > 1 ? (
             <div className="mt-8">
-              <p className="text-xs uppercase tracking-[0.16em] text-muted">Size</p>
+              <p className="text-xs uppercase tracking-[0.16em] text-cream/70">{t("size")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {variants.map((variant) => (
                   <button
@@ -106,7 +132,7 @@ export function ProductDetail({ product }: { product: Product }) {
                     type="button"
                     onClick={() => setSelectedId(variant.id)}
                     className={`border px-4 py-2 text-sm ${
-                      selectedId === variant.id ? "border-forest bg-forest text-cream" : "border-ink/15"
+                      selectedId === variant.id ? "border-gold bg-gold text-forest-dark" : "border-cream/25"
                     }`}
                   >
                     {variant.name}
@@ -116,7 +142,7 @@ export function ProductDetail({ product }: { product: Product }) {
               </div>
             </div>
           ) : selected?.weight_label ? (
-            <p className="mt-6 text-sm text-muted">{selected.weight_label}</p>
+            <p className="mt-6 text-sm text-cream/70">{selected.weight_label}</p>
           ) : null}
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -126,14 +152,14 @@ export function ProductDetail({ product }: { product: Product }) {
               min={1}
               max={product.allow_backorder ? undefined : selected?.stock_quantity}
             />
-            <Button onClick={add} disabled={busy || !selected || !inStock}>
-              {!selected ? "Unavailable" : !inStock ? "Sold out" : busy ? "Adding…" : "Add to bag"}
+            <Button variant="gold" onClick={add} disabled={busy || !selected || !inStock}>
+              {!selected ? t("unavailable") : !inStock ? t("soldOut") : busy ? `${t("adding")}…` : t("addToBag")}
             </Button>
           </div>
-          {!inStock ? <p className="mt-3 text-sm text-muted">This size is currently unavailable.</p> : null}
-          {product.origin ? <p className="mt-6 text-sm text-muted">Origin — {product.origin}</p> : null}
+          {!inStock ? <p className="mt-3 text-sm text-cream/70">{t("thisSizeUnavailable")}</p> : null}
+          {product.origin ? <p className="mt-6 text-sm text-cream/70">{t("originLine", { origin: product.origin })}</p> : null}
           {product.description ? (
-            <div className="prose-bch mt-8 whitespace-pre-wrap text-sm">{product.description}</div>
+            <div className="prose-bch mt-8 whitespace-pre-wrap text-sm text-cream/80">{product.description}</div>
           ) : null}
         </div>
       </div>
@@ -141,12 +167,12 @@ export function ProductDetail({ product }: { product: Product }) {
         <section className="mt-20 border-t border-ink/8 pt-16" data-reveal>
           <div className="flex items-end justify-between gap-4">
             <div>
-              <p className="eyebrow text-gold">The shelf</p>
-              <h2 className="font-display mt-3 text-2xl md:text-3xl">You may also like</h2>
+              <p className="eyebrow text-gold">{t("theShelf")}</p>
+              <h2 className="font-display mt-3 text-2xl md:text-3xl">{t("youMayAlsoLike")}</h2>
             </div>
             {categorySlug(product) ? (
-              <Link href={`/shop/${categorySlug(product)}`} className="text-sm text-forest">
-                Shop the collection
+              <Link href={`/shop/${categorySlug(product)}`} className="text-sm text-gold">
+                {t("shopTheCollection")}
               </Link>
             ) : null}
           </div>

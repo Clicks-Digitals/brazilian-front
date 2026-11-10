@@ -32,10 +32,21 @@ export function normalizeSettings(raw: unknown): StoreSettings {
     about: String(merged.about || BRAND.about),
     story: String(merged.story || BRAND.story),
     currency: String(merged.currency || BRAND.currency),
-    social: (merged.social as Record<string, string>) || {},
+    social: (() => {
+      const incoming = (merged.social as Record<string, string>) || {};
+      const instagram = incoming.instagram?.includes("brazilian_coffee_house")
+        ? incoming.instagram
+        : BRAND.instagram;
+      return { ...incoming, instagram };
+    })(),
     branches: Array.isArray(merged.branches) && merged.branches.length
       ? merged.branches
-      : BRAND.branches.map((b) => ({ name: b.name, city: b.city })),
+      : BRAND.branches.map((b) => ({
+          name: b.name,
+          name_ar: b.nameAr,
+          city: b.city,
+          phone: "phone" in b ? b.phone : undefined,
+        })),
     delivery: merged.delivery,
     homepage: merged.homepage,
     announcement: merged.announcement,

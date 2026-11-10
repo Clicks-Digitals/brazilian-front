@@ -1,8 +1,10 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Alexandria } from "next/font/google";
 import { IntroSplash } from "@/components/layout/intro-splash";
 import { Providers } from "@/components/providers";
 import { BRAND, SITE_URL } from "@/lib/brand";
+import { getLocale } from "@/lib/locale-server";
 import "./globals.css";
 
 const careem = localFont({
@@ -11,6 +13,13 @@ const careem = localFont({
     { path: "./fonts/Careem-Bold.otf", weight: "700", style: "normal" },
   ],
   variable: "--font-careem",
+  display: "swap",
+});
+
+const alexandria = Alexandria({
+  subsets: ["arabic", "latin"],
+  weight: ["400", "700"],
+  variable: "--font-alexandria",
   display: "swap",
 });
 
@@ -45,12 +54,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const locale = await getLocale();
   return (
-    <html lang="en" className={careem.variable}>
-      <body className={`${careem.className} min-h-screen bg-white font-sans text-ink antialiased`}>
+    <html
+      lang={locale === "ar" ? "ar" : "en"}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className={`${careem.variable} ${alexandria.variable} ${locale === "ar" ? "is-ar" : ""}`}
+      suppressHydrationWarning
+    >
+      <body className="min-h-screen bg-forest font-sans text-cream antialiased">
         <IntroSplash />
-        <Providers>{children}</Providers>
+        <Providers initialLocale={locale}>{children}</Providers>
       </body>
     </html>
   );

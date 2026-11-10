@@ -2,25 +2,23 @@ import { ReloadError } from "@/components/ui/reload-error";
 import { HeroSlider } from "@/features/storefront/hero-slider";
 import { PackJourney } from "@/features/storefront/pack-journey";
 import {
-  BrandIntro,
   CategoryGrid,
   JournalGrid,
   NewsletterBand,
   ProductRail,
   PromoBanner,
-  StoryBand,
 } from "@/features/storefront/home-sections";
+import { OriginsGlobe } from "@/features/storefront/origins-globe";
 import { FeaturedShelf } from "@/features/storefront/featured-shelf";
 import { BRAND, SITE_URL } from "@/lib/brand";
 import { errorMessage } from "@/lib/http";
-import { asList, normalizeSettings } from "@/lib/settings";
+import { asList } from "@/lib/settings";
 import { getStorefront } from "@/lib/storefront-data";
 import type { Article, Banner, StorefrontPayload } from "@/types/api";
 
 export default async function HomePage() {
   try {
     const data = await getStorefront().catch(() => ({} as StorefrontPayload));
-    const settings = normalizeSettings(data.settings);
     const heroes =
       data.hero_banners ||
       (data.banners || []).filter((b) => !b.placement || b.placement === "hero");
@@ -51,18 +49,15 @@ export default async function HomePage() {
           <div data-home-page>
             <HeroSlider banners={heroes} />
           </div>
-          <BrandIntro settings={settings} />
           <CategoryGrid categories={categories} />
           <FeaturedShelf products={data.featured_products || []} />
           <PromoBanner banners={promos} />
         </PackJourney>
         <ProductRail
-          eyebrow="Just in"
-          title="New arrivals"
           products={data.new_products || []}
           href="/shop?ordering=-created_at"
         />
-        <StoryBand settings={settings} />
+        <OriginsGlobe />
         <JournalGrid articles={journal} />
         <NewsletterBand />
       </>

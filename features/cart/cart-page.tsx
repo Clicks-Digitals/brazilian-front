@@ -8,13 +8,16 @@ import { Quantity } from "@/components/ui/quantity";
 import { EmptyState, ErrorState, PageHeader, Skeleton } from "@/components/ui/states";
 import { SmartImage } from "@/components/ui/smart-image";
 import { applyDiscountCode, fetchCart, removeCartItem, updateCartItem } from "@/features/cart/cart-api";
+import { useLocale } from "@/features/i18n/locale-provider";
 import { toast } from "@/features/ui/toast-store";
+import { localizedName } from "@/lib/i18n";
 import { formatMoney } from "@/lib/format";
 import { errorMessage } from "@/lib/http";
 import { pickImage } from "@/lib/settings";
 import type { Cart } from "@/types/api";
 
 export function CartPageClient() {
+  const { locale, t } = useLocale();
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,7 +30,7 @@ export function CartPageClient() {
     try {
       setCart(await fetchCart());
     } catch (err) {
-      setError(errorMessage(err, "The bag could not be loaded."));
+      setError(errorMessage(err, t("bagCouldNotLoad")));
     } finally {
       setLoading(false);
     }
@@ -49,22 +52,23 @@ export function CartPageClient() {
   if (!cart || !cart.items?.length) {
     return (
       <EmptyState
-        title="Your bag is empty"
-        description="Add a roast from the shop when you are ready."
-        action={<Button href="/shop">Shop coffee</Button>}
+        title={t("bagEmpty")}
+        description={t("bagEmptyBlurb")}
+        action={<Button href="/shop">{t("shopCoffeeCta")}</Button>}
       />
     );
   }
 
   return (
     <>
-      <PageHeader eyebrow="Bag" title="Your bag" />
+      <PageHeader eyebrow={t("bag")} title={t("yourBag")} />
       <div className="mx-auto grid max-w-6xl gap-12 px-6 pb-24 lg:grid-cols-[1fr_20rem]">
-        <ul className="divide-y divide-ink/10">
+        <ul className="divide-y divide-cream/15">
           {cart.items.map((item) => {
             const variant = typeof item.variant === "object" ? item.variant : null;
             const product = item.product || variant?.product;
-            const name = item.product_name || product?.name || variant?.name || "Coffee";
+            const name =
+              localizedName(locale, product) || item.product_name || product?.name || variant?.name || t("coffee");
             const slug = item.product_slug || product?.slug;
             const variantName = item.variant_name || variant?.name;
             const image = item.image || variant?.image || (product ? pickImage(product) : null);
@@ -80,7 +84,7 @@ export function CartPageClient() {
                   <Link href={slug ? `/products/${slug}` : "/shop"} className="font-medium">
                     {name}
                   </Link>
-                  <p className="text-sm text-muted">{variantName}</p>
+                  <p className="text-sm text-cream/70">{variantName}</p>
                   <p className="mt-1 text-sm">{formatMoney(price || "0")}</p>
                   <div className="mt-3 flex items-center gap-4">
                     <Quantity
@@ -91,7 +95,7 @@ export function CartPageClient() {
                         try {
                           setCart(await updateCartItem(item.id, quantity));
                         } catch (err) {
-                          toast("Could not update", errorMessage(err), "error");
+                          toast(t("couldNotUpdate"), errorMessage(err), "error");
                         } finally {
                           setBusyId(null);
                         }
@@ -99,20 +103,20 @@ export function CartPageClient() {
                     />
                     <button
                       type="button"
-                      className="text-sm text-muted hover:text-ink"
+                      className="text-sm text-cream/70 hover:text-gold"
                       disabled={busyId === item.id}
                       onClick={async () => {
                         setBusyId(item.id);
                         try {
                           setCart(await removeCartItem(item.id));
                         } catch (err) {
-                          toast("Could not remove", errorMessage(err), "error");
+                          toast(t("couldNotRemove"), errorMessage(err), "error");
                         } finally {
                           setBusyId(null);
                         }
                       }}
                     >
-                      Remove
+                      {t("remove")}
                     </button>
                   </div>
                 </div>
@@ -121,25 +125,25 @@ export function CartPageClient() {
             );
           })}
         </ul>
-        <aside className="h-fit space-y-4 border border-ink/10 bg-cream p-6">
-          <h2 className="text-lg font-medium">Summary</h2>
-          <p className="flex justify-between text-sm">
-            <span>Subtotal</span>
+        <aside className="h-fit space-y-4 border border-cream/15 bg-cream/10 p-6 text-cream">
+          <h2 className="text-lg font-medium">{t("summary")}</h2>
+          <p className="flex justify-between text-sm text-cream/80">
+            <span>{t("subtotal")}</span>
             <span>{formatMoney(cart.subtotal || "0")}</span>
           </p>
           {Number(cart.discount_amount || 0) > 0 ? (
-            <p className="flex justify-between text-sm text-forest">
-              <span>Discount {cart.discount_code ? `(${cart.discount_code})` : ""}</span>
+            <p className="flex justify-between text-sm text-gold">
+              <span>{t("discount")} {cart.discount_code ? `(${cart.discount_code})` : ""}</span>
               <span>-{formatMoney(cart.discount_amount || "0")}</span>
             </p>
           ) : null}
-          <p className="flex justify-between text-sm">
-            <span>Delivery</span>
-            <span>{cart.delivery_fee ? formatMoney(cart.delivery_fee) : "Calculated at checkout"}</span>
+          <p className="flex justify-between text-sm text-cream/80">
+            <span>{t("delivery")}</span>
+            <span>{cart.delivery_fee ? formatMoney(cart.delivery_fee) : t("calculatedAtCheckout")}</span>
           </p>
           <div className="gold-rule" />
           <p className="flex justify-between">
-            <span>Total</span>
+            <span>{t("total")}</span>
             <span>{formatMoney(cart.total || cart.subtotal || "0", cart.currency)}</span>
           </p>
           <form
@@ -148,23 +152,23 @@ export function CartPageClient() {
               event.preventDefault();
               try {
                 setCart(await applyDiscountCode(code));
-                toast("Code applied", code, "success");
+                toast(t("codeApplied"), code, "success");
               } catch (err) {
-                toast("Code not applied", errorMessage(err), "error");
+                toast(t("codeNotApplied"), errorMessage(err), "error");
               }
             }}
           >
-            <Field label="Discount code">
-              <Input value={code} onChange={(e) => setCode(e.target.value)} />
+            <Field tone="forest" label={t("discountCode")}>
+              <Input tone="forest" value={code} onChange={(e) => setCode(e.target.value)} />
             </Field>
-            <Button type="submit" variant="secondary" className="w-full" disabled={!code}>
-              Apply
+            <Button type="submit" variant="secondary" className="w-full border-cream/25 text-cream hover:border-gold hover:text-gold" disabled={!code}>
+              {t("apply")}
             </Button>
           </form>
-          <Button href="/checkout" className="w-full">
-            Checkout
+          <Button href="/checkout" variant="gold" className="w-full">
+            {t("checkout")}
           </Button>
-          <p className="text-xs text-muted">Cash on delivery only. Totals are confirmed by the server.</p>
+          <p className="text-xs text-cream/55">{t("codOnly")}</p>
         </aside>
       </div>
     </>

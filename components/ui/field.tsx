@@ -1,42 +1,76 @@
 import { cn } from "@/lib/cn";
 import type { InputHTMLAttributes, ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
 
-const fieldClass =
-  "w-full border border-ink/15 bg-paper px-3 py-2.5 text-sm text-ink placeholder:text-muted/80 outline-none transition focus:border-gold";
+type FieldTone = "light" | "forest";
+
+function fieldSurface(tone: FieldTone) {
+  return cn(
+    "w-full min-h-12 border px-4 py-3 text-base outline-none transition",
+    tone === "forest"
+      ? "border-cream/15 bg-cream/10 text-cream caret-cream placeholder:text-cream/40 focus:border-cream/40 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_#305b4a] [&:-webkit-autofill]:[-webkit-text-fill-color:var(--cream)]"
+      : "border-ink/15 bg-white text-forest placeholder:text-muted/70 focus:border-gold",
+  );
+}
 
 export function Field({
   label,
   hint,
   error,
   className,
+  tone = "light",
   children,
 }: {
   label: string;
   hint?: string;
   error?: string;
   className?: string;
+  tone?: FieldTone;
   children: ReactNode;
 }) {
   return (
     <label className={cn("block space-y-1.5", className)}>
-      <span className="text-xs tracking-wide text-ink">{label}</span>
+      <span
+        className={
+          tone === "forest"
+            ? "text-[11px] uppercase tracking-[0.14em] text-cream/80"
+            : "text-xs tracking-wide text-ink"
+        }
+      >
+        {label}
+      </span>
       {children}
-      {hint && !error ? <span className="block text-xs text-muted">{hint}</span> : null}
-      {error ? <span className="block text-xs text-red-800">{error}</span> : null}
+      {hint && !error ? (
+        <span className={cn("block text-xs", tone === "forest" ? "text-cream/55" : "text-muted")}>{hint}</span>
+      ) : null}
+      {error ? (
+        <span className={cn("block text-xs", tone === "forest" ? "text-gold" : "text-red-800")}>{error}</span>
+      ) : null}
     </label>
   );
 }
 
-export function Input({ className, ...props }: InputHTMLAttributes<HTMLInputElement>) {
-  return <input className={cn(fieldClass, className)} {...props} />;
+export function Input({
+  className,
+  tone = "light",
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & { tone?: FieldTone }) {
+  return <input className={cn(fieldSurface(tone), className)} {...props} />;
 }
 
-export function Textarea({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return <textarea className={cn(fieldClass, "min-h-32", className)} {...props} />;
+export function Textarea({
+  className,
+  tone = "light",
+  ...props
+}: TextareaHTMLAttributes<HTMLTextAreaElement> & { tone?: FieldTone }) {
+  return <textarea className={cn(fieldSurface(tone), "min-h-32", className)} {...props} />;
 }
 
-export function Select({ className, ...props }: SelectHTMLAttributes<HTMLSelectElement>) {
-  return <select className={cn(fieldClass, className)} {...props} />;
+export function Select({
+  className,
+  tone = "light",
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & { tone?: FieldTone }) {
+  return <select className={cn(fieldSurface(tone), className)} {...props} />;
 }
 
 export function Checkbox({

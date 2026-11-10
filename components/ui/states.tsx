@@ -1,6 +1,9 @@
+"use client";
+
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
+import { useLocale } from "@/features/i18n/locale-provider";
 
 export function Skeleton({ className }: { className?: string }) {
   return <div className={cn("animate-pulse bg-cream", className)} />;
@@ -26,18 +29,19 @@ export function EmptyState({
   description?: string;
   action?: ReactNode;
 }) {
+  const { t } = useLocale();
   return (
     <div className="mx-auto max-w-lg py-16 text-center">
-      <p className="eyebrow text-gold">Nothing here yet</p>
-      <h2 className="font-display mt-3 text-2xl text-ink">{title}</h2>
-      {description ? <p className="font-subtitle mt-3 text-muted">{description}</p> : null}
+      <p className="eyebrow text-gold">{t("nothingHereYet")}</p>
+      <h2 className="font-display mt-3 text-2xl text-cream">{title}</h2>
+      {description ? <p className="font-subtitle mt-3 text-cream/70">{description}</p> : null}
       {action ? <div className="mt-6 flex justify-center">{action}</div> : null}
     </div>
   );
 }
 
 export function ErrorState({
-  title = "We could not load this just now",
+  title,
   description,
   onRetry,
 }: {
@@ -45,16 +49,17 @@ export function ErrorState({
   description?: string;
   onRetry?: () => void;
 }) {
+  const { t } = useLocale();
   return (
     <div className="mx-auto max-w-lg py-16 text-center">
-      <p className="eyebrow text-gold">Connection</p>
-      <h2 className="font-display mt-3 text-2xl text-ink">{title}</h2>
-      <p className="font-subtitle mt-3 text-muted">
-        {description || "The store could not reach Brazilian Coffee House. Please try again."}
+      <p className="eyebrow text-gold">{t("connection")}</p>
+      <h2 className="font-display mt-3 text-2xl text-cream">{title || t("couldNotLoadNow")}</h2>
+      <p className="font-subtitle mt-3 text-cream/70">
+        {description || t("storeCouldNotReach")}
       </p>
       {onRetry ? (
         <Button className="mt-6" onClick={onRetry} type="button">
-          Try again
+          {t("tryAgain")}
         </Button>
       ) : null}
     </div>
@@ -73,8 +78,8 @@ export function PageHeader({
   return (
     <header className="mx-auto max-w-3xl px-6 pb-10 pt-16 text-center md:pt-24">
       {eyebrow ? <p className="eyebrow text-gold">{eyebrow}</p> : null}
-      <h1 className="font-display mt-3 text-4xl tracking-tight text-ink md:text-5xl">{title}</h1>
-      {description ? <p className="font-subtitle mt-4 text-muted">{description}</p> : null}
+      <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{title}</h1>
+      {description ? <p className="font-subtitle mt-4 text-cream/75">{description}</p> : null}
     </header>
   );
 }

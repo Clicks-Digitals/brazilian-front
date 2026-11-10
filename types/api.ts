@@ -196,7 +196,7 @@ export type CartItem = {
     | (ProductVariant & {
         product?: Pick<Product, "id" | "name" | "slug" | "primary_image">;
       });
-  product?: Pick<Product, "id" | "name" | "slug" | "primary_image" | "tasting_notes">;
+  product?: Pick<Product, "id" | "name" | "name_ar" | "slug" | "primary_image" | "tasting_notes">;
 };
 
 export type Cart = {

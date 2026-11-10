@@ -9,6 +9,8 @@ import { toast } from "@/features/ui/toast-store";
 import { cn } from "@/lib/cn";
 import { formatMoney } from "@/lib/format";
 import { errorMessage } from "@/lib/http";
+import { useLocale } from "@/features/i18n/locale-provider";
+import { localizedName } from "@/lib/i18n";
 import { pickImage } from "@/lib/settings";
 import type { Product } from "@/types/api";
 
@@ -23,6 +25,7 @@ export function ProductCard({
   media?: ReactNode;
   title?: string;
 }) {
+  const { locale, t } = useLocale();
   const [busy, setBusy] = useState(false);
   const [qty, setQty] = useState(1);
   const variant = product.default_variant || product.variants?.find((item) => item.is_active !== false);
@@ -33,19 +36,20 @@ export function ProductCard({
   const compare = variant?.compare_at_price || product.compare_at_price;
   const maxQty = variant?.stock_quantity && variant.stock_quantity > 0 ? variant.stock_quantity : undefined;
   const canAdd = Boolean(variantId) && inStock !== false;
-  const label = !variantId ? "View" : inStock === false ? "Sold out" : busy ? "Adding" : "Add to cart";
+  const label = !variantId ? t("view") : inStock === false ? t("soldOut") : busy ? t("adding") : t("addToCart");
+  const displayTitle = title || localizedName(locale, product);
 
   async function quickAdd() {
     if (!variantId) {
-      toast("This product has no purchasable size yet", undefined, "error");
+      toast(t("noPurchasableSize"), undefined, "error");
       return;
     }
     setBusy(true);
     try {
-      await addToCart(variantId, qty);
-      toast("Added to bag", `${qty} × ${product.name}`, "success");
+      await addToCart(variantId, qty, product);
+      toast(t("addedToBag"), `${qty} × ${displayTitle}`, "success");
     } catch (error) {
-      toast("Could not add to bag", errorMessage(error), "error");
+      toast(t("couldNotAdd"), errorMessage(error), "error");
     } finally {
       setBusy(false);
     }
@@ -57,23 +61,23 @@ export function ProductCard({
         {media ?? (
           <SmartImage
             src={image}
-            alt={product.name}
+            alt={displayTitle}
             className="aspect-square w-full bg-white ring-1 ring-forest/10"
             imgClassName="p-3 transition duration-700 ease-out group-hover:scale-[1.03] sm:p-5 md:p-8"
           />
         )}
-        <h3 className="font-display mt-3 min-h-[2.6em] break-words text-[15px] leading-snug text-ink transition group-hover:text-forest md:mt-5 md:min-h-[2.5em] md:text-xl">
-          {title || product.name}
+        <h3 className="font-display mt-3 min-h-[2.6em] break-words text-[15px] leading-snug text-cream transition group-hover:text-gold md:mt-5 md:min-h-[2.5em] md:text-xl">
+          {displayTitle}
         </h3>
       </Link>
       {hidePrice ? (
-        <p className="font-subtitle mt-auto pt-3 text-sm text-muted">
-          {product.origin || product.roast_level || "House roast"}
+        <p className="font-subtitle mt-auto pt-3 text-sm text-cream/70">
+          {product.origin || product.roast_level || t("houseRoast")}
         </p>
       ) : (
         <div className="mt-auto min-w-0 space-y-3 pt-3">
-          <p className="font-subtitle text-sm text-muted">
-            {price ? formatMoney(price) : "Price in store"}
+          <p className="font-subtitle text-sm text-cream/70">
+            {price ? formatMoney(price) : t("priceInStore")}
             {compare ? <span className="ml-2 line-through opacity-60">{formatMoney(compare)}</span> : null}
           </p>
           {canAdd ? (
@@ -91,13 +95,13 @@ export function ProductCard({
                 type="button"
                 onClick={quickAdd}
                 disabled={busy}
-                className="h-8 w-full shrink-0 rounded-lg bg-forest px-3 text-[10px] uppercase tracking-[0.14em] text-cream transition hover:bg-forest-dark disabled:opacity-60 sm:w-auto"
+                className="h-8 w-full shrink-0 rounded-lg bg-gold px-3 text-[10px] uppercase tracking-[0.14em] text-forest-dark transition hover:bg-white disabled:opacity-60 sm:w-auto"
               >
                 {label}
               </button>
             </div>
           ) : (
-            <Link href={`/products/${product.slug}`} className="text-[11px] uppercase tracking-[0.16em] text-muted">
+            <Link href={`/products/${product.slug}`} className="text-[11px] uppercase tracking-[0.16em] text-cream/70">
               {label}
             </Link>
           )}

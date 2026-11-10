@@ -3,6 +3,7 @@
 import { useAuthStore } from "@/features/account/auth-store";
 import { useCartStore } from "@/features/cart/cart-store";
 import {
+  API_BASE,
   ApiError,
   errorMessage,
   joinApi,
@@ -94,7 +95,17 @@ export async function apiFetch<T>(path: string, options: RequestOptions = {}): P
     body: body === undefined ? undefined : isForm ? (body as FormData) : JSON.stringify(body),
   };
 
-  let res = await fetch(url, fetchInit);
+  let res: Response;
+  try {
+    res = await fetch(url, fetchInit);
+  } catch (error) {
+    if (typeof window === "undefined") throw error;
+    try {
+      res = await fetch(url.replace(API_BASE, "/api/v1"), fetchInit);
+    } catch {
+      throw error;
+    }
+  }
   let data = await readBody(res);
 
   if (res.status === 401 && auth && !path.includes("/auth/")) {

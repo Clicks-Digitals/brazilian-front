@@ -1,6 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import { SmartImage } from "@/components/ui/smart-image";
+import { useLocale } from "@/features/i18n/locale-provider";
 import { categoryCover } from "@/lib/category-media";
+import { localizedName } from "@/lib/i18n";
 import type { Category } from "@/types/api";
 
 export function CategoryCards({
@@ -10,6 +14,7 @@ export function CategoryCards({
   categories: Category[];
   limit?: number;
 }) {
+  const { locale, t } = useLocale();
   const items = [...categories]
     .sort((a, b) => (a.display_order ?? 99) - (b.display_order ?? 99))
     .slice(0, limit);
@@ -22,21 +27,23 @@ export function CategoryCards({
         <Link
           key={category.slug}
           href={`/shop/${category.slug}`}
-          className="group overflow-hidden rounded-2xl bg-white ring-1 ring-forest/10 transition duration-300 hover:-translate-y-1 hover:ring-forest/30"
+          className="category-card group overflow-hidden border border-cream/15 bg-cream/10 transition duration-300 hover:border-cream/35"
         >
           <SmartImage
             src={categoryCover(category)}
-            alt={category.name}
+            alt={localizedName(locale, category)}
             fit="cover"
-            className="aspect-[4/3] w-full bg-forest-dark"
+            className="aspect-[4/3] w-full bg-forest"
             imgClassName="transition duration-700 group-hover:scale-[1.05]"
           />
-          <div className="border-t border-forest/8 px-4 py-4 md:px-5">
-            <h3 className="font-subtitle text-lg font-normal leading-tight text-forest md:text-xl">{category.name}</h3>
+          <div className="border-t border-cream/15 px-4 py-4 md:px-5">
+            <h3 className="font-subtitle text-lg font-normal leading-tight text-cream md:text-xl">
+              {localizedName(locale, category)}
+            </h3>
             <p className="mt-2 text-[11px] uppercase tracking-[0.16em] text-gold">
               {category.product_count
-                ? `${category.product_count} ${category.product_count === 1 ? "item" : "items"}`
-                : "Shop"}
+                ? `${category.product_count} ${category.product_count === 1 ? t("item") : t("items")}`
+                : t("shop")}
             </p>
           </div>
         </Link>

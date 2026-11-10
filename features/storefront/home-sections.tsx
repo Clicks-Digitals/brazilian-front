@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ProductGrid } from "@/features/shop/product-card";
 import { CategoryCards } from "@/features/storefront/category-cards";
 import { NewsletterForm } from "@/features/storefront/newsletter-form";
+import { useLocale } from "@/features/i18n/locale-provider";
 import { articleCover } from "@/lib/article-media";
 import { BRAND } from "@/lib/brand";
 import { formatDate } from "@/lib/format";
@@ -16,85 +19,23 @@ function promoHref(url?: string) {
   return url;
 }
 
-export function BrandIntro({ settings }: { settings: StoreSettings }) {
-  const branches = settings.branches?.length ? settings.branches.length : BRAND.branches.length;
-  return (
-    <section id="home-about" className="relative bg-white">
-      <div className="pointer-events-none absolute -left-24 top-10 size-72 rounded-full bg-forest/8 blur-3xl" aria-hidden />
-      <div className="pointer-events-none absolute -right-16 bottom-0 size-80 rounded-full bg-gold/15 blur-3xl" aria-hidden />
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-6 py-16 md:grid-cols-12 md:gap-10 md:py-24">
-        <div className="about-cover relative md:col-span-6 lg:col-span-6">
-          <div id="pack-dock-about" className="pack-dock pack-dock-about" aria-hidden />
-          <div className="about-photo relative aspect-[4/5] overflow-hidden rounded-[2rem] bg-linen shadow-[0_30px_60px_rgba(15,44,34,0.12)] sm:aspect-[5/6]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/assets/editorial/mill.jpg"
-              alt="The mill and house roasting"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          </div>
-          <div className="about-photo absolute -bottom-8 -right-2 w-[46%] overflow-hidden rounded-3xl border-[6px] border-white bg-linen shadow-xl sm:-right-6 md:w-[42%]">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/assets/editorial/turkish.jpg" alt="Turkish coffee of the house" className="aspect-[4/5] w-full object-cover" />
-          </div>
-          <div className="about-photo absolute top-5 left-5 rounded-full bg-white/90 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-forest shadow-sm">
-            Est. {BRAND.established}
-          </div>
-        </div>
-
-        <div className="about-copy md:col-span-6 lg:col-span-6 md:pl-6 lg:pl-10" data-reveal>
-          <p className="eyebrow text-gold">About us</p>
-          <h2 className="font-display mt-4 max-w-lg text-3xl leading-[1.12] text-forest md:text-5xl">
-            A mill in Kuwait. A house in Jordan.
-          </h2>
-          <span className="mt-6 block h-px w-16 bg-gold" />
-          <p className="font-subtitle mt-6 max-w-xl text-base leading-relaxed text-muted md:text-lg">
-            {settings.about || BRAND.about}
-          </p>
-          <div className="mt-8 grid max-w-md grid-cols-3 gap-3">
-            {[
-              { k: String(BRAND.established), v: "Kuwait" },
-              { k: String(BRAND.jordanSince), v: "Jordan" },
-              { k: String(branches), v: "Branches" },
-            ].map((stat) => (
-              <div key={stat.v} className="rounded-2xl bg-linen px-3 py-4 text-center">
-                <p className="font-display text-xl text-forest md:text-2xl">{stat.k}</p>
-                <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-muted">{stat.v}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
-            <Link href="/about" className="link-arrow">
-              Read our story
-              <span aria-hidden>→</span>
-            </Link>
-            <Link href="/contact" className="link-arrow">
-              Visit a branch
-              <span aria-hidden>→</span>
-            </Link>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export function CategoryGrid({ categories }: { categories: Category[] }) {
+  const { t } = useLocale();
   if (!categories.length) return null;
   return (
-    <section id="home-categories" className="relative bg-linen py-14 md:py-24">
+    <section id="home-categories" className="relative bg-forest py-14 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="category-cover flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between" data-reveal>
           <div>
-            <p className="eyebrow text-gold">Shop by category</p>
-            <h2 className="font-display mt-3 text-2xl text-forest sm:text-3xl md:text-5xl">Choose a brew</h2>
+            <p className="eyebrow text-gold">{t("shopByCategory")}</p>
+            <h2 className="font-display mt-3 text-2xl text-cream sm:text-3xl md:text-5xl">{t("chooseABrew")}</h2>
           </div>
           <Link href="/categories" className="link-arrow">
-            All categories
-            <span aria-hidden>→</span>
+            {t("allCategories")}
+            <span aria-hidden className="rtl:inline-block rtl:rotate-180">→</span>
           </Link>
         </div>
-        <div className="category-cover relative mt-10 md:mt-14">
+        <div className="relative mt-10 md:mt-14">
           <div className="relative">
             <CategoryCards categories={categories} limit={8} />
             <div id="pack-dock-categories-start" className="pack-dock pack-dock-categories-start" aria-hidden />
@@ -113,34 +54,37 @@ export function ProductRail({
   href,
   limit = 4,
 }: {
-  title: string;
-  eyebrow: string;
+  title?: string;
+  eyebrow?: string;
   products: Product[];
   href: string;
   limit?: number;
 }) {
+  const { t } = useLocale();
+  const railTitle = title || t("newArrivals");
+  const railEyebrow = eyebrow || t("justIn");
   if (!products.length) {
     return (
-      <section className="bg-white py-16" data-reveal>
+      <section className="bg-forest py-16" data-reveal>
         <div className="mx-auto max-w-7xl px-6">
-          <p className="eyebrow text-gold">{eyebrow}</p>
-          <h2 className="font-display mt-3 text-3xl">{title}</h2>
-          <p className="mt-4 text-muted">Nothing in this collection yet.</p>
+          <p className="eyebrow text-gold">{railEyebrow}</p>
+          <h2 className="font-display mt-3 text-3xl">{railTitle}</h2>
+          <p className="mt-4 text-cream/75">{t("nothingYet")}</p>
         </div>
       </section>
     );
   }
   return (
-    <section className="bg-white py-20 md:py-24">
+    <section className="bg-forest py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4" data-reveal>
           <div>
-            <p className="eyebrow text-gold">{eyebrow}</p>
-            <h2 className="font-display mt-3 text-3xl md:text-4xl">{title}</h2>
+            <p className="eyebrow text-gold">{railEyebrow}</p>
+            <h2 className="font-display mt-3 text-3xl md:text-4xl">{railTitle}</h2>
           </div>
           <Link href={href} className="link-arrow">
-            View all
-            <span aria-hidden>→</span>
+            {t("viewAll")}
+            <span aria-hidden className="rtl:inline-block rtl:rotate-180">→</span>
           </Link>
         </div>
         <div className="mt-12">
@@ -152,18 +96,19 @@ export function ProductRail({
 }
 
 export function PromoBanner({ banners }: { banners: Banner[] }) {
+  const { t } = useLocale();
   const banner = banners[0];
   return (
-    <section id="home-banner" className="relative my-8 w-full overflow-x-clip bg-[#eff5f1] text-ink">
+    <section id="home-banner" className="relative my-8 w-full overflow-x-clip bg-forest text-cream">
       <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 grid-cols-1 md:grid-cols-[minmax(0,1fr)_min(36rem,52%)] md:gap-8 md:py-36">
         <div className="relative z-20 max-w-xl">
-          <p className="eyebrow text-gold">Season</p>
+          <p className="eyebrow text-gold">{t("season")}</p>
           <span className="mt-4 block h-px w-10 bg-gold/80" />
-          <h2 className="font-display mt-5 text-4xl leading-[1.08] text-forest md:text-6xl">
-            {banner?.title || "Roasted for the house cup."}
+          <h2 className="font-display mt-5 text-4xl leading-[1.08] text-cream md:text-6xl">
+            {banner?.title || t("roastedForTheHouseCup")}
           </h2>
           {banner?.subtitle ? (
-            <p className="font-subtitle mt-5 max-w-md text-base leading-relaxed text-muted">{banner.subtitle}</p>
+            <p className="font-subtitle mt-5 max-w-md text-base leading-relaxed text-cream/75">{banner.subtitle}</p>
           ) : null}
           {banner?.cta_label ? (
             <div className="mt-8">
@@ -174,7 +119,7 @@ export function PromoBanner({ banners }: { banners: Banner[] }) {
           ) : (
             <div className="mt-8">
               <Button variant="gold" href="/shop">
-                Shop the collection
+                {t("shopTheCollection")}
               </Button>
             </div>
           )}
@@ -186,25 +131,28 @@ export function PromoBanner({ banners }: { banners: Banner[] }) {
 }
 
 export function StoryBand({ settings }: { settings: StoreSettings }) {
+  const { locale, t } = useLocale();
   return (
-    <section className="bg-white py-16 md:py-24" data-reveal>
+    <section className="bg-forest py-16 md:py-24" data-reveal>
       <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 md:grid-cols-2 md:gap-16">
         <div className="relative min-h-[18rem] overflow-hidden rounded-3xl md:min-h-[28rem]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/assets/editorial/cafe.jpg"
-            alt="Brazilian Coffee House in Jordan"
+            alt={locale === "ar" ? BRAND.nameAr : BRAND.name}
             className="absolute inset-0 h-full w-full object-cover"
           />
         </div>
         <div>
-          <p className="eyebrow text-gold">Since {BRAND.established}</p>
-          <p className="mt-3 text-sm tracking-[0.16em] text-forest uppercase">Jordan {BRAND.jordanSince}</p>
-          <h2 className="font-display mt-5 text-3xl text-forest md:text-4xl">From Kuwait to Jordan</h2>
-          <p className="font-subtitle mt-6 max-w-2xl text-lg leading-relaxed text-muted">{settings.story || BRAND.story}</p>
+          <p className="eyebrow text-gold">{t("since")} {BRAND.established}</p>
+          <p className="mt-3 text-sm tracking-[0.16em] text-gold uppercase">{t("jordan")} {BRAND.jordanSince}</p>
+          <h2 className="font-display mt-5 text-3xl text-cream md:text-4xl">{t("fromKuwaitToJordan")}</h2>
+          <p className="font-subtitle mt-6 max-w-2xl text-lg leading-relaxed text-cream/75">
+            {locale === "ar" ? t("story") : settings.story || BRAND.story}
+          </p>
           <Link href="/about" className="link-arrow mt-8">
-            About the house
-            <span aria-hidden>→</span>
+            {t("aboutTheHouse")}
+            <span aria-hidden className="rtl:inline-block rtl:rotate-180">→</span>
           </Link>
         </div>
       </div>
@@ -213,23 +161,24 @@ export function StoryBand({ settings }: { settings: StoreSettings }) {
 }
 
 export function JournalGrid({ articles }: { articles: Article[] }) {
+  const { t } = useLocale();
   const notes = articles.slice(0, 3);
   return (
-    <section className="border-y border-forest/10 bg-linen py-20 md:py-28">
+    <section className="border-y border-cream/10 bg-forest py-20 md:py-28">
       <div className="mx-auto max-w-7xl px-6">
         <div className="flex items-end justify-between gap-4" data-reveal>
           <div>
-            <p className="eyebrow text-gold">Articles</p>
-            <h2 className="font-display mt-3 text-3xl text-ink md:text-4xl">From the house</h2>
+            <p className="eyebrow text-gold">{t("articles")}</p>
+            <h2 className="font-display mt-3 text-3xl text-cream md:text-4xl">{t("fromTheHouse")}</h2>
           </div>
           <Link href="/articles" className="link-arrow">
-            All articles
-            <span aria-hidden>→</span>
+            {t("allArticles")}
+            <span aria-hidden className="rtl:inline-block rtl:rotate-180">→</span>
           </Link>
         </div>
 
         {notes.length === 0 ? (
-          <p className="mt-10 text-muted">No articles have been published yet.</p>
+          <p className="mt-10 text-cream/75">{t("noArticles")}</p>
         ) : (
           <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-3 md:gap-6">
             {notes.map((article) => (
@@ -261,7 +210,7 @@ export function JournalGrid({ articles }: { articles: Article[] }) {
                   <span aria-hidden className="grid size-3.5 place-items-center rounded-full border border-white/80">
                     <span className="size-1 rounded-full bg-white/80" />
                   </span>
-                  {formatDate(article.published_at) || "House note"}
+                  {formatDate(article.published_at) || t("houseNote")}
                 </p>
               </Link>
             ))}
@@ -273,13 +222,14 @@ export function JournalGrid({ articles }: { articles: Article[] }) {
 }
 
 export function NewsletterBand() {
+  const { t } = useLocale();
   return (
-    <section className="bg-forest-dark py-20 text-cream md:py-24" data-reveal>
+    <section className="bg-forest py-20 text-cream md:py-24" data-reveal>
       <div className="mx-auto flex max-w-xl flex-col items-center px-6 text-center">
-        <p className="eyebrow text-gold">Correspondence</p>
-        <h2 className="font-display mt-3 text-3xl md:text-4xl">Join the house list</h2>
+        <p className="eyebrow text-gold">{t("correspondence")}</p>
+        <h2 className="font-display mt-3 text-3xl md:text-4xl">{t("joinTheHouseList")}</h2>
         <p className="font-subtitle mt-3 mb-8 max-w-md text-cream/75">
-          Occasional notes on roast, origin lots, and what is new on the shelf.
+          {t("newsletterBlurb")}
         </p>
         <NewsletterForm dark />
       </div>

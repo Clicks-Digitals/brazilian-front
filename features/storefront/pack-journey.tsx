@@ -42,7 +42,6 @@ export function PackJourney({ children }: { children: ReactNode }) {
     const docks = () => {
       const hero = root.querySelector("#pack-dock-hero");
       if (!hero) return null;
-      const about = root.querySelector("#pack-dock-about");
       const catsStart = root.querySelector("#pack-dock-categories-start");
       const cats = root.querySelector("#pack-dock-categories");
       const featured = root.querySelector("#pack-dock-featured");
@@ -50,7 +49,6 @@ export function PackJourney({ children }: { children: ReactNode }) {
       const h = measure(hero, root);
       return {
         h,
-        a: about ? measure(about, root) : h,
         cs: catsStart ? measure(catsStart, root) : h,
         c: cats ? measure(cats, root) : h,
         f: featured ? measure(featured, root) : h,
@@ -76,14 +74,13 @@ export function PackJourney({ children }: { children: ReactNode }) {
         transformOrigin: "center center",
       });
 
-      const travel = { duration: 1.15, ease: "power2.inOut" };
-      const settle = { duration: 0.8, ease: "power1.inOut" };
+      const travel = { duration: 1.2, ease: "power2.inOut" };
       const compact = window.matchMedia("(max-width: 767px)").matches;
       const bannerScale = compact ? scaleFor(d.h, d.b) : Math.max(scaleFor(d.h, d.b) * 1.35, 1.35);
 
       return gsap
         .timeline({
-          defaults: { force3D: true },
+          defaults: { force3D: true, autoAlpha: 1 },
           scrollTrigger: {
             id: "hero-pack-scroll",
             trigger: root,
@@ -93,46 +90,33 @@ export function PackJourney({ children }: { children: ReactNode }) {
             invalidateOnRefresh: true,
           },
         })
-        .to(pack, { duration: 0.5 })
-        // Go under the About mill photo.
-        .to(pack, {
-          x: d.a.x,
-          y: d.a.y,
-          scale: scaleFor(d.h, d.a),
-          rotate: -4,
-          ...travel,
-        })
-        .to(pack, { rotate: 0, ...settle })
-        // Stay hidden through the category cards.
-        .to(pack, { autoAlpha: 0, duration: 0.4, ease: "power1.in" })
+        .to(pack, { duration: 0.32 })
+        // Enter the right column behind the cards.
         .to(pack, {
           x: d.cs.x,
           y: d.cs.y,
           scale: scaleFor(d.h, d.cs),
-          rotate: 8,
-          autoAlpha: 0,
-          duration: 0.5,
-          ease: "none",
+          rotate: 5,
+          duration: 0.75,
+          ease: "power2.in",
         })
-        // Pass through the gap under Caffitaly — no pause — into Featured.
+        // Slide down the section and come out under Caffitaly.
         .to(pack, {
           x: d.c.x,
           y: d.c.y,
           scale: scaleFor(d.h, d.c),
           rotate: -4,
-          autoAlpha: 1,
-          duration: 0.45,
-          ease: "power2.out",
+          duration: 1.15,
+          ease: "none",
         })
         .to(pack, {
           x: d.f.x,
           y: d.f.y,
           scale: scaleFor(d.h, d.f),
           rotate: 0,
-          duration: 1.7,
+          duration: 1.35,
           ease: "power2.inOut",
         })
-        // Stop on the right of the banner.
         .to(pack, {
           x: d.b.x,
           y: d.b.y,
@@ -140,7 +124,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
           rotate: 3,
           ...travel,
         })
-        .to(pack, { rotate: 0, duration: 1, ease: "power1.inOut" });
+        .to(pack, { rotate: 0, duration: 0.85, ease: "power1.inOut" });
     };
 
     const remount = () => {
@@ -177,7 +161,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
       {children}
       <div ref={packRef} className="hero-pack-stage" aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/hero/hero-espresso.png" alt="" className="hero-pack-img" />
+        <img src="/assets/hero/hero-pack.png" alt="" className="hero-pack-img" />
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  transpilePackages: ["react-globe.gl", "globe.gl", "three-globe", "three"],
   async redirects() {
     return [
       { source: "/our-story", destination: "/about", permanent: false },

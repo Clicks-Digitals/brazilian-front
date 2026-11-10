@@ -4,6 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Field, Input, Select, Checkbox } from "@/components/ui/field";
+import { useLocale } from "@/features/i18n/locale-provider";
+import { localizedName } from "@/lib/i18n";
 import type { Category } from "@/types/api";
 
 export type ShopQuery = {
@@ -27,15 +29,16 @@ export function CategoryChips({
   value?: string;
   onSelect: (slug: string) => void;
 }) {
+  const { locale, t } = useLocale();
   if (!categories.length) return null;
   return (
     <div className="flex gap-2 overflow-x-auto pb-1">
       <Chip active={!value} onClick={() => onSelect("")}>
-        All coffees
+        {t("allCoffees")}
       </Chip>
       {categories.map((category) => (
         <Chip key={category.id} active={value === category.slug} onClick={() => onSelect(category.slug)}>
-          {category.name}
+          {localizedName(locale, category)}
         </Chip>
       ))}
     </div>
@@ -76,6 +79,7 @@ export function ShopToolbar({
   count: number;
   onChange: (next: ShopQuery) => void;
 }) {
+  const { t } = useLocale();
   const [search, setSearch] = useState(value.search || "");
   const [open, setOpen] = useState(false);
   const valueRef = useRef(value);
@@ -106,7 +110,7 @@ export function ShopToolbar({
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search the shelf"
+            placeholder={t("searchTheShelf")}
             className="w-full border-0 bg-transparent py-1 text-sm text-ink outline-none placeholder:text-muted"
           />
         </label>
@@ -116,60 +120,62 @@ export function ShopToolbar({
             onChange={(e) => set("roast", e.target.value)}
             className="bg-transparent text-xs tracking-[0.12em] uppercase text-ink outline-none"
           >
-            <option value="">Any roast</option>
-            <option value="light">Light</option>
-            <option value="medium">Medium</option>
-            <option value="medium-dark">Medium dark</option>
-            <option value="dark">Dark</option>
+            <option value="">{t("anyRoast")}</option>
+            <option value="light">{t("roastLight")}</option>
+            <option value="medium">{t("roastMedium")}</option>
+            <option value="medium-dark">{t("roastMediumDark")}</option>
+            <option value="dark">{t("roastDark")}</option>
           </select>
           <select
             value={value.ordering || "featured"}
             onChange={(e) => set("ordering", e.target.value)}
             className="bg-transparent text-xs tracking-[0.12em] uppercase text-ink outline-none"
           >
-            <option value="featured">Featured</option>
-            <option value="-created_at">Newest</option>
-            <option value="price">Price, low to high</option>
-            <option value="-price">Price, high to low</option>
-            <option value="name">Name A–Z</option>
-            <option value="-name">Name Z–A</option>
-            <option value="best_selling">Best selling</option>
+            <option value="featured">{t("featured")}</option>
+            <option value="-created_at">{t("newest")}</option>
+            <option value="price">{t("priceLowHigh")}</option>
+            <option value="-price">{t("priceHighLow")}</option>
+            <option value="name">{t("nameAZ")}</option>
+            <option value="-name">{t("nameZA")}</option>
+            <option value="best_selling">{t("bestSelling")}</option>
           </select>
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
             className="text-xs tracking-[0.12em] uppercase text-muted hover:text-forest"
           >
-            {open ? "Hide filters" : "More filters"}
+            {open ? t("hideFilters") : t("moreFilters")}
           </button>
-          <p className="text-xs tracking-[0.12em] uppercase text-muted">{count} {count === 1 ? "coffee" : "coffees"}</p>
+          <p className="text-xs tracking-[0.12em] uppercase text-muted">
+            {t(count === 1 ? "coffeeOne" : "coffeeMany", { count })}
+          </p>
         </div>
       </div>
       {open ? (
         <div className="grid gap-4 pb-2 md:grid-cols-4">
-          <Field label="Min JOD">
+          <Field label={t("minJod")}>
             <Input
               inputMode="decimal"
               value={value.min_price || ""}
               onChange={(e) => set("min_price", e.target.value)}
             />
           </Field>
-          <Field label="Max JOD">
+          <Field label={t("maxJod")}>
             <Input
               inputMode="decimal"
               value={value.max_price || ""}
               onChange={(e) => set("max_price", e.target.value)}
             />
           </Field>
-          <Field label="Availability">
+          <Field label={t("availability")}>
             <Select value={value.availability || "in_stock"} onChange={(e) => set("availability", e.target.value)}>
-              <option value="in_stock">In stock</option>
-              <option value="all">All products</option>
+              <option value="in_stock">{t("inStock")}</option>
+              <option value="all">{t("allProducts")}</option>
             </Select>
           </Field>
           <div className="flex items-end pb-2">
             <Checkbox
-              label="On sale"
+              label={t("onSale")}
               checked={value.on_sale === "true"}
               onChange={(e) => set("on_sale", e.target.checked ? "true" : "")}
             />

@@ -5,6 +5,8 @@ import { SmartImage } from "@/components/ui/smart-image";
 import { articleCover } from "@/lib/article-media";
 import { formatDate } from "@/lib/format";
 import { errorMessage } from "@/lib/http";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale-server";
 import { serverGet } from "@/lib/server-get";
 import { asPaginated } from "@/lib/settings";
 import type { Article } from "@/types/api";
@@ -15,6 +17,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ArticlesPage() {
+  const locale = await getLocale();
   try {
     const data = await serverGet("/articles/");
     const { results } = asPaginated<Article>(data);
@@ -22,13 +25,13 @@ export default async function ArticlesPage() {
     return (
       <div className="mx-auto max-w-7xl px-6 pb-24">
         <header className="max-w-2xl pb-10 pt-12 md:pt-16" data-reveal>
-          <p className="eyebrow text-gold">House</p>
-          <h1 className="font-display mt-3 text-4xl tracking-tight text-ink md:text-5xl">Articles</h1>
-          <p className="font-subtitle mt-4 text-muted">Roast notes, origin stories, and life in the branches.</p>
+          <p className="eyebrow text-gold">{t(locale, "house")}</p>
+          <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t(locale, "articles")}</h1>
+          <p className="font-subtitle mt-4 text-cream/75">{t(locale, "articlesBlurb")}</p>
         </header>
 
         {results.length === 0 ? (
-          <EmptyState title="No articles yet" description="Articles will appear here when they are published." />
+          <EmptyState title={t(locale, "noArticlesYet")} description={t(locale, "articlesWillAppear")} />
         ) : (
           <div className="grid gap-x-8 gap-y-12 md:grid-cols-2 lg:grid-cols-3" data-reveal-stagger>
             {results.map((article) => (

@@ -5,20 +5,14 @@ import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Menu, Search, ShoppingBag, User, X } from "lucide-react";
 import { SearchOverlay } from "@/components/layout/search-overlay";
+import { LanguageSwitcher } from "@/components/i18n/language-switcher";
 import { useAuthStore } from "@/features/account/auth-store";
 import { useCartStore } from "@/features/cart/cart-store";
+import { useLocale } from "@/features/i18n/locale-provider";
 import { BRAND } from "@/lib/brand";
 import { cn } from "@/lib/cn";
+import { localizedName } from "@/lib/i18n";
 import type { Category } from "@/types/api";
-
-const STATIC_NAV = [
-  { href: "/shop", label: "Shop" },
-  { href: "/export", label: "Export" },
-  { href: "/categories", label: "Categories" },
-  { href: "/about", label: "About" },
-  { href: "/articles", label: "Articles" },
-  { href: "/contact", label: "Contact" },
-];
 
 function LogoMark({ overlay }: { overlay: boolean }) {
   return (
@@ -51,6 +45,15 @@ export function Header({
   const count = useCartStore((s) => s.itemCount);
   const user = useAuthStore((s) => s.user);
   const overlay = false;
+  const { locale, t } = useLocale();
+  const staticNav = [
+    { href: "/about", label: t("about") },
+    { href: "/categories", label: t("categories") },
+    { href: "/shop", label: t("shop") },
+    { href: "/export", label: t("export") },
+    { href: "/articles", label: t("articles") },
+    { href: "/contact", label: t("contact") },
+  ];
 
   const navCategories = categories.filter((c) => c.show_in_nav !== false && c.is_active !== false).slice(0, 8);
 
@@ -113,7 +116,7 @@ export function Header({
     >
       <div className="nav-shell">
         <div className="nav-mobile">
-          <IconButton label={open ? "Close menu" : "Open menu"} onClick={() => setOpen((v) => !v)}>
+          <IconButton label={open ? t("closeMenu") : t("openMenu")} onClick={() => setOpen((v) => !v)}>
             {open ? <X className="size-[18px]" strokeWidth={1.5} /> : <Menu className="size-[18px]" strokeWidth={1.5} />}
           </IconButton>
 
@@ -123,10 +126,11 @@ export function Header({
           </Link>
 
           <div className="flex items-center justify-end">
-            <IconButton label="Search" onClick={() => setSearchOpen(true)}>
+            <LanguageSwitcher className="me-1" />
+            <IconButton label={t("search")} onClick={() => setSearchOpen(true)}>
               <Search className="size-4" strokeWidth={1.5} />
             </IconButton>
-            <IconButton label="Bag" href="/cart">
+            <IconButton label={t("bag")} href="/cart">
               <span className="relative">
                 <ShoppingBag className="size-4" strokeWidth={1.5} />
                 {count > 0 ? <span className="nav-count">{count}</span> : null}
@@ -138,20 +142,21 @@ export function Header({
         <div className="nav-desktop">
           <LogoMark overlay={overlay} />
           <nav className="nav-primary" aria-label="Primary">
-            {STATIC_NAV.map((item) => (
+            {staticNav.map((item) => (
               <Link key={item.href} href={item.href} className="nav-link">
                 {item.label}
               </Link>
             ))}
           </nav>
-          <div className="flex items-center justify-end">
-            <IconButton label="Search" onClick={() => setSearchOpen(true)}>
+          <div className="flex items-center justify-end gap-1">
+            <LanguageSwitcher />
+            <IconButton label={t("search")} onClick={() => setSearchOpen(true)}>
               <Search className="size-4" strokeWidth={1.5} />
             </IconButton>
-            <IconButton label="Account" href={user ? "/account" : "/login"}>
+            <IconButton label={t("account")} href={user ? "/account" : "/login"}>
               <User className="size-4" strokeWidth={1.5} />
             </IconButton>
-            <IconButton label="Bag" href="/cart">
+            <IconButton label={t("bag")} href="/cart">
               <span className="relative">
                 <ShoppingBag className="size-4" strokeWidth={1.5} />
                 {count > 0 ? <span className="nav-count">{count}</span> : null}
@@ -166,7 +171,7 @@ export function Header({
           <div className="nav-categories">
             {navCategories.map((category) => (
               <Link key={category.slug} href={`/shop/${category.slug}`} className="nav-cat-link">
-                {category.name}
+                {localizedName(locale, category)}
               </Link>
             ))}
           </div>
@@ -175,7 +180,7 @@ export function Header({
 
       <div className={cn("nav-drawer", open ? "is-open" : "")} aria-hidden={!open}>
         <div className="nav-drawer-top">
-          <button type="button" aria-label="Close menu" className="nav-icon" onClick={() => setOpen(false)}>
+          <button type="button" aria-label={t("closeMenu")} className="nav-icon" onClick={() => setOpen(false)}>
             <X className="size-[18px]" strokeWidth={1.5} />
           </button>
           <Link href="/" className="nav-logo-center" aria-label={BRAND.name} onClick={() => setOpen(false)}>
@@ -185,16 +190,19 @@ export function Header({
           <span />
         </div>
         <nav className="nav-drawer-inner" aria-label="Mobile">
-          {STATIC_NAV.map((item) => (
+          {staticNav.map((item) => (
             <Link key={item.href} href={item.href} className="nav-drawer-link" onClick={() => setOpen(false)}>
               {item.label}
             </Link>
           ))}
           <Link href={user ? "/account" : "/login"} className="nav-drawer-link" onClick={() => setOpen(false)}>
-            {user ? "Account" : "Sign in"}
+            {user ? t("account") : t("signIn")}
           </Link>
+          <div className="mt-6">
+            <LanguageSwitcher align="start" />
+          </div>
           <div className="gold-rule my-6" />
-          <p className="eyebrow text-gold">Collections</p>
+          <p className="eyebrow text-gold">{t("collections")}</p>
           <div className="mt-4 grid grid-cols-2 gap-x-6 gap-y-2">
             {navCategories.map((category) => (
               <Link
@@ -203,7 +211,7 @@ export function Header({
                 className="py-1.5 text-sm text-muted"
                 onClick={() => setOpen(false)}
               >
-                {category.name}
+                {localizedName(locale, category)}
               </Link>
             ))}
           </div>

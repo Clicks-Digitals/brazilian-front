@@ -8,6 +8,8 @@ import { articleCover } from "@/lib/article-media";
 import { formatDate } from "@/lib/format";
 import { isProbablyHtml, sanitizeHtml } from "@/lib/html";
 import { errorMessage } from "@/lib/http";
+import { t } from "@/lib/i18n";
+import { getLocale } from "@/lib/locale-server";
 import { serverGet } from "@/lib/server-get";
 import type { Article } from "@/types/api";
 
@@ -28,6 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
+  const locale = await getLocale();
   try {
     const article = await serverGet<Article>(`/articles/${slug}/`);
     const html = article.content
@@ -54,7 +57,7 @@ export default async function ArticlePage({ params }: Props) {
           />
           <p className="text-sm text-muted">
             <Link href="/articles" className="hover:text-forest">
-              Articles
+              {t(locale, "articles")}
             </Link>
           </p>
           <p className="eyebrow mt-6 text-gold">{formatDate(article.published_at)}</p>
@@ -72,7 +75,7 @@ export default async function ArticlePage({ params }: Props) {
         </article>
         {related.length > 0 ? (
           <section className="mx-auto max-w-7xl px-6 pb-24 pt-8" data-reveal>
-            <h2 className="font-display text-2xl md:text-3xl">Related coffees</h2>
+            <h2 className="font-display text-2xl md:text-3xl">{t(locale, "relatedCoffees")}</h2>
             <div className="mt-6">
               <ProductGrid products={related} />
             </div>

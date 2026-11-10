@@ -9,25 +9,15 @@ type OrbitLike = {
   enablePan: boolean;
   zoomSpeed: number;
   zoomToCursor: boolean;
-  minDistance: number;
-  maxDistance: number;
   autoRotate: boolean;
   autoRotateSpeed: number;
   mouseButtons?: { MIDDLE?: number };
   touches?: { TWO?: number };
-  dollyIn?: () => unknown;
-  dollyOut?: () => unknown;
   _onMouseWheel?: (event: WheelEvent) => void;
-  _handleMouseWheel?: (event: WheelEvent) => void;
-  _dollyIn?: () => void;
-  _dollyOut?: () => void;
-  update: (...args: unknown[]) => unknown;
   addEventListener: (type: string, fn: () => void) => void;
   removeEventListener: (type: string, fn: () => void) => void;
   domElement?: HTMLElement;
 };
-
-const zoomPatched = new WeakSet<object>();
 
 type GlobeApi = GlobeMethods & {
   globeMaterial: () => {
@@ -38,7 +28,6 @@ type GlobeApi = GlobeMethods & {
     shininess: number;
   };
   controls: () => OrbitLike;
-  camera: () => { position: { length: () => number; setLength: (value: number) => void } };
   renderer: () => { domElement: HTMLElement; setPixelRatio: (value: number) => void };
 };
 
@@ -60,7 +49,7 @@ type Marker = {
 
 let landDotsPromise: Promise<LandDot[]> | null = null;
 
-function loadLandDots(rows = 48): Promise<LandDot[]> {
+function loadLandDots(rows = 30): Promise<LandDot[]> {
   if (landDotsPromise) return landDotsPromise;
   landDotsPromise = new Promise((resolve, reject) => {
     const img = new Image();
@@ -101,57 +90,18 @@ function targetFor(id: GlobeFocusId) {
   return COFFEE_ORIGINS.find((origin) => origin.id === id);
 }
 
-function holdDistance(globe: GlobeApi) {
-  const radius = globe.getGlobeRadius();
-  if (radius <= 1) return;
+function lockGlobe(globe: GlobeApi) {
   const controls = globe.controls();
-  const distance = radius * (1 + VIEW_ALTITUDE);
-  controls.minDistance = distance;
-  controls.maxDistance = distance;
-}
-
-function disableZoom(globe: GlobeApi) {
-  const controls = globe.controls();
+  controls.enableZoom = false;
   controls.enablePan = false;
   controls.zoomSpeed = 0;
   controls.zoomToCursor = false;
-  holdDistance(globe);
   if (controls.mouseButtons) controls.mouseButtons.MIDDLE = -1;
   if (controls.touches) controls.touches.TWO = 0;
-  controls.dollyIn = () => controls;
-  controls.dollyOut = () => controls;
-  controls._handleMouseWheel = () => undefined;
-  controls._dollyIn = () => undefined;
-  controls._dollyOut = () => undefined;
   const canvas = controls.domElement || globe.renderer().domElement;
   if (canvas && controls._onMouseWheel) {
     canvas.removeEventListener("wheel", controls._onMouseWheel);
   }
-  if (zoomPatched.has(controls)) return;
-  zoomPatched.add(controls);
-  Object.defineProperty(controls, "enableZoom", {
-    get: () => false,
-    set: () => undefined,
-    configurable: true,
-  });
-  const originalUpdate = controls.update.bind(controls);
-  controls.update = (...args: unknown[]) => {
-    controls.zoomSpeed = 0;
-    controls.zoomToCursor = false;
-    holdDistance(globe);
-    return originalUpdate(...args);
-  };
-}
-
-function eventOverGlobe(event: Event, wrap: HTMLElement) {
-  if (event.target instanceof Node && wrap.contains(event.target)) return true;
-  if (event.composedPath().includes(wrap)) return true;
-  if ("clientX" in event && "clientY" in event) {
-    const { clientX, clientY } = event as PointerEvent;
-    const rect = wrap.getBoundingClientRect();
-    return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
-  }
-  return false;
 }
 
 export function CoffeeGlobe({
@@ -243,21 +193,14 @@ export function CoffeeGlobe({
     [],
   );
 
-  const setupControls = useCallback((globe: GlobeApi) => {
-    disableZoom(globe);
+  const flyTo = useCallback((id: GlobeFocusId | null | undefined, duration = 1100) => {
+    const globe = globeRef.current as GlobeApi | undefined;
+    const target = id ? targetFor(id) : null;
+    if (!globe || !target) return;
+    globe.controls().autoRotate = false;
+    globe.pointOfView({ lat: target.lat, lng: target.lng, altitude: VIEW_ALTITUDE }, duration);
+    lockGlobe(globe);
   }, []);
-
-  const flyTo = useCallback(
-    (id: GlobeFocusId | null | undefined, duration = 1100) => {
-      const globe = globeRef.current as GlobeApi | undefined;
-      const target = id ? targetFor(id) : null;
-      if (!globe || !target) return;
-      globe.controls().autoRotate = false;
-      globe.pointOfView({ lat: target.lat, lng: target.lng, altitude: VIEW_ALTITUDE }, duration);
-      setupControls(globe);
-    },
-    [setupControls],
-  );
 
   const paint = useCallback(() => {
     const globe = globeRef.current as GlobeApi | undefined;
@@ -273,10 +216,10 @@ export function CoffeeGlobe({
     controls.autoRotateSpeed = 0.45;
     const opening = (focusId && targetFor(focusId)) || { lat: 8, lng: 8 };
     globe.pointOfView({ lat: opening.lat, lng: opening.lng, altitude: VIEW_ALTITUDE }, 0);
-    setupControls(globe);
-    globe.renderer().setPixelRatio(Math.min(1.25, window.devicePixelRatio || 1));
+    lockGlobe(globe);
+    globe.renderer().setPixelRatio(1);
     setReady(true);
-  }, [focusId, setupControls, reduceMotion]);
+  }, [focusId, reduceMotion]);
 
   useEffect(() => {
     const el = wrapRef.current;
@@ -298,48 +241,36 @@ export function CoffeeGlobe({
     const globe = globeRef.current as GlobeApi | undefined;
     const wrap = wrapRef.current;
     if (!globe || !wrap || !ready) return;
-
-    const keepDisabled = () => disableZoom(globe);
-    keepDisabled();
-    globe.controls().addEventListener("change", keepDisabled);
-    const frames = [window.requestAnimationFrame(keepDisabled)];
-    const timers = [window.setTimeout(keepDisabled, 80), window.setTimeout(keepDisabled, 400)];
+    lockGlobe(globe);
 
     const stopWheel = (event: WheelEvent) => {
-      if (!eventOverGlobe(event, wrap)) return;
       event.stopImmediatePropagation();
       if (event.ctrlKey || event.metaKey) event.preventDefault();
     };
     const stopPinch = (event: TouchEvent) => {
-      if (!eventOverGlobe(event, wrap) || event.touches.length < 2) return;
+      if (event.touches.length < 2) return;
       event.preventDefault();
       event.stopImmediatePropagation();
     };
     const stopGesture = (event: Event) => {
-      if (!eventOverGlobe(event, wrap)) return;
       event.preventDefault();
       event.stopImmediatePropagation();
     };
-
     const opts: AddEventListenerOptions = { capture: true, passive: false };
-    window.addEventListener("wheel", stopWheel, opts);
-    window.addEventListener("touchstart", stopPinch, opts);
-    window.addEventListener("touchmove", stopPinch, opts);
-    window.addEventListener("gesturestart", stopGesture, opts);
-    window.addEventListener("gesturechange", stopGesture, opts);
-    wrap.style.touchAction = "none";
+    wrap.addEventListener("wheel", stopWheel, opts);
+    wrap.addEventListener("touchstart", stopPinch, opts);
+    wrap.addEventListener("touchmove", stopPinch, opts);
+    wrap.addEventListener("gesturestart", stopGesture, opts);
+    wrap.addEventListener("gesturechange", stopGesture, opts);
 
     return () => {
-      globe.controls().removeEventListener("change", keepDisabled);
-      frames.forEach((id) => window.cancelAnimationFrame(id));
-      timers.forEach((id) => window.clearTimeout(id));
-      window.removeEventListener("wheel", stopWheel, opts);
-      window.removeEventListener("touchstart", stopPinch, opts);
-      window.removeEventListener("touchmove", stopPinch, opts);
-      window.removeEventListener("gesturestart", stopGesture, opts);
-      window.removeEventListener("gesturechange", stopGesture, opts);
+      wrap.removeEventListener("wheel", stopWheel, opts);
+      wrap.removeEventListener("touchstart", stopPinch, opts);
+      wrap.removeEventListener("touchmove", stopPinch, opts);
+      wrap.removeEventListener("gesturestart", stopGesture, opts);
+      wrap.removeEventListener("gesturechange", stopGesture, opts);
     };
-  }, [ready, size]);
+  }, [ready]);
 
   useEffect(() => {
     flyTo(focusId);
@@ -389,8 +320,8 @@ export function CoffeeGlobe({
         pointLng="lng"
         pointColor={() => LAND}
         pointAltitude={0.012}
-        pointRadius={0.38}
-        pointResolution={4}
+        pointRadius={0.45}
+        pointResolution={3}
         pointsMerge
         pointsTransitionDuration={0}
         arcsData={arcs}
@@ -416,14 +347,7 @@ export function CoffeeGlobe({
         htmlElementVisibilityModifier={(el, visible) => {
           el.style.opacity = visible ? "1" : "0";
         }}
-        enablePointerInteraction
-        onZoom={(pov) => {
-          if (Math.abs(pov.altitude - VIEW_ALTITUDE) < 0.08) return;
-          globeRef.current?.pointOfView(
-            { lat: pov.lat, lng: pov.lng, altitude: VIEW_ALTITUDE },
-            0,
-          );
-        }}
+        enablePointerInteraction={false}
       />
       ) : null}
     </div>

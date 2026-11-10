@@ -21,11 +21,9 @@ type OrbitLike = {
   _handleMouseWheel?: (event: WheelEvent) => void;
   _dollyIn?: () => void;
   _dollyOut?: () => void;
-  update: (...args: unknown[]) => unknown;
   addEventListener: (type: string, fn: () => void) => void;
   removeEventListener: (type: string, fn: () => void) => void;
   domElement?: HTMLElement;
-  __zoomLocked?: boolean;
 };
 
 type GlobeApi = GlobeMethods & {
@@ -100,19 +98,18 @@ function targetFor(id: GlobeFocusId) {
   return COFFEE_ORIGINS.find((origin) => origin.id === id);
 }
 
-function lockedDistance(globe: GlobeApi) {
-  return globe.getGlobeRadius() * (1 + VIEW_ALTITUDE);
-}
-
-function lockZoom(globe: GlobeApi) {
+function disableZoom(globe: GlobeApi) {
   const controls = globe.controls();
-  const distance = lockedDistance(globe);
+  const radius = globe.getGlobeRadius();
   controls.enableZoom = false;
   controls.enablePan = false;
   controls.zoomSpeed = 0;
   controls.zoomToCursor = false;
-  controls.minDistance = distance;
-  controls.maxDistance = distance;
+  if (radius > 1) {
+    const distance = radius * (1 + VIEW_ALTITUDE);
+    controls.minDistance = distance;
+    controls.maxDistance = distance;
+  }
   if (controls.mouseButtons) controls.mouseButtons.MIDDLE = -1;
   if (controls.touches) controls.touches.TWO = 0;
   controls.dollyIn = () => controls;
@@ -123,48 +120,6 @@ function lockZoom(globe: GlobeApi) {
   const canvas = controls.domElement || globe.renderer().domElement;
   if (canvas && controls._onMouseWheel) {
     canvas.removeEventListener("wheel", controls._onMouseWheel);
-  }
-  const camera = globe.camera();
-  if (Math.abs(camera.position.length() - distance) > 0.02) {
-    camera.position.setLength(distance);
-  }
-  if (!controls.__zoomLocked) {
-    Object.defineProperty(controls, "enableZoom", {
-      get: () => false,
-      set: () => undefined,
-      configurable: true,
-    });
-    Object.defineProperty(controls, "zoomToCursor", {
-      get: () => false,
-      set: () => undefined,
-      configurable: true,
-    });
-    Object.defineProperty(controls, "minDistance", {
-      get: () => lockedDistance(globe),
-      set: () => undefined,
-      configurable: true,
-    });
-    Object.defineProperty(controls, "maxDistance", {
-      get: () => lockedDistance(globe),
-      set: () => undefined,
-      configurable: true,
-    });
-    const originalUpdate = controls.update.bind(controls);
-    controls.update = (...args: unknown[]) => {
-      const locked = lockedDistance(globe);
-      controls.enableZoom = false;
-      controls.zoomSpeed = 0;
-      controls.zoomToCursor = false;
-      controls.minDistance = locked;
-      controls.maxDistance = locked;
-      const result = originalUpdate(...args);
-      const camera = globe.camera();
-      if (Math.abs(camera.position.length() - locked) > 0.02) {
-        camera.position.setLength(locked);
-      }
-      return result;
-    };
-    controls.__zoomLocked = true;
   }
 }
 
@@ -258,7 +213,7 @@ export function CoffeeGlobe({
   );
 
   const setupControls = useCallback((globe: GlobeApi) => {
-    lockZoom(globe);
+    disableZoom(globe);
   }, []);
 
   const flyTo = useCallback(
@@ -313,11 +268,16 @@ export function CoffeeGlobe({
     const wrap = wrapRef.current;
     if (!globe || !wrap || !ready) return;
 
-    lockZoom(globe);
-    const keep = () => lockZoom(globe);
-    globe.controls().addEventListener("change", keep);
-    const frames = [window.requestAnimationFrame(keep), window.requestAnimationFrame(() => keep())];
-    const timers = [window.setTimeout(keep, 50), window.setTimeout(keep, 250), window.setTimeout(keep, 800)];
+    const keepDisabled = () => disableZoom(globe);
+    const pov = globe.pointOfView() as { lat?: number; lng?: number } | undefined;
+    globe.pointOfView(
+      { lat: pov?.lat ?? 8, lng: pov?.lng ?? 8, altitude: VIEW_ALTITUDE },
+      0,
+    );
+    keepDisabled();
+    globe.controls().addEventListener("change", keepDisabled);
+    const frames = [window.requestAnimationFrame(keepDisabled)];
+    const timers = [window.setTimeout(keepDisabled, 80), window.setTimeout(keepDisabled, 400)];
 
     const overGlobe = (target: EventTarget | null) => target instanceof Node && wrap.contains(target);
 
@@ -346,7 +306,7 @@ export function CoffeeGlobe({
     wrap.style.touchAction = "none";
 
     return () => {
-      globe.controls().removeEventListener("change", keep);
+      globe.controls().removeEventListener("change", keepDisabled);
       frames.forEach((id) => window.cancelAnimationFrame(id));
       timers.forEach((id) => window.clearTimeout(id));
       window.removeEventListener("wheel", stopWheel, opts);

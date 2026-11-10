@@ -165,12 +165,13 @@ export function CoffeeGlobe({
   const setupControls = useCallback((globe: GlobeApi) => {
     const controls = globe.controls();
     const radius = globe.getGlobeRadius();
-    controls.enableZoom = true;
+    const distance = radius * (1 + VIEW_ALTITUDE);
+    controls.enableZoom = false;
     controls.enablePan = false;
-    controls.zoomSpeed = 0.7;
-    controls.zoomToCursor = true;
-    controls.minDistance = radius * 1.35;
-    controls.maxDistance = radius * 6;
+    controls.zoomSpeed = 0;
+    controls.zoomToCursor = false;
+    controls.minDistance = distance;
+    controls.maxDistance = distance;
   }, []);
 
   const flyTo = useCallback(
@@ -219,6 +220,16 @@ export function CoffeeGlobe({
     io.observe(el);
     return () => io.disconnect();
   }, [ready]);
+
+  useEffect(() => {
+    const globe = globeRef.current as GlobeApi | undefined;
+    if (!globe || !ready) return;
+    const controls = globe.controls();
+    const keep = () => setupControls(globe);
+    keep();
+    controls.addEventListener("change", keep);
+    return () => controls.removeEventListener("change", keep);
+  }, [ready, setupControls]);
 
   useEffect(() => {
     flyTo(focusId);

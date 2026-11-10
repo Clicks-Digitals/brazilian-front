@@ -24,7 +24,9 @@ export function normalizeSettings(raw: unknown): StoreSettings {
   const flat = flattenSettings(raw);
   const nested = (flat.value && typeof flat.value === "object" ? flat.value : {}) as StoreSettings;
   const merged: StoreSettings = { ...nested, ...flat };
+  const incomingSocial = (merged.social as Record<string, string>) || {};
   return {
+    ...merged,
     store_name: String(merged.store_name || merged.name || BRAND.name),
     store_name_ar: String(merged.store_name_ar || merged.name_ar || BRAND.nameAr),
     phone: String(merged.phone || BRAND.phone),
@@ -32,13 +34,10 @@ export function normalizeSettings(raw: unknown): StoreSettings {
     about: String(merged.about || BRAND.about),
     story: String(merged.story || BRAND.story),
     currency: String(merged.currency || BRAND.currency),
-    social: (() => {
-      const incoming = (merged.social as Record<string, string>) || {};
-      const instagram = incoming.instagram?.includes("brazilian_coffee_house")
-        ? incoming.instagram
-        : BRAND.instagram;
-      return { ...incoming, instagram };
-    })(),
+    social: {
+      ...incomingSocial,
+      instagram: BRAND.instagram,
+    },
     branches: Array.isArray(merged.branches) && merged.branches.length
       ? merged.branches
       : BRAND.branches.map((b) => ({
@@ -50,7 +49,6 @@ export function normalizeSettings(raw: unknown): StoreSettings {
     delivery: merged.delivery,
     homepage: merged.homepage,
     announcement: merged.announcement,
-    ...merged,
   };
 }
 

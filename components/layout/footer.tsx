@@ -18,7 +18,10 @@ export function Footer({
   const phone = settings.phone || BRAND.phone;
   const email = settings.email || BRAND.email;
   const shopLinks = categories.filter((c) => c.show_in_nav !== false).slice(0, 8);
-  const social = { instagram: BRAND.instagram, ...(settings?.social || {}) };
+  const social = {
+    ...(settings?.social || {}),
+    instagram: BRAND.instagram,
+  };
   const houseName = locale === "ar" ? BRAND.nameAr : BRAND.name;
   const about = locale === "ar" ? t("aboutBody") : settings.about || BRAND.about;
 
@@ -90,15 +93,15 @@ export function Footer({
                 {email}
               </a>
             </li>
-            {Object.entries(social).map(([network, url]) =>
-              url ? (
+            {Object.entries(social)
+              .filter(([, url]) => Boolean(url))
+              .map(([network, url]) => (
                 <li key={network}>
                   <a href={url} className="capitalize hover:text-gold" target="_blank" rel="noreferrer">
                     {network}
                   </a>
                 </li>
-              ) : null,
-            )}
+              ))}
           </ul>
         </div>
         <div>

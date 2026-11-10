@@ -32,7 +32,7 @@ type Marker = {
 
 let landDotsPromise: Promise<LandDot[]> | null = null;
 
-function loadLandDots(rows = 92): Promise<LandDot[]> {
+function loadLandDots(rows = 48): Promise<LandDot[]> {
   if (landDotsPromise) return landDotsPromise;
   landDotsPromise = new Promise((resolve, reject) => {
     const img = new Image();
@@ -113,26 +113,7 @@ export function CoffeeGlobe({
     sync();
     const observer = new ResizeObserver(sync);
     observer.observe(el);
-    const stop = (event: Event) => {
-      event.preventDefault();
-      event.stopPropagation();
-    };
-    const stopPinch = (event: TouchEvent) => {
-      if (event.touches.length > 1) stop(event);
-    };
-    el.addEventListener("wheel", stop, { passive: false, capture: true });
-    el.addEventListener("touchmove", stopPinch, { passive: false, capture: true });
-    el.addEventListener("gesturestart", stop, { capture: true });
-    el.addEventListener("gesturechange", stop, { capture: true });
-    el.addEventListener("gestureend", stop, { capture: true });
-    return () => {
-      observer.disconnect();
-      el.removeEventListener("wheel", stop, { capture: true });
-      el.removeEventListener("touchmove", stopPinch, { capture: true });
-      el.removeEventListener("gesturestart", stop, { capture: true });
-      el.removeEventListener("gesturechange", stop, { capture: true });
-      el.removeEventListener("gestureend", stop, { capture: true });
-    };
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -227,24 +208,25 @@ export function CoffeeGlobe({
     const opening = (focusId && targetFor(focusId)) || { lat: 8, lng: 8 };
     globe.pointOfView({ lat: opening.lat, lng: opening.lng, altitude: VIEW_ALTITUDE }, 0);
     lockOrbit(globe);
+    globe.renderer().setPixelRatio(Math.min(1.25, window.devicePixelRatio || 1));
     setReady(true);
   }, [focusId, lockOrbit, reduceMotion]);
 
   useEffect(() => {
-    const globe = globeRef.current as GlobeApi | undefined;
-    if (!globe || !ready) return;
-    const controls = globe.controls();
-    const keepLocked = () => lockOrbit(globe);
-    keepLocked();
-    controls.addEventListener("change", keepLocked);
-    controls.addEventListener("start", keepLocked);
-    controls.addEventListener("end", keepLocked);
-    return () => {
-      controls.removeEventListener("change", keepLocked);
-      controls.removeEventListener("start", keepLocked);
-      controls.removeEventListener("end", keepLocked);
-    };
-  }, [lockOrbit, ready, size]);
+    const el = wrapRef.current;
+    if (!el || !ready) return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const globe = globeRef.current;
+        if (!globe) return;
+        if (entry.isIntersecting) globe.resumeAnimation();
+        else globe.pauseAnimation();
+      },
+      { threshold: 0.12, rootMargin: "80px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ready]);
 
   useEffect(() => {
     flyTo(focusId);
@@ -322,14 +304,6 @@ export function CoffeeGlobe({
           el.style.opacity = visible ? "1" : "0";
         }}
         enablePointerInteraction
-        onZoom={(pov) => {
-          const globe = globeRef.current as GlobeApi | undefined;
-          if (!globe) return;
-          lockOrbit(globe);
-          if (Math.abs(pov.altitude - VIEW_ALTITUDE) > 0.05) {
-            globe.pointOfView({ lat: pov.lat, lng: pov.lng, altitude: VIEW_ALTITUDE }, 0);
-          }
-        }}
       />
       ) : null}
     </div>

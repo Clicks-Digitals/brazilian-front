@@ -22,7 +22,7 @@ export default function SettingsPage() {
     currency: "JOD",
     delivery_fee: "",
     free_over: "",
-    instagram: "",
+    instagram: BRAND.instagram as string,
     facebook: "",
   });
 
@@ -45,7 +45,9 @@ export default function SettingsPage() {
           currency: String(nested.currency || "JOD"),
           delivery_fee: String(delivery.fee || ""),
           free_over: String(delivery.free_over || ""),
-          instagram: social.instagram || "",
+          instagram: social.instagram?.includes("brazilian_coffee_house")
+            ? social.instagram
+            : BRAND.instagram,
           facebook: social.facebook || "",
         }));
       })

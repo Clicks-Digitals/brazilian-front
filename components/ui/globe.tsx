@@ -165,13 +165,21 @@ export function CoffeeGlobe({
   const setupControls = useCallback((globe: GlobeApi) => {
     const controls = globe.controls();
     const radius = globe.getGlobeRadius();
-    const distance = radius * (1 + VIEW_ALTITUDE);
+    const distance = globe.camera().position.length() || radius * (1 + VIEW_ALTITUDE);
     controls.enableZoom = false;
     controls.enablePan = false;
     controls.zoomSpeed = 0;
     controls.zoomToCursor = false;
     controls.minDistance = distance;
     controls.maxDistance = distance;
+    const patched = controls as typeof controls & {
+      dollyIn?: () => unknown;
+      dollyOut?: () => unknown;
+      _onMouseWheel?: (event: WheelEvent) => void;
+    };
+    patched.dollyIn = () => controls;
+    patched.dollyOut = () => controls;
+    patched._onMouseWheel = () => undefined;
   }, []);
 
   const flyTo = useCallback(
@@ -223,12 +231,48 @@ export function CoffeeGlobe({
 
   useEffect(() => {
     const globe = globeRef.current as GlobeApi | undefined;
-    if (!globe || !ready) return;
-    const controls = globe.controls();
+    const wrap = wrapRef.current;
+    if (!globe || !wrap || !ready) return;
+    const canvas = globe.renderer().domElement;
     const keep = () => setupControls(globe);
     keep();
-    controls.addEventListener("change", keep);
-    return () => controls.removeEventListener("change", keep);
+    globe.controls().addEventListener("change", keep);
+
+    const stopGlobeZoom = (event: WheelEvent) => {
+      event.stopImmediatePropagation();
+      if (event.ctrlKey || event.metaKey) event.preventDefault();
+    };
+    const stopPinch = (event: TouchEvent) => {
+      if (event.touches.length < 2) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+    const stopGesture = (event: Event) => {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    };
+
+    const opts: AddEventListenerOptions = { capture: true, passive: false };
+    canvas.addEventListener("wheel", stopGlobeZoom, opts);
+    wrap.addEventListener("wheel", stopGlobeZoom, opts);
+    canvas.addEventListener("touchstart", stopPinch, opts);
+    canvas.addEventListener("touchmove", stopPinch, opts);
+    wrap.addEventListener("touchstart", stopPinch, opts);
+    wrap.addEventListener("touchmove", stopPinch, opts);
+    wrap.addEventListener("gesturestart", stopGesture, opts);
+    wrap.addEventListener("gesturechange", stopGesture, opts);
+
+    return () => {
+      globe.controls().removeEventListener("change", keep);
+      canvas.removeEventListener("wheel", stopGlobeZoom, opts);
+      wrap.removeEventListener("wheel", stopGlobeZoom, opts);
+      canvas.removeEventListener("touchstart", stopPinch, opts);
+      canvas.removeEventListener("touchmove", stopPinch, opts);
+      wrap.removeEventListener("touchstart", stopPinch, opts);
+      wrap.removeEventListener("touchmove", stopPinch, opts);
+      wrap.removeEventListener("gesturestart", stopGesture, opts);
+      wrap.removeEventListener("gesturechange", stopGesture, opts);
+    };
   }, [ready, setupControls]);
 
   useEffect(() => {

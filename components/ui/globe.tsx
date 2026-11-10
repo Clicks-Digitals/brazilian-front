@@ -162,23 +162,15 @@ export function CoffeeGlobe({
     [],
   );
 
-  const lockOrbit = useCallback((globe: GlobeApi) => {
+  const setupControls = useCallback((globe: GlobeApi) => {
     const controls = globe.controls();
     const radius = globe.getGlobeRadius();
-    const distance = radius * (1 + VIEW_ALTITUDE);
-    controls.enableZoom = false;
+    controls.enableZoom = true;
     controls.enablePan = false;
-    controls.zoomSpeed = 0;
-    controls.zoomToCursor = false;
-    controls.minDistance = distance;
-    controls.maxDistance = distance;
-    const mouseButtons = controls.mouseButtons as { LEFT?: number; MIDDLE?: number; RIGHT?: number };
-    mouseButtons.MIDDLE = -1;
-    const touches = controls.touches as { ONE?: number; TWO?: number };
-    touches.TWO = -1;
-    const dolly = controls as typeof controls & { dollyIn?: (scale?: number) => void; dollyOut?: (scale?: number) => void };
-    dolly.dollyIn = () => undefined;
-    dolly.dollyOut = () => undefined;
+    controls.zoomSpeed = 0.7;
+    controls.zoomToCursor = true;
+    controls.minDistance = radius * 1.35;
+    controls.maxDistance = radius * 6;
   }, []);
 
   const flyTo = useCallback(
@@ -188,9 +180,9 @@ export function CoffeeGlobe({
       if (!globe || !target) return;
       globe.controls().autoRotate = false;
       globe.pointOfView({ lat: target.lat, lng: target.lng, altitude: VIEW_ALTITUDE }, duration);
-      lockOrbit(globe);
+      setupControls(globe);
     },
-    [lockOrbit],
+    [setupControls],
   );
 
   const paint = useCallback(() => {
@@ -207,10 +199,10 @@ export function CoffeeGlobe({
     controls.autoRotateSpeed = 0.45;
     const opening = (focusId && targetFor(focusId)) || { lat: 8, lng: 8 };
     globe.pointOfView({ lat: opening.lat, lng: opening.lng, altitude: VIEW_ALTITUDE }, 0);
-    lockOrbit(globe);
+    setupControls(globe);
     globe.renderer().setPixelRatio(Math.min(1.25, window.devicePixelRatio || 1));
     setReady(true);
-  }, [focusId, lockOrbit, reduceMotion]);
+  }, [focusId, setupControls, reduceMotion]);
 
   useEffect(() => {
     const el = wrapRef.current;

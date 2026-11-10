@@ -85,7 +85,7 @@ export function OriginsGlobe() {
           <CoffeeGlobe
             labels={labels}
             focusId={focusId}
-            className="relative mx-auto aspect-square w-full overflow-visible touch-none overscroll-none"
+            className="relative mx-auto aspect-square w-full overflow-visible"
           />
         </div>
       </div>

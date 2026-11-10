@@ -21,10 +21,13 @@ type OrbitLike = {
   _handleMouseWheel?: (event: WheelEvent) => void;
   _dollyIn?: () => void;
   _dollyOut?: () => void;
+  update: (...args: unknown[]) => unknown;
   addEventListener: (type: string, fn: () => void) => void;
   removeEventListener: (type: string, fn: () => void) => void;
   domElement?: HTMLElement;
 };
+
+const zoomPatched = new WeakSet<object>();
 
 type GlobeApi = GlobeMethods & {
   globeMaterial: () => {
@@ -98,18 +101,21 @@ function targetFor(id: GlobeFocusId) {
   return COFFEE_ORIGINS.find((origin) => origin.id === id);
 }
 
+function holdDistance(globe: GlobeApi) {
+  const radius = globe.getGlobeRadius();
+  if (radius <= 1) return;
+  const controls = globe.controls();
+  const distance = radius * (1 + VIEW_ALTITUDE);
+  controls.minDistance = distance;
+  controls.maxDistance = distance;
+}
+
 function disableZoom(globe: GlobeApi) {
   const controls = globe.controls();
-  const radius = globe.getGlobeRadius();
-  controls.enableZoom = false;
   controls.enablePan = false;
   controls.zoomSpeed = 0;
   controls.zoomToCursor = false;
-  if (radius > 1) {
-    const distance = radius * (1 + VIEW_ALTITUDE);
-    controls.minDistance = distance;
-    controls.maxDistance = distance;
-  }
+  holdDistance(globe);
   if (controls.mouseButtons) controls.mouseButtons.MIDDLE = -1;
   if (controls.touches) controls.touches.TWO = 0;
   controls.dollyIn = () => controls;
@@ -121,6 +127,31 @@ function disableZoom(globe: GlobeApi) {
   if (canvas && controls._onMouseWheel) {
     canvas.removeEventListener("wheel", controls._onMouseWheel);
   }
+  if (zoomPatched.has(controls)) return;
+  zoomPatched.add(controls);
+  Object.defineProperty(controls, "enableZoom", {
+    get: () => false,
+    set: () => undefined,
+    configurable: true,
+  });
+  const originalUpdate = controls.update.bind(controls);
+  controls.update = (...args: unknown[]) => {
+    controls.zoomSpeed = 0;
+    controls.zoomToCursor = false;
+    holdDistance(globe);
+    return originalUpdate(...args);
+  };
+}
+
+function eventOverGlobe(event: Event, wrap: HTMLElement) {
+  if (event.target instanceof Node && wrap.contains(event.target)) return true;
+  if (event.composedPath().includes(wrap)) return true;
+  if ("clientX" in event && "clientY" in event) {
+    const { clientX, clientY } = event as PointerEvent;
+    const rect = wrap.getBoundingClientRect();
+    return clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom;
+  }
+  return false;
 }
 
 export function CoffeeGlobe({
@@ -269,30 +300,23 @@ export function CoffeeGlobe({
     if (!globe || !wrap || !ready) return;
 
     const keepDisabled = () => disableZoom(globe);
-    const pov = globe.pointOfView() as { lat?: number; lng?: number } | undefined;
-    globe.pointOfView(
-      { lat: pov?.lat ?? 8, lng: pov?.lng ?? 8, altitude: VIEW_ALTITUDE },
-      0,
-    );
     keepDisabled();
     globe.controls().addEventListener("change", keepDisabled);
     const frames = [window.requestAnimationFrame(keepDisabled)];
     const timers = [window.setTimeout(keepDisabled, 80), window.setTimeout(keepDisabled, 400)];
 
-    const overGlobe = (target: EventTarget | null) => target instanceof Node && wrap.contains(target);
-
     const stopWheel = (event: WheelEvent) => {
-      if (!overGlobe(event.target)) return;
+      if (!eventOverGlobe(event, wrap)) return;
       event.stopImmediatePropagation();
       if (event.ctrlKey || event.metaKey) event.preventDefault();
     };
     const stopPinch = (event: TouchEvent) => {
-      if (!overGlobe(event.target) || event.touches.length < 2) return;
+      if (!eventOverGlobe(event, wrap) || event.touches.length < 2) return;
       event.preventDefault();
       event.stopImmediatePropagation();
     };
     const stopGesture = (event: Event) => {
-      if (!overGlobe(event.target)) return;
+      if (!eventOverGlobe(event, wrap)) return;
       event.preventDefault();
       event.stopImmediatePropagation();
     };
@@ -393,6 +417,13 @@ export function CoffeeGlobe({
           el.style.opacity = visible ? "1" : "0";
         }}
         enablePointerInteraction
+        onZoom={(pov) => {
+          if (Math.abs(pov.altitude - VIEW_ALTITUDE) < 0.08) return;
+          globeRef.current?.pointOfView(
+            { lat: pov.lat, lng: pov.lng, altitude: VIEW_ALTITUDE },
+            0,
+          );
+        }}
       />
       ) : null}
     </div>

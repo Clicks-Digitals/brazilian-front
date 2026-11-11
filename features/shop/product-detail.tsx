@@ -151,18 +151,22 @@ export function ProductDetail({ product, hidePrice = false }: { product: Product
             <p className="mt-6 text-sm text-cream">{selected.weight_label}</p>
           ) : null}
 
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <Quantity
-              value={qty}
-              onChange={setQty}
-              min={1}
-              max={product.allow_backorder ? undefined : selected?.stock_quantity}
-            />
-            <Button variant="gold" onClick={add} disabled={busy || !selected || !inStock}>
-              {!selected ? t("unavailable") : !inStock ? t("soldOut") : busy ? `${t("adding")}…` : t("addToBag")}
-            </Button>
-          </div>
-          {!inStock ? <p className="mt-3 text-sm text-cream">{t("thisSizeUnavailable")}</p> : null}
+          {hidePrice ? null : (
+            <>
+              <div className="mt-8 flex flex-wrap items-center gap-4">
+                <Quantity
+                  value={qty}
+                  onChange={setQty}
+                  min={1}
+                  max={product.allow_backorder ? undefined : selected?.stock_quantity}
+                />
+                <Button variant="gold" onClick={add} disabled={busy || !selected || !inStock}>
+                  {!selected ? t("unavailable") : !inStock ? t("soldOut") : busy ? `${t("adding")}…` : t("addToBag")}
+                </Button>
+              </div>
+              {!inStock ? <p className="mt-3 text-sm text-cream">{t("thisSizeUnavailable")}</p> : null}
+            </>
+          )}
           {product.origin ? <p className="mt-6 text-sm text-cream">{t("originLine", { origin: product.origin })}</p> : null}
           {product.description ? (
             <div className="prose-bch mt-8 whitespace-pre-wrap text-sm text-cream">{product.description}</div>

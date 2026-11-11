@@ -740,14 +740,19 @@ body:has(.announcement-bar) .site-header {
   }
 
   .hero-pack-slot {
-    width: min(52vw, 12.5rem);
-    height: 32vh;
-    max-height: 15.5rem;
+    width: min(48vw, 11.5rem);
+    height: auto;
+    aspect-ratio: 3 / 4;
+    max-height: 15rem;
   }
 
   .hero-pack-stage {
-    width: min(52vw, 12.5rem);
-    height: min(32vh, 15.5rem);
+    width: min(48vw, 11.5rem);
+    height: calc(min(48vw, 11.5rem) * 4 / 3);
+  }
+
+  .hero-pack-img {
+    filter: none;
   }
 
   .pack-dock-categories-start {

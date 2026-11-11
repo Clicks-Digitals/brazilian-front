@@ -31,6 +31,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
     if (!root || !pack) return;
 
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
@@ -38,6 +39,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
 
     let tl: gsap.core.Timeline | null = null;
     let resizeTimer = 0;
+    let lastWidth = window.innerWidth;
 
     const docks = () => {
       const hero = root.querySelector("#pack-dock-hero");
@@ -74,24 +76,56 @@ export function PackJourney({ children }: { children: ReactNode }) {
         transformOrigin: "center center",
       });
 
-      const travel = { duration: 1.2, ease: "power2.inOut" };
       const compact = window.matchMedia("(max-width: 767px)").matches;
       const bannerScale = compact ? scaleFor(d.h, d.b) : Math.max(scaleFor(d.h, d.b) * 1.35, 1.35);
+      const featuredScale = compact
+        ? Math.max(scaleFor(d.h, d.f), scaleFor(d.h, d.c) * 0.92)
+        : scaleFor(d.h, d.f);
 
-      return gsap
-        .timeline({
-          defaults: { force3D: true, autoAlpha: 1 },
-          scrollTrigger: {
-            id: "hero-pack-scroll",
-            trigger: root,
-            start: "top top",
-            end: "bottom bottom",
-            scrub: 1.2,
-            invalidateOnRefresh: true,
-          },
-        })
+      const timeline = gsap.timeline({
+        defaults: { force3D: true, autoAlpha: 1, ease: compact ? "none" : "power2.inOut" },
+        scrollTrigger: {
+          id: "hero-pack-scroll",
+          trigger: root,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: compact ? 0.45 : 0.95,
+          fastScrollEnd: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      if (compact) {
+        return timeline
+          .to(pack, { duration: 0.1 })
+          .to(pack, {
+            x: d.cs.x,
+            y: d.cs.y,
+            scale: scaleFor(d.h, d.cs),
+            duration: 0.95,
+          })
+          .to(pack, {
+            x: d.c.x,
+            y: d.c.y,
+            scale: scaleFor(d.h, d.c),
+            duration: 1.05,
+          })
+          .to(pack, {
+            x: d.f.x,
+            y: d.f.y,
+            scale: featuredScale,
+            duration: 1.1,
+          })
+          .to(pack, {
+            x: d.b.x,
+            y: d.b.y,
+            scale: bannerScale,
+            duration: 1.15,
+          });
+      }
+
+      return timeline
         .to(pack, { duration: 0.32 })
-        // Enter the right column behind the cards.
         .to(pack, {
           x: d.cs.x,
           y: d.cs.y,
@@ -100,7 +134,6 @@ export function PackJourney({ children }: { children: ReactNode }) {
           duration: 0.75,
           ease: "power2.in",
         })
-        // Slide down the section and come out under Caffitaly.
         .to(pack, {
           x: d.c.x,
           y: d.c.y,
@@ -112,17 +145,16 @@ export function PackJourney({ children }: { children: ReactNode }) {
         .to(pack, {
           x: d.f.x,
           y: d.f.y,
-          scale: scaleFor(d.h, d.f),
+          scale: featuredScale,
           rotate: 0,
           duration: 1.35,
-          ease: "power2.inOut",
         })
         .to(pack, {
           x: d.b.x,
           y: d.b.y,
           scale: bannerScale,
           rotate: 3,
-          ...travel,
+          duration: 1.2,
         })
         .to(pack, { rotate: 0, duration: 0.85, ease: "power1.inOut" });
     };
@@ -136,8 +168,10 @@ export function PackJourney({ children }: { children: ReactNode }) {
     };
 
     const onResize = () => {
+      if (Math.abs(window.innerWidth - lastWidth) < 8) return;
+      lastWidth = window.innerWidth;
       window.clearTimeout(resizeTimer);
-      resizeTimer = window.setTimeout(remount, 180);
+      resizeTimer = window.setTimeout(remount, 220);
     };
 
     const frame = requestAnimationFrame(() => {
@@ -145,12 +179,16 @@ export function PackJourney({ children }: { children: ReactNode }) {
       ScrollTrigger.refresh();
     });
 
+    const onLoad = () => ScrollTrigger.refresh();
     window.addEventListener("resize", onResize);
+    window.addEventListener("load", onLoad);
+    pack.querySelector("img")?.addEventListener("load", onLoad, { once: true });
 
     return () => {
       cancelAnimationFrame(frame);
       window.clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
+      window.removeEventListener("load", onLoad);
       tl?.scrollTrigger?.kill();
       tl?.kill();
     };
@@ -161,7 +199,13 @@ export function PackJourney({ children }: { children: ReactNode }) {
       {children}
       <div ref={packRef} className="hero-pack-stage" aria-hidden>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/hero/hero-pack.png" alt="" className="hero-pack-img" />
+        <img
+          src="/assets/hero/hero-pack.png"
+          alt=""
+          className="hero-pack-img"
+          decoding="async"
+          draggable={false}
+        />
       </div>
     </div>
   );

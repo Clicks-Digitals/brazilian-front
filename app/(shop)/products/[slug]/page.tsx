@@ -9,7 +9,7 @@ import { formatMoney } from "@/lib/format";
 import { pickImage } from "@/lib/settings";
 import type { Product } from "@/types/api";
 
-type Props = { params: Promise<{ slug: string }> };
+type Props = { params: Promise<{ slug: string }>; searchParams: Promise<{ export?: string }> };
 
 async function loadProduct(slug: string) {
   return serverGet<Product>(`/products/${slug}/`);
@@ -31,8 +31,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function ProductPage({ params }: Props) {
+export default async function ProductPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const query = await searchParams;
+  const hidePrice = query.export === "1";
   try {
     const product = await loadProduct(slug);
     const variant = product.default_variant || product.variants?.[0];
@@ -48,7 +50,8 @@ export default async function ProductPage({ params }: Props) {
               description: product.description || product.short_description,
               image: pickImage(product),
               sku: variant?.sku || product.sku,
-              offers: variant
+              offers:
+                !hidePrice && variant
                 ? {
                     "@type": "Offer",
                     priceCurrency: "JOD",
@@ -60,8 +63,8 @@ export default async function ProductPage({ params }: Props) {
             }),
           }}
         />
-        <ProductDetail product={product} />
-        {variant?.price ? (
+        <ProductDetail product={product} hidePrice={hidePrice} />
+        {!hidePrice && variant?.price ? (
           <span className="sr-only">{formatMoney(variant.price)}</span>
         ) : null}
       </>

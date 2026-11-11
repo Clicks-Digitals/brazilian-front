@@ -38,6 +38,7 @@ export function ProductCard({
   const canAdd = Boolean(variantId) && inStock !== false;
   const label = !variantId ? t("view") : inStock === false ? t("soldOut") : busy ? t("adding") : t("addToCart");
   const displayTitle = title || localizedName(locale, product);
+  const href = hidePrice ? `/products/${product.slug}?export=1` : `/products/${product.slug}`;
 
   async function quickAdd() {
     if (!variantId) {
@@ -57,7 +58,7 @@ export function ProductCard({
 
   return (
     <article className="group flex h-full min-w-0 flex-col">
-      <Link href={`/products/${product.slug}`} className="block min-w-0">
+      <Link href={href} className="block min-w-0">
         {media ?? (
           <SmartImage
             src={image}
@@ -101,7 +102,7 @@ export function ProductCard({
               </button>
             </div>
           ) : (
-            <Link href={`/products/${product.slug}`} className="text-[11px] uppercase tracking-[0.16em] text-cream">
+            <Link href={href} className="text-[11px] uppercase tracking-[0.16em] text-cream">
               {label}
             </Link>
           )}

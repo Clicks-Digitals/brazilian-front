@@ -22,7 +22,7 @@ const ROAST_KEYS = {
   dark: "roastDark",
 } as const;
 
-export function ProductDetail({ product }: { product: Product }) {
+export function ProductDetail({ product, hidePrice = false }: { product: Product; hidePrice?: boolean }) {
   const { locale, t } = useLocale();
   const variants = (product.variants || []).filter((item) => item.is_active !== false);
   const displayName = localizedName(locale, product);
@@ -66,11 +66,15 @@ export function ProductDetail({ product }: { product: Product }) {
   return (
     <div className="mx-auto max-w-7xl px-6 py-12" data-reveal>
       <p className="text-sm text-cream">
-        <Link href="/shop">{t("shop")}</Link>
+        {hidePrice ? (
+          <Link href="/export">{t("export")}</Link>
+        ) : (
+          <Link href="/shop">{t("shop")}</Link>
+        )}
         {categorySlug(product) ? (
           <>
             {" / "}
-            <Link href={`/shop/${categorySlug(product)}`}>
+            <Link href={hidePrice ? "/export" : `/shop/${categorySlug(product)}`}>
               {localizedName(locale, category) || categorySlug(product)}
             </Link>
           </>
@@ -107,14 +111,16 @@ export function ProductDetail({ product }: { product: Product }) {
               : t("houseRoast")}
           </p>
           <h1 className="font-display mt-3 text-4xl md:text-5xl">{displayName}</h1>
-          <p className="mt-4 text-xl">
-            {selected?.price ? formatMoney(selected.price) : t("priceUnavailable")}
-            {selected?.compare_at_price ? (
-              <span className="ml-3 text-base text-cream line-through">
-                {formatMoney(selected.compare_at_price)}
-              </span>
-            ) : null}
-          </p>
+          {hidePrice ? null : (
+            <p className="mt-4 text-xl">
+              {selected?.price ? formatMoney(selected.price) : t("priceUnavailable")}
+              {selected?.compare_at_price ? (
+                <span className="ml-3 text-base text-cream line-through">
+                  {formatMoney(selected.compare_at_price)}
+                </span>
+              ) : null}
+            </p>
+          )}
           {product.tasting_notes ? (
             <p className="mt-4 text-cream">{t("tastingNotesLine", { notes: product.tasting_notes })}</p>
           ) : null}
@@ -171,13 +177,13 @@ export function ProductDetail({ product }: { product: Product }) {
               <h2 className="font-display mt-3 text-2xl md:text-3xl">{t("youMayAlsoLike")}</h2>
             </div>
             {categorySlug(product) ? (
-              <Link href={`/shop/${categorySlug(product)}`} className="text-sm text-gold">
-                {t("shopTheCollection")}
+              <Link href={hidePrice ? "/export" : `/shop/${categorySlug(product)}`} className="text-sm text-gold">
+                {hidePrice ? t("export") : t("shopTheCollection")}
               </Link>
             ) : null}
           </div>
           <div className="mt-10">
-            <ProductGrid products={related.slice(0, 4)} className="lg:grid-cols-4" />
+            <ProductGrid products={related.slice(0, 4)} className="lg:grid-cols-4" hidePrice={hidePrice} />
           </div>
         </section>
       ) : null}

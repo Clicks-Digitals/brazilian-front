@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, type ReactNode } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useLocale } from "@/features/i18n/locale-provider";
 
 type Dock = { x: number; y: number; w: number; h: number };
 
@@ -21,7 +22,12 @@ function scaleFor(base: Dock, target: Dock) {
   return Math.min(target.w / Math.max(base.w, 1), target.h / Math.max(base.h, 1));
 }
 
+function travel(from: Dock, to: Dock) {
+  return Math.max(Math.hypot(to.x - from.x, to.y - from.y), 48);
+}
+
 export function PackJourney({ children }: { children: ReactNode }) {
+  const { locale } = useLocale();
   const rootRef = useRef<HTMLDivElement>(null);
   const packRef = useRef<HTMLDivElement>(null);
 
@@ -81,6 +87,11 @@ export function PackJourney({ children }: { children: ReactNode }) {
       const featuredScale = compact
         ? Math.max(scaleFor(d.h, d.f), scaleFor(d.h, d.c) * 0.92)
         : scaleFor(d.h, d.f);
+      const toStart = travel(d.h, d.cs);
+      const toCats = travel(d.cs, d.c);
+      const toFeatured = Math.max(travel(d.c, d.f) * 1.45, toStart * 0.6);
+      const featuredHold = Math.max(toFeatured * 0.8, compact ? 180 : 220);
+      const toBanner = travel(d.f, d.b) * 0.9;
 
       const timeline = gsap.timeline({
         defaults: { force3D: true, autoAlpha: 1, ease: compact ? "none" : "power2.inOut" },
@@ -89,7 +100,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
           trigger: root,
           start: "top top",
           end: "bottom bottom",
-          scrub: compact ? 0.45 : 0.95,
+          scrub: compact ? 0.42 : 0.85,
           fastScrollEnd: true,
           invalidateOnRefresh: true,
         },
@@ -97,30 +108,32 @@ export function PackJourney({ children }: { children: ReactNode }) {
 
       if (compact) {
         return timeline
-          .to(pack, { duration: 0.1 })
+          .to(pack, { duration: 0.08 })
           .to(pack, {
             x: d.cs.x,
             y: d.cs.y,
             scale: scaleFor(d.h, d.cs),
-            duration: 0.95,
+            duration: toStart,
           })
           .to(pack, {
             x: d.c.x,
             y: d.c.y,
             scale: scaleFor(d.h, d.c),
-            duration: 1.05,
+            duration: toCats,
           })
           .to(pack, {
             x: d.f.x,
             y: d.f.y,
             scale: featuredScale,
-            duration: 1.1,
+            duration: toFeatured,
+            ease: "power1.out",
           })
+          .to(pack, { duration: featuredHold })
           .to(pack, {
             x: d.b.x,
             y: d.b.y,
             scale: bannerScale,
-            duration: 1.15,
+            duration: toBanner,
           });
       }
 
@@ -131,7 +144,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
           y: d.cs.y,
           scale: scaleFor(d.h, d.cs),
           rotate: 5,
-          duration: 0.75,
+          duration: toStart,
           ease: "power2.in",
         })
         .to(pack, {
@@ -139,7 +152,7 @@ export function PackJourney({ children }: { children: ReactNode }) {
           y: d.c.y,
           scale: scaleFor(d.h, d.c),
           rotate: -4,
-          duration: 1.15,
+          duration: toCats,
           ease: "none",
         })
         .to(pack, {
@@ -147,16 +160,18 @@ export function PackJourney({ children }: { children: ReactNode }) {
           y: d.f.y,
           scale: featuredScale,
           rotate: 0,
-          duration: 1.35,
+          duration: toFeatured,
+          ease: "power2.out",
         })
+        .to(pack, { duration: featuredHold })
         .to(pack, {
           x: d.b.x,
           y: d.b.y,
           scale: bannerScale,
           rotate: 3,
-          duration: 1.2,
+          duration: toBanner,
         })
-        .to(pack, { rotate: 0, duration: 0.85, ease: "power1.inOut" });
+        .to(pack, { rotate: 0, duration: 80, ease: "power1.inOut" });
     };
 
     const remount = () => {
@@ -174,9 +189,11 @@ export function PackJourney({ children }: { children: ReactNode }) {
       resizeTimer = window.setTimeout(remount, 220);
     };
 
+    let nestedFrame = 0;
     const frame = requestAnimationFrame(() => {
       tl = build();
       ScrollTrigger.refresh();
+      nestedFrame = requestAnimationFrame(remount);
     });
 
     const onLoad = () => ScrollTrigger.refresh();
@@ -186,13 +203,14 @@ export function PackJourney({ children }: { children: ReactNode }) {
 
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(nestedFrame);
       window.clearTimeout(resizeTimer);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("load", onLoad);
       tl?.scrollTrigger?.kill();
       tl?.kill();
     };
-  }, []);
+  }, [locale]);
 
   return (
     <div ref={rootRef} id="pack-journey" className="pack-journey relative">

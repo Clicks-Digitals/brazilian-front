@@ -529,6 +529,7 @@ body:has(.announcement-bar) .site-header {
   pointer-events: none;
   position: absolute;
   left: 0;
+  right: auto;
   top: 0;
   z-index: 5;
   width: min(38vw, 20rem);

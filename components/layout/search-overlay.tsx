@@ -5,10 +5,11 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
 import { Input } from "@/components/ui/field";
+import { SmartImage } from "@/components/ui/smart-image";
 import { api } from "@/lib/api";
 import { useLocale } from "@/features/i18n/locale-provider";
 import { localizedName } from "@/lib/i18n";
-import { asList } from "@/lib/settings";
+import { asList, pickImage } from "@/lib/settings";
 import { formatMoney } from "@/lib/format";
 import type { Product } from "@/types/api";
 
@@ -58,11 +59,11 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-[60] bg-white/95 p-6 pt-[max(1.5rem,env(safe-area-inset-top))] backdrop-blur-sm">
+    <div className="fixed inset-0 z-[60] bg-white p-6 pt-[max(1.5rem,env(safe-area-inset-top))] text-forest">
       <div className="mx-auto max-w-2xl pt-6">
         <div className="flex items-center justify-between">
           <p className="eyebrow text-gold">{t("searchTheHouse")}</p>
-          <button type="button" onClick={onClose} aria-label={t("closeSearch")}>
+          <button type="button" onClick={onClose} aria-label={t("closeSearch")} className="text-forest">
             <X className="size-5" />
           </button>
         </div>
@@ -82,25 +83,33 @@ export function SearchOverlay({ open, onClose }: { open: boolean; onClose: () =>
             aria-label={t("search")}
           />
         </form>
-        <div className="mt-6 space-y-3">
-          {busy ? <p className="text-sm text-muted">{t("searching")}</p> : null}
-          {results.map((product) => (
-            <Link
-              key={product.id}
-              href={`/products/${product.slug}`}
-              onClick={onClose}
-              className="flex items-center justify-between border-b border-ink/10 py-3 text-sm"
-            >
-              <span>{localizedName(locale, product)}</span>
-              <span className="text-muted">
-                {product.default_variant?.price || product.min_price
-                  ? formatMoney(product.default_variant?.price || product.min_price || "")
-                  : ""}
-              </span>
-            </Link>
-          ))}
+        <div className="mt-6 space-y-1">
+          {busy ? <p className="text-sm text-forest/60">{t("searching")}</p> : null}
+          {results.map((product) => {
+            const name = localizedName(locale, product);
+            const price = product.default_variant?.price || product.min_price;
+            return (
+              <Link
+                key={product.id}
+                href={`/products/${product.slug}`}
+                onClick={onClose}
+                className="flex items-center gap-3 border-b border-forest/10 py-3 text-sm text-forest"
+              >
+                <SmartImage
+                  src={pickImage(product) || product.default_variant?.image}
+                  alt={name}
+                  className="size-14 shrink-0 bg-white ring-1 ring-forest/10 sm:size-16"
+                  imgClassName="p-1.5"
+                />
+                <span className="min-w-0 flex-1 text-start font-medium">{name}</span>
+                <span className="shrink-0 tabular-nums text-forest/70">
+                  {price ? formatMoney(price) : ""}
+                </span>
+              </Link>
+            );
+          })}
           {q.trim().length >= 2 && !busy && results.length === 0 ? (
-            <p className="text-sm text-muted">{t("noMatches")}</p>
+            <p className="text-sm text-forest/60">{t("noMatches")}</p>
           ) : null}
         </div>
       </div>

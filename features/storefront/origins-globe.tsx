@@ -16,7 +16,7 @@ const CoffeeGlobe = dynamic(
 );
 
 export function OriginsGlobe() {
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const [focusId, setFocusId] = useState<GlobeFocusId | null>(null);
   const labels = useMemo(
     () => ({
@@ -83,6 +83,7 @@ export function OriginsGlobe() {
         </div>
         <div className="mx-auto w-full min-w-0 max-w-[26rem] sm:max-w-[32rem] lg:max-w-none">
           <CoffeeGlobe
+            key={locale}
             labels={labels}
             focusId={focusId}
             className="relative mx-auto aspect-square w-full overflow-visible"

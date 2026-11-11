@@ -218,6 +218,20 @@ export function CoffeeGlobe({
     globe.pointOfView({ lat: opening.lat, lng: opening.lng, altitude: VIEW_ALTITUDE }, 0);
     lockGlobe(globe);
     globe.renderer().setPixelRatio(1);
+    const overlay = globe.renderer().domElement.parentElement;
+    if (overlay) {
+      overlay.style.direction = "ltr";
+      overlay.style.position = "relative";
+      Array.from(overlay.children).forEach((child) => {
+        if (!(child instanceof HTMLElement) || child.tagName === "CANVAS") return;
+        child.style.left = "0";
+        child.style.top = "0";
+        child.style.right = "0";
+        child.style.width = "100%";
+        child.style.height = "100%";
+        child.style.direction = "ltr";
+      });
+    }
     setReady(true);
   }, [focusId, reduceMotion]);
 
@@ -286,12 +300,13 @@ export function CoffeeGlobe({
     const marker = data as Marker;
     const wrap = document.createElement("div");
     wrap.className = `origin-pin origin-pin-${marker.kind}`;
-    wrap.innerHTML = `<span class="origin-pin-dot"></span><span class="origin-pin-name">${marker.label}</span>`;
+    wrap.dir = "ltr";
+    wrap.innerHTML = `<span class="origin-pin-inner"><span class="origin-pin-dot"></span><span class="origin-pin-name" dir="auto">${marker.label}</span></span>`;
     return wrap;
   }, []);
 
   return (
-    <div ref={wrapRef} className={className} style={{ touchAction: "none" }}>
+    <div ref={wrapRef} className={className} dir="ltr" style={{ touchAction: "none" }}>
       {size > 0 ? (
       <Globe
         ref={globeRef}

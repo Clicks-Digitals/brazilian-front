@@ -135,7 +135,7 @@ export function CheckoutPageClient() {
               onChange={(e) => setForm({ ...form, notes: e.target.value })}
             />
           </Field>
-          <p className="min-h-12 border border-cream/15 bg-cream/10 px-4 py-3 text-sm text-cream/80">
+          <p className="min-h-12 border border-cream/15 bg-cream/10 px-4 py-3 text-sm text-cream">
             {t("paymentCod")}
           </p>
           <Button type="submit" variant="gold" className="w-full sm:w-auto" disabled={submitting}>
@@ -145,18 +145,18 @@ export function CheckoutPageClient() {
         <aside className="h-fit space-y-3 border border-cream/15 bg-cream/10 p-6 text-cream">
           <h2 className="font-medium">{t("orderSummary")}</h2>
           {cart.items.map((item) => (
-            <p key={item.id} className="flex justify-between text-sm text-cream/80">
+            <p key={item.id} className="flex justify-between text-sm text-cream">
               <span>
                 {item.product_name || item.product?.name || item.variant_name || t("coffee")} × {item.quantity}
               </span>
               <span>{formatMoney(item.line_total || "")}</span>
             </p>
           ))}
-          <p className="flex justify-between text-sm text-cream/80">
+          <p className="flex justify-between text-sm text-cream">
             <span>{t("subtotal")}</span>
             <span>{formatMoney(cart.subtotal || "0")}</span>
           </p>
-          <p className="flex justify-between text-sm text-cream/80">
+          <p className="flex justify-between text-sm text-cream">
             <span>{t("delivery")}</span>
             <span>{cart.delivery_fee ? formatMoney(cart.delivery_fee) : t("calculatedAtCheckout")}</span>
           </p>

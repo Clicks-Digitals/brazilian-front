@@ -24,7 +24,7 @@ export default async function CategoriesPage() {
         <header className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pb-12 md:pt-16" data-reveal>
           <p className="eyebrow text-gold">{t(locale, "shop")}</p>
           <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t(locale, "categories")}</h1>
-          <p className="font-subtitle mt-4 max-w-xl text-cream/75">
+          <p className="font-subtitle mt-4 max-w-xl text-cream">
             {t(locale, "categoriesBlurb")}
           </p>
         </header>

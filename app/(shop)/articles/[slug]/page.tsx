@@ -55,14 +55,14 @@ export default async function ArticlePage({ params }: Props) {
               }),
             }}
           />
-          <p className="text-sm text-muted">
+          <p className="text-sm text-cream">
             <Link href="/articles" className="hover:text-forest">
               {t(locale, "articles")}
             </Link>
           </p>
           <p className="eyebrow mt-6 text-gold">{formatDate(article.published_at)}</p>
           <h1 className="font-display mt-3 text-4xl md:text-5xl">{article.title}</h1>
-          {article.excerpt ? <p className="font-subtitle mt-4 text-lg text-muted">{article.excerpt}</p> : null}
+          {article.excerpt ? <p className="font-subtitle mt-4 text-lg text-cream">{article.excerpt}</p> : null}
           {cover ? (
             <SmartImage
               src={cover}

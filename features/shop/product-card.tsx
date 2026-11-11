@@ -71,12 +71,12 @@ export function ProductCard({
         </h3>
       </Link>
       {hidePrice ? (
-        <p className="font-subtitle mt-auto pt-3 text-sm text-cream/70">
+        <p className="font-subtitle mt-auto pt-3 text-sm text-cream">
           {product.origin || product.roast_level || t("houseRoast")}
         </p>
       ) : (
         <div className="mt-auto min-w-0 space-y-3 pt-3">
-          <p className="font-subtitle text-sm text-cream/70">
+          <p className="font-subtitle text-sm text-cream">
             {price ? formatMoney(price) : t("priceInStore")}
             {compare ? <span className="ml-2 line-through opacity-60">{formatMoney(compare)}</span> : null}
           </p>
@@ -101,7 +101,7 @@ export function ProductCard({
               </button>
             </div>
           ) : (
-            <Link href={`/products/${product.slug}`} className="text-[11px] uppercase tracking-[0.16em] text-cream/70">
+            <Link href={`/products/${product.slug}`} className="text-[11px] uppercase tracking-[0.16em] text-cream">
               {label}
             </Link>
           )}

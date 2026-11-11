@@ -39,7 +39,7 @@ export function ContactForm() {
     return (
       <div className="border-t border-ink/10 pt-8">
         <p className="eyebrow text-gold">{t("sent")}</p>
-        <p className="font-subtitle mt-3 text-lg text-ink">
+        <p className="font-subtitle mt-3 text-lg text-cream">
           {t("contactThanks")}
         </p>
       </div>
@@ -89,10 +89,10 @@ export function ContactForm() {
           onChange={(e) => setForm({ ...form, body: e.target.value })}
         />
       </Field>
-      <Button type="submit" variant="primary" className="w-full sm:w-auto" disabled={status === "loading"}>
+      <Button type="submit" variant="gold" size="lg" className="w-full rounded-full sm:w-auto sm:px-10" disabled={status === "loading"}>
         {status === "loading" ? t("sending") : t("sendMessage")}
       </Button>
-      {message ? <p className="font-subtitle text-sm text-muted">{message}</p> : null}
+      {message ? <p className="font-subtitle text-sm text-cream">{message}</p> : null}
     </form>
   );
 }

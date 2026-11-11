@@ -18,10 +18,17 @@ export function Pagination({
   if (count === 0) return null;
   return (
     <div className={cn("flex items-center justify-center gap-3 pt-10", className)}>
-      <Button type="button" variant="secondary" size="sm" disabled={page <= 1} onClick={() => onPage(page - 1)}>
+      <Button
+        type="button"
+        variant="secondary"
+        size="sm"
+        disabled={page <= 1}
+        onClick={() => onPage(page - 1)}
+        className="border-cream text-cream hover:border-gold hover:text-gold disabled:border-cream disabled:text-cream disabled:opacity-100"
+      >
         Previous
       </Button>
-      <span className="text-sm text-muted">
+      <span className="text-sm text-cream">
         {page} / {pages}
       </span>
       <Button
@@ -30,6 +37,7 @@ export function Pagination({
         size="sm"
         disabled={page >= pages}
         onClick={() => onPage(page + 1)}
+        className="border-cream text-cream hover:border-gold hover:text-gold disabled:border-cream disabled:text-cream disabled:opacity-100"
       >
         Next
       </Button>

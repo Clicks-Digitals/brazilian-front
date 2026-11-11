@@ -7,7 +7,7 @@ function fieldSurface(tone: FieldTone) {
   return cn(
     "w-full min-h-12 border px-4 py-3 text-base outline-none transition",
     tone === "forest"
-      ? "border-cream/15 bg-cream/10 text-cream caret-cream placeholder:text-cream/40 focus:border-cream/40 [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_#305b4a] [&:-webkit-autofill]:[-webkit-text-fill-color:var(--cream)]"
+      ? "rounded-full border-cream/40 bg-transparent text-cream caret-cream placeholder:text-cream/70 focus:border-cream [&:-webkit-autofill]:shadow-[inset_0_0_0_1000px_#1b4a38] [&:-webkit-autofill]:[-webkit-text-fill-color:var(--cream)]"
       : "border-ink/15 bg-white text-forest placeholder:text-muted/70 focus:border-gold",
   );
 }
@@ -32,7 +32,7 @@ export function Field({
       <span
         className={
           tone === "forest"
-            ? "text-[11px] uppercase tracking-[0.14em] text-cream/80"
+            ? "text-[11px] uppercase tracking-[0.14em] text-cream"
             : "text-xs tracking-wide text-ink"
         }
       >
@@ -40,7 +40,7 @@ export function Field({
       </span>
       {children}
       {hint && !error ? (
-        <span className={cn("block text-xs", tone === "forest" ? "text-cream/55" : "text-muted")}>{hint}</span>
+        <span className={cn("block text-xs", tone === "forest" ? "text-cream" : "text-muted")}>{hint}</span>
       ) : null}
       {error ? (
         <span className={cn("block text-xs", tone === "forest" ? "text-gold" : "text-red-800")}>{error}</span>
@@ -62,7 +62,12 @@ export function Textarea({
   tone = "light",
   ...props
 }: TextareaHTMLAttributes<HTMLTextAreaElement> & { tone?: FieldTone }) {
-  return <textarea className={cn(fieldSurface(tone), "min-h-32", className)} {...props} />;
+  return (
+    <textarea
+      className={cn(fieldSurface(tone), "min-h-32", tone === "forest" && "rounded-2xl", className)}
+      {...props}
+    />
+  );
 }
 
 export function Select({

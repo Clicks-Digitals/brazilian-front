@@ -48,7 +48,7 @@ export default function OrderDetailPage() {
         <span>Total</span>
         <span>{formatMoney(order.total, order.currency)}</span>
       </p>
-      <p className="text-sm text-muted">
+      <p className="text-sm text-cream">
         {order.shipping_line1}, {order.shipping_city}
       </p>
     </div>

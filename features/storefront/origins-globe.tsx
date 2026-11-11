@@ -39,7 +39,7 @@ export function OriginsGlobe() {
           <h2 className="font-display mt-3 text-[1.75rem] leading-tight text-cream sm:text-3xl md:text-5xl">
             {t("originsTitle")}
           </h2>
-          <p className="font-subtitle mt-4 max-w-md text-sm leading-relaxed text-cream/80 sm:mt-5 sm:text-base md:text-lg">
+          <p className="font-subtitle mt-4 max-w-md text-sm leading-relaxed text-cream sm:mt-5 sm:text-base md:text-lg">
             {t("originsBlurb")}
           </p>
           <ul className="mt-6 grid grid-cols-1 gap-2.5 sm:mt-8 sm:max-w-md sm:grid-cols-2 sm:gap-x-6 sm:gap-y-3">

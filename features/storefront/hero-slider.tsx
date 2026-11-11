@@ -56,7 +56,7 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
 
           <div className="relative z-20 mt-auto grid grid-cols-12 items-end gap-x-6 gap-y-10 pt-6 pb-2 lg:pt-[4vh]">
             <div className="col-span-12 flex flex-col gap-8 md:col-span-6 lg:col-span-3">
-              <p className="font-subtitle max-w-[290px] text-[17px] leading-[1.47] text-cream/80">
+              <p className="font-subtitle max-w-[290px] text-[17px] leading-[1.47] text-cream">
                 {t("heroCopy", { year: BRAND.established })}
               </p>
               <Link
@@ -74,7 +74,7 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
               {stats.map((stat) => (
                 <div
                   key={stat.label}
-                  className="flex items-center gap-3 rounded-xl bg-white/70 py-1.5 pl-1.5 pr-5 backdrop-blur-sm"
+                  className="flex items-center gap-3 rounded-xl bg-white py-1.5 pl-1.5 pr-5"
                 >
                   <span className="grid size-11 shrink-0 place-items-center rounded-[9px] bg-white text-gold">
                     <stat.icon className="size-5" strokeWidth={1.5} />
@@ -102,7 +102,7 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center leading-none">
               <span className="text-[15px] font-bold tracking-[-0.03em]">100%</span>
-              <span className="mt-0.5 text-[10px] tracking-[0.04em] text-cream/70">Arabica</span>
+              <span className="mt-0.5 text-[10px] tracking-[0.04em] text-cream">Arabica</span>
             </div>
           </div>
         </div>
@@ -110,7 +110,7 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
         <div className="relative z-20 mt-8 flex justify-center pb-6">
           <a
             href="#home-categories"
-            className="hero-nudge flex flex-col items-center gap-2 text-[12px] tracking-[0.08em] text-cream/70 uppercase transition-colors hover:text-gold"
+            className="hero-nudge flex flex-col items-center gap-2 text-[12px] tracking-[0.08em] text-cream uppercase transition-colors hover:text-gold"
           >
             {t("scrollToBrew")}
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
@@ -126,7 +126,7 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
             <div key={copy} className="flex items-center gap-10" aria-hidden={copy === 1}>
               {marquee.map((item) => (
                 <div key={`${copy}-${item}`} className="flex items-center gap-10">
-                  <span className="whitespace-nowrap text-sm uppercase tracking-[0.14em] text-cream/80">{item}</span>
+                  <span className="whitespace-nowrap text-sm uppercase tracking-[0.14em] text-cream">{item}</span>
                   <span className="size-[5px] shrink-0 rounded-full bg-gold" />
                 </div>
               ))}

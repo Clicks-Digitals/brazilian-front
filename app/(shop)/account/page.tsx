@@ -10,7 +10,7 @@ export default function AccountOverviewPage() {
     <div className="space-y-8">
       <div>
         <h1 className="text-3xl font-light">Hello{user?.first_name ? `, ${user.first_name}` : ""}</h1>
-        <p className="mt-2 text-muted">{user?.email}</p>
+        <p className="mt-2 text-cream">{user?.email}</p>
       </div>
       <LoyaltyWidget />
       <div className="grid gap-4 sm:grid-cols-3">

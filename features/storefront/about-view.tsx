@@ -22,13 +22,13 @@ export function AboutView() {
         <div className="relative z-10 mx-auto flex min-h-[88svh] max-w-7xl flex-col justify-end px-6 pb-16 pt-28 md:pb-24">
           <p className="font-display text-3xl leading-none tracking-[-0.03em] md:text-5xl">{houseName}</p>
           {locale === "en" ? (
-            <p className="mt-2 text-lg text-cream/90 md:text-xl" dir="rtl" lang="ar">
+            <p className="mt-2 text-lg text-cream md:text-xl" dir="rtl" lang="ar">
               {BRAND.nameAr}
             </p>
           ) : (
-            <p className="mt-2 text-lg text-cream/90 md:text-xl">{BRAND.name}</p>
+            <p className="mt-2 text-lg text-cream md:text-xl">{BRAND.name}</p>
           )}
-          <h1 className="font-subtitle mt-8 max-w-xl text-base leading-relaxed text-cream/85 md:text-lg">
+          <h1 className="font-subtitle mt-8 max-w-xl text-base leading-relaxed text-cream md:text-lg">
             {t("aboutHero", { year: BRAND.established })}
           </h1>
           <div className="mt-8">
@@ -61,7 +61,7 @@ export function AboutView() {
               {t("millHeadline")}
             </h2>
             <span className="mt-6 block h-px w-14 bg-gold" />
-            <p className="font-subtitle mt-6 max-w-xl text-base leading-relaxed text-cream/75 md:text-lg">
+            <p className="font-subtitle mt-6 max-w-xl text-base leading-relaxed text-cream md:text-lg">
               {t("millHeritage")}
             </p>
             <div className="mt-8 grid grid-cols-3 gap-2 sm:gap-3">
@@ -80,7 +80,7 @@ export function AboutView() {
                     alt=""
                     className="h-14 w-14 object-contain sm:h-16 sm:w-16 md:h-[4.75rem] md:w-[4.75rem]"
                   />
-                  <p className="mt-2.5 text-[10px] uppercase tracking-[0.16em] text-cream/70" dir="ltr">
+                  <p className="mt-2.5 text-[10px] uppercase tracking-[0.16em] text-cream" dir="ltr">
                     {stat.label}
                   </p>
                 </div>
@@ -110,11 +110,11 @@ export function AboutView() {
             <p className="eyebrow text-gold">{t("ourStory")}</p>
             <h2 className="font-display mt-4 text-3xl leading-[1.12] text-cream md:text-5xl">{t("aboutHeadline")}</h2>
             <span className="mt-6 block h-px w-14 bg-gold" />
-            <p className="font-subtitle mt-6 text-base leading-relaxed text-cream/85 md:text-lg">{t("aboutLead")}</p>
-            <p className="font-subtitle mt-4 text-base leading-relaxed text-cream/75 md:text-lg">{t("aboutKuwait")}</p>
-            <p className="font-subtitle mt-4 text-base leading-relaxed text-cream/75 md:text-lg">{t("aboutJordan")}</p>
+            <p className="font-subtitle mt-6 text-base leading-relaxed text-cream md:text-lg">{t("aboutLead")}</p>
+            <p className="font-subtitle mt-4 text-base leading-relaxed text-cream md:text-lg">{t("aboutKuwait")}</p>
+            <p className="font-subtitle mt-4 text-base leading-relaxed text-cream md:text-lg">{t("aboutJordan")}</p>
             <h3 className="font-display mt-10 text-2xl leading-snug text-cream md:text-3xl">{t("aboutJourneyTitle")}</h3>
-            <p className="font-subtitle mt-4 text-base leading-relaxed text-cream/75 md:text-lg">{t("aboutJourneyBody")}</p>
+            <p className="font-subtitle mt-4 text-base leading-relaxed text-cream md:text-lg">{t("aboutJourneyBody")}</p>
             <p className="font-display mt-8 text-xl text-gold md:text-2xl">{t("moreThanCoffee")}</p>
           </div>
           <div className="relative md:col-span-6 md:sticky md:top-28" data-reveal>
@@ -135,7 +135,7 @@ export function AboutView() {
           <div className="max-w-xl">
             <p className="eyebrow text-gold">{t("branches")}</p>
             <h2 className="font-display mt-3 text-3xl text-cream md:text-5xl">{t("findTheHouse")}</h2>
-            <p className="font-subtitle mt-5 text-base leading-relaxed text-cream/75">{t("branchesBlurb")}</p>
+            <p className="font-subtitle mt-5 text-base leading-relaxed text-cream">{t("branchesBlurb")}</p>
           </div>
 
           <div className="mt-14 grid gap-x-12 gap-y-3 md:grid-cols-2">
@@ -148,7 +148,7 @@ export function AboutView() {
                 >
                   <div className="min-w-0">
                     <p className="font-display text-xl text-cream md:text-2xl">{label}</p>
-                    <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-cream/55">
+                    <p className="mt-1 text-[11px] uppercase tracking-[0.16em] text-cream">
                       {locale === "ar" ? branch.cityAr : branch.city}
                     </p>
                   </div>
@@ -161,7 +161,7 @@ export function AboutView() {
                       {branch.phone}
                     </a>
                   ) : (
-                    <span className="shrink-0 text-[11px] uppercase tracking-[0.16em] text-cream/70">
+                    <span className="shrink-0 text-[11px] uppercase tracking-[0.16em] text-cream">
                       {t("jordan")}
                     </span>
                   )}
@@ -190,7 +190,7 @@ export function AboutView() {
       <section className="mx-auto max-w-7xl px-6 py-20 text-center md:py-28" data-reveal>
         <p className="eyebrow text-gold">{t("visitOrShop")}</p>
         <h2 className="font-display mx-auto mt-4 max-w-2xl text-3xl text-cream md:text-5xl">{t("houseCupWherever")}</h2>
-        <p className="font-subtitle mx-auto mt-5 max-w-lg text-base leading-relaxed text-cream/75">
+        <p className="font-subtitle mx-auto mt-5 max-w-lg text-base leading-relaxed text-cream">
           {t("visitOrShopBlurb")}
         </p>
         <div className="mt-10 flex w-full flex-col items-center gap-4 sm:flex-row sm:justify-center">

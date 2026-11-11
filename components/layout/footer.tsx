@@ -33,7 +33,7 @@ export function Footer({
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={BRAND.logo} alt={houseName} className="size-16" />
           <p className="font-display text-2xl text-cream">{houseName}</p>
-          <p className="text-sm leading-relaxed text-cream/75">{about}</p>
+          <p className="text-sm leading-relaxed text-cream">{about}</p>
           <p className="text-[11px] uppercase tracking-[0.18em] text-gold">
             {t("statEst", { year: BRAND.established })} · {t("jordan")} {BRAND.jordanSince}
           </p>
@@ -106,12 +106,12 @@ export function Footer({
         </div>
         <div>
           <p className="eyebrow text-gold">{t("theList")}</p>
-          <p className="mt-5 mb-5 text-sm text-cream/75">{t("footerListBlurb")}</p>
+          <p className="mt-5 mb-5 text-sm text-cream">{t("footerListBlurb")}</p>
           <NewsletterForm dark />
         </div>
       </div>
       <div className="border-t border-cream/10">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-5 text-xs text-cream/55">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-6 py-5 text-xs text-cream">
           <p>
             © {new Date().getFullYear()} {houseName}. {t("rights")}
           </p>

@@ -43,18 +43,38 @@ export function LoginForm({ admin = false }: { admin?: boolean }) {
       onSubmit={submit}
       className={cn("mx-auto space-y-4", admin ? "mt-8 max-w-none px-0 pb-0" : "max-w-md px-6 pb-24")}
     >
-      <Field label="Email">
-        <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+      <Field label="Email" tone={admin ? "light" : "forest"}>
+        <Input
+          type="email"
+          required
+          tone={admin ? "light" : "forest"}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
+        />
       </Field>
-      <Field label="Password">
-        <Input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
+      <Field label="Password" tone={admin ? "light" : "forest"}>
+        <Input
+          type="password"
+          required
+          tone={admin ? "light" : "forest"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          autoComplete="current-password"
+        />
       </Field>
-      {error ? <p className="text-sm text-red-800">{error}</p> : null}
-      <Button type="submit" className="w-full rounded-lg" disabled={busy}>
+      {error ? <p className={cn("text-sm", admin ? "text-red-800" : "text-gold")}>{error}</p> : null}
+      <Button
+        type="submit"
+        variant={admin ? "primary" : "gold"}
+        size={admin ? "md" : "lg"}
+        className={cn("w-full", admin ? "rounded-lg" : "rounded-full")}
+        disabled={busy}
+      >
         {busy ? "Signing in…" : "Sign in"}
       </Button>
       {!admin ? (
-        <p className="text-center text-sm text-muted">
+        <p className="text-center text-sm text-cream">
           <Link href="/forgot-password">Forgot password</Link>
           {" · "}
           <Link href="/register">Create an account</Link>
@@ -86,23 +106,23 @@ export function RegisterForm() {
 
   return (
     <form onSubmit={submit} className="mx-auto grid max-w-md gap-4 px-6 pb-24">
-      <Field label="First name">
-        <Input required value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} />
+      <Field tone="forest" label="First name">
+        <Input tone="forest" required value={form.first_name} onChange={(e) => setForm({ ...form, first_name: e.target.value })} />
       </Field>
-      <Field label="Last name">
-        <Input required value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} />
+      <Field tone="forest" label="Last name">
+        <Input tone="forest" required value={form.last_name} onChange={(e) => setForm({ ...form, last_name: e.target.value })} />
       </Field>
-      <Field label="Email">
-        <Input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+      <Field tone="forest" label="Email">
+        <Input tone="forest" type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
       </Field>
-      <Field label="Phone">
-        <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+      <Field tone="forest" label="Phone">
+        <Input tone="forest" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
       </Field>
-      <Field label="Password">
-        <Input type="password" required minLength={8} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+      <Field tone="forest" label="Password">
+        <Input tone="forest" type="password" required minLength={8} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
       </Field>
-      {error ? <p className="text-sm text-red-800">{error}</p> : null}
-      <Button type="submit" disabled={busy}>
+      {error ? <p className="text-sm text-gold">{error}</p> : null}
+      <Button type="submit" variant="gold" size="lg" className="w-full rounded-full" disabled={busy}>
         {busy ? "Creating…" : "Create account"}
       </Button>
     </form>
@@ -129,13 +149,13 @@ export function ForgotForm() {
 
   return (
     <form onSubmit={submit} className="mx-auto max-w-md space-y-4 px-6 pb-24">
-      <Field label="Email">
-        <Input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+      <Field tone="forest" label="Email">
+        <Input tone="forest" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
       </Field>
-      <Button type="submit" disabled={busy}>
+      <Button type="submit" variant="gold" size="lg" className="w-full rounded-full" disabled={busy}>
         Send reset link
       </Button>
-      {message ? <p className="text-sm text-muted">{message}</p> : null}
+      {message ? <p className="text-sm text-cream">{message}</p> : null}
     </form>
   );
 }
@@ -171,18 +191,18 @@ export function ResetForm() {
   }
 
   if (!search.get("token") && !search.get("uid")) {
-    return <p className="px-6 text-center text-muted">This reset link is missing a token.</p>;
+    return <p className="px-6 text-center text-cream">This reset link is missing a token.</p>;
   }
 
   return (
     <form onSubmit={submit} className="mx-auto max-w-md space-y-4 px-6 pb-24">
-      <Field label="New password">
-        <Input type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
+      <Field tone="forest" label="New password">
+        <Input tone="forest" type="password" required minLength={8} value={password} onChange={(e) => setPassword(e.target.value)} />
       </Field>
-      <Button type="submit" disabled={busy}>
+      <Button type="submit" variant="gold" size="lg" className="w-full rounded-full" disabled={busy}>
         Update password
       </Button>
-      {message ? <p className="text-sm text-muted">{message}</p> : null}
+      {message ? <p className="text-sm text-cream">{message}</p> : null}
     </form>
   );
 }

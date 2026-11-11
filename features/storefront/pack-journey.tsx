@@ -89,19 +89,21 @@ export function PackJourney({ children }: { children: ReactNode }) {
         : scaleFor(d.h, d.f);
       const toStart = travel(d.h, d.cs);
       const toCats = travel(d.cs, d.c);
-      const toFeatured = Math.max(travel(d.c, d.f) * 1.45, toStart * 0.6);
-      const featuredHold = Math.max(toFeatured * 0.8, compact ? 180 : 220);
-      const toBanner = travel(d.f, d.b) * 0.9;
+      const toFeatured = compact
+        ? Math.max(travel(d.c, d.f) * 1.45, toStart * 0.6)
+        : Math.max(travel(d.c, d.f) * 0.5, toStart * 0.22);
+      const featuredHold = Math.max(toFeatured * (compact ? 0.55 : 0.16), compact ? 180 : 48);
+      const toBanner = travel(d.f, d.b) * (compact ? 0.9 : 0.42);
 
       const timeline = gsap.timeline({
-        defaults: { force3D: true, autoAlpha: 1, ease: compact ? "none" : "power2.inOut" },
+        defaults: { force3D: true, autoAlpha: 1, ease: "none" },
         scrollTrigger: {
           id: "hero-pack-scroll",
           trigger: root,
           start: "top top",
           end: "bottom bottom",
-          scrub: compact ? 0.42 : 0.85,
-          fastScrollEnd: true,
+          scrub: compact ? 0.42 : true,
+          fastScrollEnd: compact,
           invalidateOnRefresh: true,
         },
       });
@@ -137,41 +139,38 @@ export function PackJourney({ children }: { children: ReactNode }) {
           });
       }
 
+      const down = (from: Dock, to: Dock) => Math.max(Math.abs(to.y - from.y), 40);
+
       return timeline
-        .to(pack, { duration: 0.32 })
         .to(pack, {
           x: d.cs.x,
           y: d.cs.y,
           scale: scaleFor(d.h, d.cs),
           rotate: 5,
-          duration: toStart,
-          ease: "power2.in",
+          duration: down(d.h, d.cs),
         })
         .to(pack, {
           x: d.c.x,
           y: d.c.y,
           scale: scaleFor(d.h, d.c),
           rotate: -4,
-          duration: toCats,
-          ease: "none",
+          duration: down(d.cs, d.c),
         })
         .to(pack, {
           x: d.f.x,
           y: d.f.y,
           scale: featuredScale,
           rotate: 0,
-          duration: toFeatured,
-          ease: "power2.out",
+          duration: down(d.c, d.f),
         })
-        .to(pack, { duration: featuredHold })
         .to(pack, {
           x: d.b.x,
           y: d.b.y,
           scale: bannerScale,
           rotate: 3,
-          duration: toBanner,
+          duration: down(d.f, d.b),
         })
-        .to(pack, { rotate: 0, duration: 80, ease: "power1.inOut" });
+        .to(pack, { rotate: 0, duration: 40 });
     };
 
     const remount = () => {

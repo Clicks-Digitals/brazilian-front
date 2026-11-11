@@ -36,7 +36,7 @@ export default async function ExportPage() {
           <div className="mx-auto max-w-7xl px-6 py-12 md:py-16" data-reveal>
             <p className="eyebrow text-gold">{t(locale, "export")}</p>
             <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t(locale, "productShowcase")}</h1>
-            <p className="font-subtitle mt-4 max-w-xl text-cream/75">
+            <p className="font-subtitle mt-4 max-w-xl text-cream">
               {t(locale, "exportBlurb")}
             </p>
           </div>

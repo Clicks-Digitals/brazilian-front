@@ -76,7 +76,7 @@ export function ShopByCategory() {
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16" data-reveal>
           <p className="eyebrow text-gold">{t("collection")}</p>
           <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t("shopCoffee")}</h1>
-          <p className="font-subtitle mt-4 max-w-xl text-cream/75">
+          <p className="font-subtitle mt-4 max-w-xl text-cream">
             {t("shopCoffeeBlurb")}
           </p>
         </div>
@@ -118,7 +118,7 @@ export function ShopByCategory() {
                   <p className="eyebrow text-gold">{String(index + 1).padStart(2, "0")}</p>
                   <h2 className="font-display mt-2 text-3xl text-cream md:text-4xl">{localizedName(locale, section.category)}</h2>
                   {section.category.description ? (
-                    <p className="font-subtitle mt-3 max-w-xl text-sm text-cream/75">{section.category.description}</p>
+                    <p className="font-subtitle mt-3 max-w-xl text-sm text-cream">{section.category.description}</p>
                   ) : null}
                 </div>
                 {section.category.slug !== "other" ? (

@@ -65,7 +65,7 @@ export function ProductDetail({ product }: { product: Product }) {
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12" data-reveal>
-      <p className="text-sm text-cream/70">
+      <p className="text-sm text-cream">
         <Link href="/shop">{t("shop")}</Link>
         {categorySlug(product) ? (
           <>
@@ -110,21 +110,21 @@ export function ProductDetail({ product }: { product: Product }) {
           <p className="mt-4 text-xl">
             {selected?.price ? formatMoney(selected.price) : t("priceUnavailable")}
             {selected?.compare_at_price ? (
-              <span className="ml-3 text-base text-cream/55 line-through">
+              <span className="ml-3 text-base text-cream line-through">
                 {formatMoney(selected.compare_at_price)}
               </span>
             ) : null}
           </p>
           {product.tasting_notes ? (
-            <p className="mt-4 text-cream/75">{t("tastingNotesLine", { notes: product.tasting_notes })}</p>
+            <p className="mt-4 text-cream">{t("tastingNotesLine", { notes: product.tasting_notes })}</p>
           ) : null}
           {product.short_description ? (
-            <p className="font-subtitle mt-4 leading-relaxed text-cream/80">{product.short_description}</p>
+            <p className="font-subtitle mt-4 leading-relaxed text-cream">{product.short_description}</p>
           ) : null}
 
           {variants.length > 1 ? (
             <div className="mt-8">
-              <p className="text-xs uppercase tracking-[0.16em] text-cream/70">{t("size")}</p>
+              <p className="text-xs uppercase tracking-[0.16em] text-cream">{t("size")}</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {variants.map((variant) => (
                   <button
@@ -142,7 +142,7 @@ export function ProductDetail({ product }: { product: Product }) {
               </div>
             </div>
           ) : selected?.weight_label ? (
-            <p className="mt-6 text-sm text-cream/70">{selected.weight_label}</p>
+            <p className="mt-6 text-sm text-cream">{selected.weight_label}</p>
           ) : null}
 
           <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -156,10 +156,10 @@ export function ProductDetail({ product }: { product: Product }) {
               {!selected ? t("unavailable") : !inStock ? t("soldOut") : busy ? `${t("adding")}…` : t("addToBag")}
             </Button>
           </div>
-          {!inStock ? <p className="mt-3 text-sm text-cream/70">{t("thisSizeUnavailable")}</p> : null}
-          {product.origin ? <p className="mt-6 text-sm text-cream/70">{t("originLine", { origin: product.origin })}</p> : null}
+          {!inStock ? <p className="mt-3 text-sm text-cream">{t("thisSizeUnavailable")}</p> : null}
+          {product.origin ? <p className="mt-6 text-sm text-cream">{t("originLine", { origin: product.origin })}</p> : null}
           {product.description ? (
-            <div className="prose-bch mt-8 whitespace-pre-wrap text-sm text-cream/80">{product.description}</div>
+            <div className="prose-bch mt-8 whitespace-pre-wrap text-sm text-cream">{product.description}</div>
           ) : null}
         </div>
       </div>

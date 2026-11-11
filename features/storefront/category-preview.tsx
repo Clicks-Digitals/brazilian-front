@@ -33,7 +33,7 @@ export function CategoryPreview({ categories }: { categories: Category[] }) {
                 <span className="font-subtitle block text-xl font-normal leading-snug text-ink">
                   {category.name}
                 </span>
-                <span className="mt-1 block text-[11px] uppercase tracking-[0.16em] text-muted">
+                <span className="mt-1 block text-[11px] uppercase tracking-[0.16em] text-cream">
                   {countLabel(category.product_count)}
                 </span>
               </span>
@@ -68,7 +68,7 @@ export function CategoryPreview({ categories }: { categories: Category[] }) {
                   <span
                     className={cn(
                       "shrink-0 text-[11px] uppercase tracking-[0.16em]",
-                      on ? "text-gold" : "text-muted",
+                      on ? "text-gold" : "text-cream",
                     )}
                   >
                     {countLabel(category.product_count)}
@@ -88,7 +88,7 @@ export function CategoryPreview({ categories }: { categories: Category[] }) {
             imgClassName="transition duration-500"
           />
           {current.description ? (
-            <p className="font-subtitle mt-6 text-sm leading-relaxed text-muted">{current.description}</p>
+            <p className="font-subtitle mt-6 text-sm leading-relaxed text-cream">{current.description}</p>
           ) : null}
           <Link href={`/shop/${current.slug}`} className="link-arrow mt-5">
             Shop {current.name}

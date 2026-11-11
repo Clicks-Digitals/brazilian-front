@@ -40,11 +40,11 @@ function CategoryTile({
       <div className="mt-4 flex items-start justify-between gap-4 md:mt-6">
         <div>
           <p className="text-[11px] tracking-[0.22em] text-gold">{String(index + 1).padStart(2, "0")}</p>
-          <h3 className="font-display mt-1 text-2xl leading-tight text-ink transition group-hover:text-forest md:text-5xl">
+          <h3 className="font-display mt-1 text-2xl leading-tight text-cream transition group-hover:text-gold md:text-5xl">
             {category.name}
           </h3>
           {category.description ? (
-            <p className="font-subtitle mt-3 hidden max-w-md text-sm leading-relaxed text-muted md:line-clamp-2 md:block">
+            <p className="font-subtitle mt-3 hidden max-w-md text-sm leading-relaxed text-cream md:line-clamp-2 md:block">
               {category.description}
             </p>
           ) : null}
@@ -111,10 +111,10 @@ export function CategoryIndex({
           style={{ zIndex: pairIndex + 1 }}
         >
           <div className="mx-auto w-full max-w-7xl px-6">
-            <p className="mb-6 text-[11px] tracking-[0.22em] text-muted">
+            <p className="mb-6 text-[11px] tracking-[0.22em] text-cream">
               {String(pairIndex * 2 + 1).padStart(2, "0")}
               {pair.length > 1 ? ` — ${String(pairIndex * 2 + 2).padStart(2, "0")}` : ""}
-              <span className="text-ink/25"> / {String(categories.length).padStart(2, "0")}</span>
+              <span className="text-cream"> / {String(categories.length).padStart(2, "0")}</span>
             </p>
             <div className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
               {pair.map((category, offset) => (

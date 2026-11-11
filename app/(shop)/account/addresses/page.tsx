@@ -70,7 +70,7 @@ export default function AddressesPage() {
                 <p className="font-medium">
                   {address.full_name} {address.is_default ? "· Default" : ""}
                 </p>
-                <p className="text-sm text-muted">
+                <p className="text-sm text-cream">
                   {address.line1}, {address.city}
                 </p>
               </div>

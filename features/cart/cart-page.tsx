@@ -84,7 +84,7 @@ export function CartPageClient() {
                   <Link href={slug ? `/products/${slug}` : "/shop"} className="font-medium">
                     {name}
                   </Link>
-                  <p className="text-sm text-cream/70">{variantName}</p>
+                  <p className="text-sm text-cream">{variantName}</p>
                   <p className="mt-1 text-sm">{formatMoney(price || "0")}</p>
                   <div className="mt-3 flex items-center gap-4">
                     <Quantity
@@ -103,7 +103,7 @@ export function CartPageClient() {
                     />
                     <button
                       type="button"
-                      className="text-sm text-cream/70 hover:text-gold"
+                      className="text-sm text-cream hover:text-gold"
                       disabled={busyId === item.id}
                       onClick={async () => {
                         setBusyId(item.id);
@@ -127,7 +127,7 @@ export function CartPageClient() {
         </ul>
         <aside className="h-fit space-y-4 border border-cream/15 bg-cream/10 p-6 text-cream">
           <h2 className="text-lg font-medium">{t("summary")}</h2>
-          <p className="flex justify-between text-sm text-cream/80">
+          <p className="flex justify-between text-sm text-cream">
             <span>{t("subtotal")}</span>
             <span>{formatMoney(cart.subtotal || "0")}</span>
           </p>
@@ -137,7 +137,7 @@ export function CartPageClient() {
               <span>-{formatMoney(cart.discount_amount || "0")}</span>
             </p>
           ) : null}
-          <p className="flex justify-between text-sm text-cream/80">
+          <p className="flex justify-between text-sm text-cream">
             <span>{t("delivery")}</span>
             <span>{cart.delivery_fee ? formatMoney(cart.delivery_fee) : t("calculatedAtCheckout")}</span>
           </p>
@@ -168,7 +168,7 @@ export function CartPageClient() {
           <Button href="/checkout" variant="gold" className="w-full">
             {t("checkout")}
           </Button>
-          <p className="text-xs text-cream/55">{t("codOnly")}</p>
+          <p className="text-xs text-cream">{t("codOnly")}</p>
         </aside>
       </div>
     </>

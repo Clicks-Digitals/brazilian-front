@@ -27,7 +27,7 @@ export default async function ArticlesPage() {
         <header className="max-w-2xl pb-10 pt-12 md:pt-16" data-reveal>
           <p className="eyebrow text-gold">{t(locale, "house")}</p>
           <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t(locale, "articles")}</h1>
-          <p className="font-subtitle mt-4 text-cream/75">{t(locale, "articlesBlurb")}</p>
+          <p className="font-subtitle mt-4 text-cream">{t(locale, "articlesBlurb")}</p>
         </header>
 
         {results.length === 0 ? (
@@ -49,12 +49,12 @@ export default async function ArticlesPage() {
                     imgClassName="transition duration-700 group-hover:scale-[1.04]"
                   />
                 </div>
-                <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-muted">
+                <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-cream">
                   {formatDate(article.published_at)}
                 </p>
                 <h2 className="font-display mt-2 text-2xl group-hover:text-forest">{article.title}</h2>
                 {article.excerpt ? (
-                  <p className="font-subtitle mt-2 line-clamp-3 text-sm leading-relaxed text-muted">{article.excerpt}</p>
+                  <p className="font-subtitle mt-2 line-clamp-3 text-sm leading-relaxed text-cream">{article.excerpt}</p>
                 ) : null}
               </Link>
             ))}

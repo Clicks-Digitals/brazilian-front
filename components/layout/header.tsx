@@ -14,16 +14,6 @@ import { cn } from "@/lib/cn";
 import { localizedName } from "@/lib/i18n";
 import type { Category } from "@/types/api";
 
-function InstagramIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={className} aria-hidden>
-      <rect x="3" y="3" width="18" height="18" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
 function LogoMark({ overlay }: { overlay: boolean }) {
   return (
     <Link href="/" className="nav-brand" aria-label={BRAND.name}>
@@ -137,15 +127,6 @@ export function Header({
 
           <div className="flex items-center justify-end">
             <LanguageSwitcher className="me-1" />
-            <a
-              href={BRAND.instagram}
-              aria-label="Instagram"
-              className="nav-icon"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <InstagramIcon className="size-4" />
-            </a>
             <IconButton label={t("search")} onClick={() => setSearchOpen(true)}>
               <Search className="size-4" strokeWidth={1.5} />
             </IconButton>
@@ -169,15 +150,6 @@ export function Header({
           </nav>
           <div className="flex items-center justify-end gap-1">
             <LanguageSwitcher />
-            <a
-              href={BRAND.instagram}
-              aria-label="Instagram"
-              className="nav-icon"
-              target="_blank"
-              rel="noreferrer"
-            >
-              <InstagramIcon className="size-4" />
-            </a>
             <IconButton label={t("search")} onClick={() => setSearchOpen(true)}>
               <Search className="size-4" strokeWidth={1.5} />
             </IconButton>
@@ -226,15 +198,6 @@ export function Header({
           <Link href={user ? "/account" : "/login"} className="nav-drawer-link" onClick={() => setOpen(false)}>
             {user ? t("account") : t("signIn")}
           </Link>
-          <a
-            href={BRAND.instagram}
-            className="nav-drawer-link"
-            target="_blank"
-            rel="noreferrer"
-            onClick={() => setOpen(false)}
-          >
-            Instagram
-          </a>
           <div className="mt-6">
             <LanguageSwitcher align="start" />
           </div>
@@ -245,7 +208,7 @@ export function Header({
               <Link
                 key={category.slug}
                 href={`/shop/${category.slug}`}
-                className="py-1.5 text-sm text-muted"
+                className="py-1.5 text-sm text-cream"
                 onClick={() => setOpen(false)}
               >
                 {localizedName(locale, category)}

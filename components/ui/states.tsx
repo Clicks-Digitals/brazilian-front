@@ -34,7 +34,7 @@ export function EmptyState({
     <div className="mx-auto max-w-lg py-16 text-center">
       <p className="eyebrow text-gold">{t("nothingHereYet")}</p>
       <h2 className="font-display mt-3 text-2xl text-cream">{title}</h2>
-      {description ? <p className="font-subtitle mt-3 text-cream/70">{description}</p> : null}
+      {description ? <p className="font-subtitle mt-3 text-cream">{description}</p> : null}
       {action ? <div className="mt-6 flex justify-center">{action}</div> : null}
     </div>
   );
@@ -54,7 +54,7 @@ export function ErrorState({
     <div className="mx-auto max-w-lg py-16 text-center">
       <p className="eyebrow text-gold">{t("connection")}</p>
       <h2 className="font-display mt-3 text-2xl text-cream">{title || t("couldNotLoadNow")}</h2>
-      <p className="font-subtitle mt-3 text-cream/70">
+      <p className="font-subtitle mt-3 text-cream">
         {description || t("storeCouldNotReach")}
       </p>
       {onRetry ? (
@@ -79,7 +79,7 @@ export function PageHeader({
     <header className="mx-auto max-w-3xl px-6 pb-10 pt-16 text-center md:pt-24">
       {eyebrow ? <p className="eyebrow text-gold">{eyebrow}</p> : null}
       <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{title}</h1>
-      {description ? <p className="font-subtitle mt-4 text-cream/75">{description}</p> : null}
+      {description ? <p className="font-subtitle mt-4 text-cream">{description}</p> : null}
     </header>
   );
 }

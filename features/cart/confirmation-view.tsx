@@ -48,7 +48,7 @@ export function ConfirmationView({ orderNumber }: { orderNumber: string }) {
             </p>
           </div>
         ) : !access ? (
-          <p className="text-muted">
+          <p className="text-cream">
             Keep this number for your records. Sign in to follow the order in your account.
           </p>
         ) : null}

@@ -106,19 +106,19 @@ export function ShopToolbar({
     <div className="space-y-4">
       <div className="flex flex-col gap-4 border-y border-ink/8 py-4 md:flex-row md:items-center md:justify-between">
         <label className="relative flex min-w-0 flex-1 items-center gap-2 md:max-w-sm">
-          <Search className="size-4 shrink-0 text-muted" />
+          <Search className="size-4 shrink-0 text-cream" />
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder={t("searchTheShelf")}
-            className="w-full border-0 bg-transparent py-1 text-sm text-ink outline-none placeholder:text-muted"
+            className="w-full border-0 bg-transparent py-1 text-sm text-cream outline-none placeholder:text-cream"
           />
         </label>
         <div className="flex flex-wrap items-center gap-3">
           <select
             value={value.roast || ""}
             onChange={(e) => set("roast", e.target.value)}
-            className="bg-transparent text-xs tracking-[0.12em] uppercase text-ink outline-none"
+            className="bg-transparent text-xs tracking-[0.12em] uppercase text-cream outline-none"
           >
             <option value="">{t("anyRoast")}</option>
             <option value="light">{t("roastLight")}</option>
@@ -129,7 +129,7 @@ export function ShopToolbar({
           <select
             value={value.ordering || "featured"}
             onChange={(e) => set("ordering", e.target.value)}
-            className="bg-transparent text-xs tracking-[0.12em] uppercase text-ink outline-none"
+            className="bg-transparent text-xs tracking-[0.12em] uppercase text-cream outline-none"
           >
             <option value="featured">{t("featured")}</option>
             <option value="-created_at">{t("newest")}</option>
@@ -142,11 +142,11 @@ export function ShopToolbar({
           <button
             type="button"
             onClick={() => setOpen((v) => !v)}
-            className="text-xs tracking-[0.12em] uppercase text-muted hover:text-forest"
+            className="text-xs tracking-[0.12em] uppercase text-cream hover:text-gold"
           >
             {open ? t("hideFilters") : t("moreFilters")}
           </button>
-          <p className="text-xs tracking-[0.12em] uppercase text-muted">
+          <p className="text-xs tracking-[0.12em] uppercase text-cream">
             {t(count === 1 ? "coffeeOne" : "coffeeMany", { count })}
           </p>
         </div>

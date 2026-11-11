@@ -24,7 +24,7 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
     if (hydrated && !access) router.replace("/login?next=/account");
   }, [hydrated, access, router]);
 
-  if (!hydrated) return <div className="px-6 py-20 text-muted">Loading account…</div>;
+  if (!hydrated) return <div className="px-6 py-20 text-cream">Loading account…</div>;
   if (!access) return null;
 
   return (
@@ -36,14 +36,14 @@ export function AccountShell({ children }: { children: React.ReactNode }) {
             <Link
               key={link.href}
               href={link.href}
-              className={cn("block text-sm", pathname === link.href ? "text-forest" : "text-muted hover:text-ink")}
+              className={cn("block text-sm", pathname === link.href ? "text-forest" : "text-cream hover:text-ink")}
             >
               {link.label}
             </Link>
           ))}
           <button
             type="button"
-            className="mt-4 text-sm text-muted hover:text-ink"
+            className="mt-4 text-sm text-cream hover:text-ink"
             onClick={async () => {
               await logoutSession();
               router.push("/");

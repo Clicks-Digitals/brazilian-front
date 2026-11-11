@@ -36,13 +36,13 @@ export function NewsletterForm({ dark = false }: { dark?: boolean }) {
         onChange={(e) => setEmail(e.target.value)}
         placeholder={t("emailAddress")}
         aria-label={t("emailAddress")}
-        className={dark ? "border-cream/30 bg-transparent text-cream placeholder:text-cream/60" : undefined}
+        className={dark ? "border-cream/30 bg-transparent text-cream placeholder:text-cream" : undefined}
       />
       <Button type="submit" disabled={status === "loading"} variant={dark ? "gold" : "primary"}>
         {status === "loading" ? t("sending") : t("subscribe")}
       </Button>
       {message ? (
-        <p className={`text-sm sm:col-span-2 ${status === "error" ? "text-red-200" : dark ? "text-cream/80" : "text-muted"}`}>
+        <p className={`text-sm sm:col-span-2 ${status === "error" ? "text-red-200" : dark ? "text-cream" : "text-cream"}`}>
           {message}
         </p>
       ) : null}

@@ -75,7 +75,7 @@ export default async function ContactPage() {
         <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 md:py-20" data-reveal>
           <p className="eyebrow text-gold">{t(locale, "contact")}</p>
           <h1 className="font-display mt-4 text-[2rem] leading-tight text-cream sm:text-4xl md:text-5xl">{t(locale, "visitUs")}</h1>
-          <p className="font-subtitle mt-5 max-w-xl text-base leading-relaxed text-cream/75 md:mt-6 md:text-lg">
+          <p className="font-subtitle mt-5 max-w-xl text-base leading-relaxed text-cream md:mt-6 md:text-lg">
             {t(locale, "contactBlurb")}
           </p>
 
@@ -100,7 +100,7 @@ export default async function ContactPage() {
         <div className="min-w-0" data-reveal>
           <p className="eyebrow text-gold">{t(locale, "write")}</p>
           <h2 className="font-display mt-3 text-2xl sm:text-3xl md:text-4xl">{t(locale, "sendANote")}</h2>
-          <p className="font-subtitle mt-3 max-w-md text-cream/75">
+          <p className="font-subtitle mt-3 max-w-md text-cream">
             {t(locale, "contactFormBlurb")}
           </p>
           <div className="mt-8 md:mt-10">
@@ -111,7 +111,7 @@ export default async function ContactPage() {
         <div className="min-w-0" data-reveal>
           <p className="eyebrow text-gold">{t(locale, "visit")}</p>
           <h2 className="font-display mt-3 text-2xl sm:text-3xl md:text-4xl">{t(locale, "branches")}</h2>
-          <p className="font-subtitle mt-3 text-cream/75">{t(locale, "eightHouses")}</p>
+          <p className="font-subtitle mt-3 text-cream">{t(locale, "eightHouses")}</p>
 
           <div className="mt-8 space-y-8 md:mt-10 md:space-y-10">
             {cities.map(([city, list]) => (
@@ -139,13 +139,13 @@ export default async function ContactPage() {
                             {branch.phone}
                           </a>
                         ) : (
-                          <span className="text-[11px] uppercase tracking-[0.16em] text-cream/70 sm:shrink-0">
+                          <span className="text-[11px] uppercase tracking-[0.16em] text-cream sm:shrink-0">
                             {branch.address || t(locale, "open")}
                           </span>
                         )}
                       </div>
                       {branch.address && branch.phone ? (
-                        <p className="font-subtitle -mt-1 pb-3.5 text-sm text-cream/70 sm:-mt-2 sm:pb-4">
+                        <p className="font-subtitle -mt-1 pb-3.5 text-sm text-cream sm:-mt-2 sm:pb-4">
                           {branch.address}
                         </p>
                       ) : null}

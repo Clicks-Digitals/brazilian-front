@@ -69,7 +69,7 @@ export function ProductRail({
         <div className="mx-auto max-w-7xl px-6">
           <p className="eyebrow text-gold">{railEyebrow}</p>
           <h2 className="font-display mt-3 text-3xl">{railTitle}</h2>
-          <p className="mt-4 text-cream/75">{t("nothingYet")}</p>
+          <p className="mt-4 text-cream">{t("nothingYet")}</p>
         </div>
       </section>
     );
@@ -108,7 +108,7 @@ export function PromoBanner({ banners }: { banners: Banner[] }) {
             {banner?.title || t("roastedForTheHouseCup")}
           </h2>
           {banner?.subtitle ? (
-            <p className="font-subtitle mt-5 max-w-md text-base leading-relaxed text-cream/75">{banner.subtitle}</p>
+            <p className="font-subtitle mt-5 max-w-md text-base leading-relaxed text-cream">{banner.subtitle}</p>
           ) : null}
           {banner?.cta_label ? (
             <div className="mt-8">
@@ -147,7 +147,7 @@ export function StoryBand({ settings }: { settings: StoreSettings }) {
           <p className="eyebrow text-gold">{t("since")} {BRAND.established}</p>
           <p className="mt-3 text-sm tracking-[0.16em] text-gold uppercase">{t("jordan")} {BRAND.jordanSince}</p>
           <h2 className="font-display mt-5 text-3xl text-cream md:text-4xl">{t("fromKuwaitToJordan")}</h2>
-          <p className="font-subtitle mt-6 max-w-2xl text-lg leading-relaxed text-cream/75">
+          <p className="font-subtitle mt-6 max-w-2xl text-lg leading-relaxed text-cream">
             {locale === "ar" ? t("story") : settings.story || BRAND.story}
           </p>
           <Link href="/about" className="link-arrow mt-8">
@@ -178,7 +178,7 @@ export function JournalGrid({ articles }: { articles: Article[] }) {
         </div>
 
         {notes.length === 0 ? (
-          <p className="mt-10 text-cream/75">{t("noArticles")}</p>
+          <p className="mt-10 text-cream">{t("noArticles")}</p>
         ) : (
           <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-3 md:gap-6">
             {notes.map((article) => (
@@ -228,7 +228,7 @@ export function NewsletterBand() {
       <div className="mx-auto flex max-w-xl flex-col items-center px-6 text-center">
         <p className="eyebrow text-gold">{t("correspondence")}</p>
         <h2 className="font-display mt-3 text-3xl md:text-4xl">{t("joinTheHouseList")}</h2>
-        <p className="font-subtitle mt-3 mb-8 max-w-md text-cream/75">
+        <p className="font-subtitle mt-3 mb-8 max-w-md text-cream">
           {t("newsletterBlurb")}
         </p>
         <NewsletterForm dark />

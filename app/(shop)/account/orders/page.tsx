@@ -37,7 +37,7 @@ export default function OrdersPage() {
               <Link href={`/account/orders/${order.order_number}`} className="font-medium">
                 {order.order_number}
               </Link>
-              <p className="text-sm text-muted">{formatDate(order.placed_at)}</p>
+              <p className="text-sm text-cream">{formatDate(order.placed_at)}</p>
             </div>
             <div className="flex items-center gap-4">
               <StatusPill value={order.status} />

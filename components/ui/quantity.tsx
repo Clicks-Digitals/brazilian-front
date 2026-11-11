@@ -24,7 +24,7 @@ export function Quantity({
   return (
     <div
       className={cn(
-        "inline-flex items-center rounded-2xl border border-cream/20 bg-cream/10",
+        "inline-flex items-center rounded-full border border-cream/40 bg-transparent",
         className,
       )}
     >

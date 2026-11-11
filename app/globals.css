@@ -4,7 +4,7 @@
   --forest: #1b4a38;
   --forest-dark: #0f2c22;
   --gold: #d4b46a;
-  --cream: #eef5f1;
+  --cream: #ffffff;
   --linen: #e7f0ea;
   --paper: #ffffff;
   --ink: #1a2a22;
@@ -28,6 +28,11 @@
 
 * {
   box-sizing: border-box;
+}
+
+select option {
+  color: #1a2a22;
+  background: #fff;
 }
 
 html {
@@ -90,7 +95,7 @@ html[dir="rtl"] .nav-cat-link {
   gap: 0.2rem;
   min-height: 2.6rem;
   padding: 0 0.4rem;
-  color: color-mix(in srgb, var(--cream) 78%, transparent);
+  color: var(--cream);
   font-size: 0.72rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -139,7 +144,7 @@ html[dir="rtl"] .nav-cat-link {
   text-align: start;
   font-size: 0.84rem;
   letter-spacing: 0.02em;
-  color: color-mix(in srgb, var(--cream) 82%, transparent);
+  color: var(--cream);
   transition: color 0.15s ease, background 0.15s ease;
 }
 
@@ -418,7 +423,7 @@ body:has(.announcement-bar) .site-header {
 }
 
 .site-header.is-overlay.is-light .nav-cat-link {
-  color: var(--muted);
+  color: var(--forest);
 }
 
 .site-header.is-solid .nav-categories-row {
@@ -426,11 +431,11 @@ body:has(.announcement-bar) .site-header {
 }
 
 .site-header.is-overlay .nav-cat-link {
-  color: rgba(255, 255, 255, 0.72);
+  color: #ffffff;
 }
 
 .site-header.is-solid .nav-cat-link {
-  color: color-mix(in srgb, var(--cream) 78%, transparent);
+  color: var(--cream);
 }
 
 .nav-cat-link {
@@ -823,7 +828,7 @@ body:has(.announcement-bar) .site-header {
 }
 
 .prose-bch {
-  color: color-mix(in srgb, var(--cream) 80%, transparent);
+  color: var(--cream);
   line-height: 1.75;
 }
 

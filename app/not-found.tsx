@@ -11,7 +11,7 @@ export default async function NotFound() {
       <img src={BRAND.logo} alt="" className="mb-8 size-20" />
       <p className="eyebrow text-gold">404</p>
       <h1 className="font-display mt-3 text-4xl">{t(locale, "pageNotOnShelf")}</h1>
-      <p className="mt-4 max-w-md text-cream/75">
+      <p className="mt-4 max-w-md text-cream">
         {t(locale, "pageNotOnShelfBlurb")}
       </p>
       <div className="mt-8">

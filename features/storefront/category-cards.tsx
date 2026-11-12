@@ -36,11 +36,11 @@ export function CategoryCards({
             className="aspect-[4/3] w-full bg-forest"
             imgClassName="transition duration-700 group-hover:scale-[1.05]"
           />
-          <div className="border-t border-cream/15 px-4 py-4 md:px-5">
-            <h3 className="font-subtitle text-lg font-normal leading-tight text-cream md:text-xl">
+          <div className="border-t border-cream/15 px-3 py-3 sm:px-4 sm:py-4 md:px-5">
+            <h3 className="font-subtitle min-h-[2.4em] text-[15px] font-normal leading-snug text-cream sm:text-lg md:text-xl">
               {localizedName(locale, category)}
             </h3>
-            <p className="mt-2 text-[11px] uppercase tracking-[0.16em] text-gold">
+            <p className="mt-2 text-[11px] text-gold uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case">
               {category.product_count
                 ? `${category.product_count} ${category.product_count === 1 ? t("item") : t("items")}`
                 : t("shop")}

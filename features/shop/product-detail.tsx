@@ -11,8 +11,10 @@ import { useLocale } from "@/features/i18n/locale-provider";
 import { toast } from "@/features/ui/toast-store";
 import { formatMoney, titleCase } from "@/lib/format";
 import { errorMessage } from "@/lib/http";
+import { cn } from "@/lib/cn";
 import { localizedName } from "@/lib/i18n";
 import { categorySlug, pickImage } from "@/lib/settings";
+import { variantSizeLabel } from "@/lib/variant-label";
 import type { Product, ProductVariant } from "@/types/api";
 
 const ROAST_KEYS = {
@@ -128,27 +130,29 @@ export function ProductDetail({ product, hidePrice = false }: { product: Product
             <p className="font-subtitle mt-4 leading-relaxed text-cream">{product.short_description}</p>
           ) : null}
 
-          {variants.length > 1 ? (
+          {variants.length > 0 ? (
             <div className="mt-8">
-              <p className="text-xs uppercase tracking-[0.16em] text-cream">{t("size")}</p>
+              <p className="text-xs font-bold uppercase tracking-[0.08em] text-cream rtl:tracking-normal rtl:normal-case">
+                {t("size")}
+              </p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {variants.map((variant) => (
                   <button
                     key={variant.id}
                     type="button"
                     onClick={() => setSelectedId(variant.id)}
-                    className={`border px-4 py-2 text-sm ${
-                      selectedId === variant.id ? "border-gold bg-gold text-forest-dark" : "border-cream/25"
-                    }`}
+                    className={cn(
+                      "min-w-[4.75rem] rounded-full border px-4 py-2 text-sm font-bold transition",
+                      selectedId === variant.id
+                        ? "border-gold bg-gold text-forest-dark"
+                        : "border-cream/35 text-cream hover:border-gold",
+                    )}
                   >
-                    {variant.name}
-                    {variant.weight_label ? ` · ${variant.weight_label}` : ""}
+                    {variantSizeLabel(variant, t)}
                   </button>
                 ))}
               </div>
             </div>
-          ) : selected?.weight_label ? (
-            <p className="mt-6 text-sm text-cream">{selected.weight_label}</p>
           ) : null}
 
           {hidePrice ? null : (

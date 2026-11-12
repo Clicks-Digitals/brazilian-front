@@ -51,17 +51,24 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
           </h1>
 
           <div className="hero-pack-slot">
-            <div id="pack-dock-hero" className="pack-dock pack-dock-hero" aria-hidden />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/hero/hero-pack.png"
+              alt=""
+              className="hero-pack-img"
+              decoding="async"
+              draggable={false}
+            />
           </div>
 
-          <div className="relative z-20 mt-auto grid grid-cols-12 items-end gap-x-6 gap-y-10 pt-6 pb-2 lg:pt-[4vh]">
+          <div className="relative z-20 mt-auto grid grid-cols-12 items-end gap-x-6 gap-y-10 pt-6 pb-10 lg:pt-[4vh] lg:pb-12">
             <div className="col-span-12 flex flex-col gap-8 md:col-span-6 lg:col-span-3">
               <p className="font-subtitle max-w-[290px] text-[17px] leading-[1.47] text-cream">
                 {t("heroCopy", { year: BRAND.established })}
               </p>
               <Link
                 href="/shop"
-                className="group inline-flex items-center justify-center gap-2 self-start rounded-full bg-gold px-8 py-4 text-sm font-medium text-forest-dark transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-white"
+                className="group inline-flex items-center justify-center gap-2 self-start rounded-full bg-gold px-8 py-4 text-sm font-bold text-forest-dark transition duration-300 ease-out hover:-translate-y-0.5 hover:bg-white"
               >
                 {t("shopTheCollection")}
                 <span className="transition-transform duration-300 group-hover:translate-x-1 rtl:rotate-180">→</span>
@@ -107,17 +114,6 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
           </div>
         </div>
 
-        <div className="relative z-20 mt-8 flex justify-center pb-6">
-          <a
-            href="#home-categories"
-            className="hero-nudge flex flex-col items-center gap-2 text-[12px] tracking-[0.08em] text-cream uppercase transition-colors hover:text-gold"
-          >
-            {t("scrollToBrew")}
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="h-4 w-4">
-              <path d="M12 4.8v14.4M6.6 13.8 12 19.2l5.4-5.4" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </a>
-        </div>
       </section>
 
       <div className="hero-marquee-wrap overflow-hidden border-y border-cream/10 bg-forest-dark py-4">

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { SmartImage } from "@/components/ui/smart-image";
 import { ProductGrid } from "@/features/shop/product-card";
 import { CategoryCards } from "@/features/storefront/category-cards";
 import { NewsletterForm } from "@/features/storefront/newsletter-form";
@@ -35,12 +36,8 @@ export function CategoryGrid({ categories }: { categories: Category[] }) {
             <span aria-hidden className="rtl:inline-block rtl:rotate-180">→</span>
           </Link>
         </div>
-        <div className="relative mt-10 md:mt-14">
-          <div className="relative">
-            <CategoryCards categories={categories} limit={8} />
-            <div id="pack-dock-categories-start" className="pack-dock pack-dock-categories-start" aria-hidden />
-          </div>
-          <div id="pack-dock-categories" className="pack-dock pack-dock-categories" aria-hidden />
+        <div className="mt-10 md:mt-14">
+          <CategoryCards categories={categories} limit={8} />
         </div>
       </div>
     </section>
@@ -100,7 +97,7 @@ export function PromoBanner({ banners }: { banners: Banner[] }) {
   const banner = banners[0];
   return (
     <section id="home-banner" className="relative my-8 w-full overflow-x-clip bg-forest text-cream">
-      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 grid-cols-1 md:grid-cols-[minmax(0,1fr)_min(36rem,52%)] md:gap-8 md:py-36">
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-6 py-16 md:grid-cols-2 md:gap-16 md:py-24">
         <div className="relative z-20 max-w-xl">
           <p className="eyebrow text-gold">{t("season")}</p>
           <span className="mt-4 block h-px w-10 bg-gold/80" />
@@ -124,7 +121,20 @@ export function PromoBanner({ banners }: { banners: Banner[] }) {
             </div>
           )}
         </div>
-        <div id="pack-dock-banner" className="pack-dock pack-dock-banner" aria-hidden />
+        <div className="relative mx-auto w-full max-w-[22rem] md:max-w-[30rem]">
+          <div className="relative overflow-hidden rounded-[1.75rem] border border-gold/30 shadow-[0_24px_60px_rgba(8,24,18,0.35)]">
+            <SmartImage
+              src="/assets/categories/turkish-coffee.jpg"
+              alt={banner?.title || t("roastedForTheHouseCup")}
+              fit="cover"
+              className="aspect-[4/5] w-full"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#0f2c22]/75 via-transparent to-[#0f2c22]/25" />
+            <span className="absolute start-4 top-4 rounded-full bg-gold px-3.5 py-1.5 text-[10px] font-bold text-forest-dark">
+              {t("statArabica")}
+            </span>
+          </div>
+        </div>
       </div>
     </section>
   );

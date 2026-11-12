@@ -525,25 +525,6 @@ body:has(.announcement-bar) .site-header {
   );
 }
 
-.pack-journey {
-  isolation: isolate;
-  overflow-x: clip;
-}
-
-.hero-pack-stage {
-  pointer-events: none;
-  position: absolute;
-  left: 0;
-  right: auto;
-  top: 0;
-  z-index: 5;
-  width: min(38vw, 20rem);
-  height: min(52vh, 32rem);
-  transform-origin: center center;
-  will-change: transform;
-  backface-visibility: hidden;
-}
-
 .hero-marquee-wrap {
   position: relative;
   z-index: 30;
@@ -571,6 +552,17 @@ body:has(.announcement-bar) .site-header {
   z-index: 1;
 }
 
+.hero-pack-slot {
+  position: relative;
+  z-index: 10;
+  width: min(58vw, 13.5rem);
+  height: 36vh;
+  max-height: 17rem;
+  margin: 1.25rem auto 0;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
 .hero-pack-img {
   position: absolute;
   inset: 0;
@@ -580,71 +572,11 @@ body:has(.announcement-bar) .site-header {
   max-width: 100%;
   object-fit: contain;
   filter: drop-shadow(0 28px 50px rgba(36, 31, 26, 0.18));
-  backface-visibility: hidden;
-}
-
-.pack-dock {
-  pointer-events: none;
-}
-
-.hero-pack-slot {
-  position: relative;
-  z-index: 0;
-  width: min(58vw, 13.5rem);
-  height: 36vh;
-  max-height: 17rem;
-  margin: 1.25rem auto 0;
-  flex-shrink: 0;
-}
-
-.pack-dock-hero {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.pack-dock-about {
-  position: absolute;
-  left: 10%;
-  top: 48%;
-  z-index: 0;
-  width: min(14rem, 52%);
-  height: min(22rem, 70%);
-  transform: translate(-40%, -50%);
 }
 
 .category-card {
   position: relative;
   z-index: 20;
-}
-
-.pack-dock-categories-start {
-  position: absolute;
-  right: 0;
-  top: 0;
-  z-index: 0;
-  width: min(16rem, 46%);
-  height: min(20rem, 48%);
-}
-
-.pack-dock-categories {
-  margin: 0.15rem 0 0 auto;
-  width: min(16rem, 46%);
-  height: min(22rem, 48vw);
-}
-
-.pack-dock-featured {
-  min-height: 8rem;
-}
-
-.pack-dock-banner {
-  position: relative;
-  z-index: 0;
-  width: min(18rem, 72vw);
-  height: 22rem;
-  justify-self: center;
 }
 
 .hero-seal-spin {
@@ -657,16 +589,6 @@ body:has(.announcement-bar) .site-header {
 
 .hero-marquee {
   animation: hero-marquee 28s linear infinite;
-}
-
-@keyframes hero-pack-float {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-12px) scale(1);
-  }
 }
 
 @keyframes hero-seal-spin {
@@ -697,22 +619,6 @@ body:has(.announcement-bar) .site-header {
   }
 }
 
-@media (min-width: 768px) {
-  .pack-dock-categories-start,
-  .pack-dock-categories {
-    width: min(14rem, 23%);
-  }
-
-  .pack-dock-categories {
-    height: min(22rem, 32vw);
-  }
-
-  .pack-dock-banner {
-    width: 100%;
-    height: 38rem;
-  }
-}
-
 @media (min-width: 1024px) {
   .hero-pack-slot {
     position: absolute;
@@ -723,18 +629,6 @@ body:has(.announcement-bar) .site-header {
     max-height: none;
     margin: 0;
     transform: translate(-50%, -18%);
-  }
-
-  .pack-dock-banner {
-    width: 100%;
-    height: min(48rem, 96%);
-  }
-}
-
-@media (max-width: 1023px) {
-  .hero-pack-stage {
-    width: min(58vw, 13.5rem);
-    height: min(36vh, 17rem);
   }
 }
 
@@ -752,33 +646,8 @@ body:has(.announcement-bar) .site-header {
     max-height: 15rem;
   }
 
-  .hero-pack-stage {
-    width: min(48vw, 11.5rem);
-    height: calc(min(48vw, 11.5rem) * 4 / 3);
-  }
-
   .hero-pack-img {
     filter: none;
-  }
-
-  .pack-dock-categories-start {
-    width: calc((100% - 0.75rem) / 2);
-    height: 42%;
-  }
-
-  .pack-dock-categories {
-    width: calc((100% - 0.75rem) / 2);
-    height: 11rem;
-    margin: 0.35rem 0 0 auto;
-  }
-
-  .pack-dock-banner {
-    width: min(16.5rem, 70vw);
-    height: 22rem;
-  }
-
-  #home-categories {
-    padding-bottom: 5.5rem;
   }
 }
 
@@ -860,9 +729,16 @@ body:has(.announcement-bar) .site-header {
   align-items: center;
   gap: 0.45rem;
   font-size: 0.72rem;
-  letter-spacing: 0.16em;
+  font-weight: 700;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--gold);
+}
+
+html.is-ar .link-arrow,
+html[dir="rtl"] .link-arrow {
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .link-arrow:hover {

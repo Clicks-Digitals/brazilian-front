@@ -1,6 +1,5 @@
 import { ReloadError } from "@/components/ui/reload-error";
 import { HeroSlider } from "@/features/storefront/hero-slider";
-import { PackJourney } from "@/features/storefront/pack-journey";
 import {
   CategoryGrid,
   JournalGrid,
@@ -45,14 +44,12 @@ export default async function HomePage() {
             }),
           }}
         />
-        <PackJourney>
-          <div data-home-page>
-            <HeroSlider banners={heroes} />
-          </div>
-          <CategoryGrid categories={categories} />
-          <FeaturedShelf products={data.featured_products || []} />
-          <PromoBanner banners={promos} />
-        </PackJourney>
+        <div data-home-page>
+          <HeroSlider banners={heroes} />
+        </div>
+        <CategoryGrid categories={categories} />
+        <FeaturedShelf products={data.featured_products || []} />
+        <PromoBanner banners={promos} />
         <ProductRail
           products={data.new_products || []}
           href="/shop?ordering=-created_at"

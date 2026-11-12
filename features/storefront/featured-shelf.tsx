@@ -30,21 +30,7 @@ export function FeaturedShelf({ products }: { products: Product[] }) {
         </div>
 
         <div className="mt-12 grid grid-cols-2 gap-x-3 gap-y-10 sm:gap-x-6 sm:gap-y-12 md:grid-cols-3 md:gap-x-10 md:gap-y-16">
-          {espresso ? (
-            <ProductCard
-              product={espresso}
-              title={t("espressoCoffee")}
-              media={
-                <div className="relative aspect-square w-full overflow-hidden bg-white ring-1 ring-forest/10">
-                  <div
-                    id="pack-dock-featured"
-                    className="pack-dock pack-dock-featured pointer-events-none absolute inset-[16%] sm:inset-[18%] md:inset-[20%]"
-                    aria-hidden
-                  />
-                </div>
-              }
-            />
-          ) : null}
+          {espresso ? <ProductCard product={espresso} title={t("espressoCoffee")} /> : null}
           {items.map((product, index) => (
             <ProductCard
               key={product.id || product.slug || `product-${index}`}

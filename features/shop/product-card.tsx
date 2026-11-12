@@ -96,7 +96,7 @@ export function ProductCard({
                 type="button"
                 onClick={quickAdd}
                 disabled={busy}
-                className="h-8 w-full shrink-0 rounded-lg bg-gold px-3 text-[10px] uppercase tracking-[0.14em] text-forest-dark transition hover:bg-white disabled:opacity-60 sm:w-auto"
+                className="h-8 w-full shrink-0 rounded-lg bg-gold px-3 text-[10px] font-bold uppercase tracking-[0.04em] text-forest-dark transition hover:bg-white disabled:opacity-60 rtl:tracking-normal rtl:normal-case sm:w-auto"
               >
                 {label}
               </button>

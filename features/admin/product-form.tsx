@@ -198,9 +198,54 @@ export function ProductForm({ productId }: { productId?: string }) {
       <div>
         <div className="mb-2 flex items-center justify-between">
           <h2 className="text-lg">Variants</h2>
-          <Button type="button" variant="secondary" size="sm" onClick={() => setVariants([...variants, emptyVariant()])}>
-            Add variant
-          </Button>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => {
+                const base = variants[0];
+                const price = base?.price || "";
+                const stock = base?.stock_quantity || "0";
+                const sku = base?.sku || "";
+                setVariants([
+                  {
+                    id: base?.id,
+                    name: "Small",
+                    sku: sku ? `${sku}-250` : "",
+                    price,
+                    compare_at_price: base?.compare_at_price || "",
+                    stock_quantity: stock,
+                    weight_label: "250g",
+                    is_active: true,
+                  },
+                  {
+                    name: "Medium",
+                    sku: sku ? `${sku}-500` : "",
+                    price,
+                    compare_at_price: "",
+                    stock_quantity: stock,
+                    weight_label: "500g",
+                    is_active: true,
+                  },
+                  {
+                    name: "Large",
+                    sku: sku ? `${sku}-1000` : "",
+                    price,
+                    compare_at_price: "",
+                    stock_quantity: stock,
+                    weight_label: "1000g",
+                    is_active: true,
+                  },
+                ]);
+              }}
+            >
+              Add 250g / 500g / 1kg
+            </Button>
+            <Button type="button" variant="secondary" size="sm" onClick={() => setVariants([...variants, emptyVariant()])}>
+              Add variant
+            </Button>
+          </div>
         </div>
         <div className="space-y-3">
           {variants.map((variant, i) => (

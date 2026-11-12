@@ -5,14 +5,14 @@ import type { ButtonHTMLAttributes } from "react";
 type Variant = "primary" | "secondary" | "ghost" | "gold" | "danger";
 
 const styles = {
-  base: "inline-flex items-center justify-center gap-2 text-[11px] font-medium uppercase tracking-[0.18em] transition duration-300 disabled:cursor-not-allowed disabled:opacity-50",
+  base: "inline-flex items-center justify-center gap-2 text-[11px] font-medium uppercase tracking-[0.08em] rtl:tracking-normal rtl:normal-case transition duration-300 disabled:cursor-not-allowed disabled:opacity-50",
   sm: "h-9 px-4",
   md: "h-11 px-5",
   lg: "h-12 px-7",
   primary: "bg-forest text-cream hover:bg-forest-dark",
   secondary: "border border-ink/20 bg-transparent text-ink hover:border-forest hover:text-forest",
   ghost: "text-ink hover:text-forest",
-  gold: "bg-gold text-forest-dark hover:bg-[#c9a75a]",
+  gold: "bg-gold font-bold text-forest-dark hover:bg-[#c9a75a]",
   danger: "bg-ink text-cream hover:bg-[#3a2f28]",
 };
 

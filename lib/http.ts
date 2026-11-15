@@ -24,6 +24,38 @@ function resolveApiBase(): string {
 
 export const API_BASE = resolveApiBase();
 
+const CATALOG_GET_PREFIXES = [
+  "/products",
+  "/categories",
+  "/storefront",
+  "/settings",
+  "/articles",
+  "/banners",
+  "/announcements",
+  "/search",
+  "/pages",
+];
+
+export function usesStorefrontSnapshot(): boolean {
+  if (process.env.USE_STOREFRONT_SNAPSHOT === "0") return false;
+  if (process.env.USE_STOREFRONT_SNAPSHOT === "1") return true;
+  return Boolean(
+    process.env.VERCEL || process.env.NEXT_PUBLIC_VERCEL_ENV || process.env.NEXT_PUBLIC_VERCEL_URL,
+  );
+}
+
+export function joinCatalogApi(path: string, method = "GET"): string {
+  const suffix = path.startsWith("/") ? path : `/${path}`;
+  if (
+    usesStorefrontSnapshot() &&
+    method.toUpperCase() === "GET" &&
+    CATALOG_GET_PREFIXES.some((prefix) => suffix === prefix || suffix.startsWith(`${prefix}/`) || suffix.startsWith(`${prefix}?`))
+  ) {
+    return `/api/v1${suffix}`;
+  }
+  return joinApi(suffix);
+}
+
 export class ApiError extends Error {
   status: number;
   code: string;
@@ -47,7 +79,10 @@ export function joinApi(path: string): string {
 }
 
 export function withQuery(path: string, query?: Query): string {
-  const url = joinApi(path);
+  const url =
+    path.startsWith("/api/v1") || path.startsWith("http://") || path.startsWith("https://")
+      ? path
+      : joinApi(path);
   if (!query) return url;
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(query)) {

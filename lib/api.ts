@@ -6,6 +6,7 @@ import {
   API_BASE,
   ApiError,
   errorMessage,
+  joinCatalogApi,
   joinApi,
   parseError,
   readBody,
@@ -72,7 +73,7 @@ export type RequestOptions = {
 
 export async function apiFetch<T>(path: string, options: RequestOptions = {}): Promise<T> {
   const { method = "GET", body, query, auth = true, cart = true, headers = {} } = options;
-  const url = withQuery(path, query);
+  const url = withQuery(joinCatalogApi(path, method), query);
   const isForm = typeof FormData !== "undefined" && body instanceof FormData;
   const initHeaders: Record<string, string> = {
     Accept: "application/json",

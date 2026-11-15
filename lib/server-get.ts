@@ -4,9 +4,7 @@ import { readSnapshot } from "@/lib/snapshot-catalog";
 function shouldUseSnapshot(): boolean {
   if (process.env.USE_STOREFRONT_SNAPSHOT === "0") return false;
   if (process.env.USE_STOREFRONT_SNAPSHOT === "1") return true;
-  if (!process.env.VERCEL) return false;
-  const api = process.env.NEXT_PUBLIC_API_BASE_URL || "";
-  return !api || /localhost|127\.0\.0\.1|vercel\.app/.test(api);
+  return Boolean(process.env.VERCEL);
 }
 
 function snapshotQuery(query?: Query) {

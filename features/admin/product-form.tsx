@@ -53,6 +53,7 @@ export function ProductForm({ productId }: { productId?: string }) {
     is_new: false,
     is_promotional: false,
     allow_backorder: false,
+    display_order: "0",
     seo_title: "",
     seo_description: "",
   });
@@ -85,6 +86,7 @@ export function ProductForm({ productId }: { productId?: string }) {
         is_new: Boolean(product.is_new),
         is_promotional: Boolean(product.is_promotional),
         allow_backorder: Boolean(product.allow_backorder),
+        display_order: String(product.display_order ?? 0),
         seo_title: product.seo_title || "",
         seo_description: product.seo_description || "",
       });
@@ -110,6 +112,7 @@ export function ProductForm({ productId }: { productId?: string }) {
     const payload = {
       ...form,
       category: Number(form.category) || form.category,
+      display_order: Number(form.display_order || 0),
       variants: variants.map((v) => ({
         ...v,
         price: v.price,
@@ -180,6 +183,9 @@ export function ProductForm({ productId }: { productId?: string }) {
         </Field>
         <Field label="Tasting notes">
           <Input value={form.tasting_notes} onChange={(e) => setForm({ ...form, tasting_notes: e.target.value })} />
+        </Field>
+        <Field label="Shelf order">
+          <Input value={form.display_order} onChange={(e) => setForm({ ...form, display_order: e.target.value })} />
         </Field>
       </div>
       <Field label="Short description">

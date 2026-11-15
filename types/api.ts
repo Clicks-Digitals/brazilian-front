@@ -69,6 +69,7 @@ export type Product = {
   is_new?: boolean;
   is_promotional?: boolean;
   allow_backorder?: boolean;
+  display_order?: number;
   seo_title?: string;
   seo_description?: string;
   category?: Category | number | null;

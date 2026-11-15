@@ -18,7 +18,7 @@ export default async function ExportPage() {
   try {
     const [categoryData, productData] = await Promise.all([
       serverGet("/categories/").catch(() => ({ results: [] as Category[] })),
-      serverGet("/products/", { page_size: 100, availability: "all" }),
+      serverGet("/products/", { page_size: 100, availability: "all", ordering: "featured" }),
     ]);
     const categories = asPaginated<Category>(categoryData).results.filter((c) => c.is_active !== false);
     const products = asPaginated<Product>(productData).results;
@@ -26,7 +26,14 @@ export default async function ExportPage() {
     const sections = ordered
       .map((category) => ({
         category,
-        products: products.filter((product) => categorySlug(product) === category.slug),
+        products: products
+          .filter((product) => categorySlug(product) === category.slug)
+          .sort(
+            (a, b) =>
+              (a.display_order && a.display_order > 0 ? a.display_order : 9999) -
+                (b.display_order && b.display_order > 0 ? b.display_order : 9999) ||
+              a.name.localeCompare(b.name),
+          ),
       }))
       .filter((section) => section.products.length > 0);
 

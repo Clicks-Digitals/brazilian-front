@@ -107,7 +107,16 @@ export function ShopView({
       .then((data) => {
         if (ignore) return;
         const pageData = asPaginated<Product>(data);
-        setProducts(pageData.results);
+        const results = pageData.results;
+        const ordered =
+          (query.ordering || "featured") === "featured"
+            ? [...results].sort((a, b) => {
+                const left = a.display_order && a.display_order > 0 ? a.display_order : 9999;
+                const right = b.display_order && b.display_order > 0 ? b.display_order : 9999;
+                return left - right || a.name.localeCompare(b.name);
+              })
+            : results;
+        setProducts(ordered);
         setCount(pageData.count);
       })
       .catch((err) => {

@@ -15,6 +15,10 @@ function sortCategories(categories: Category[]) {
   return [...categories].sort((a, b) => (a.display_order ?? 99) - (b.display_order ?? 99));
 }
 
+function shelfOrder(product: Product) {
+  return product.display_order && product.display_order > 0 ? product.display_order : 9999;
+}
+
 export function ShopByCategory() {
   const { locale, t } = useLocale();
   const [categories, setCategories] = useState<Category[]>([]);
@@ -27,7 +31,7 @@ export function ShopByCategory() {
     setLoading(true);
     Promise.all([
       api.get("/categories/", undefined, { auth: false, cart: false }),
-      api.get("/products/", { page_size: 100, availability: "all" }, { auth: false, cart: false }),
+      api.get("/products/", { page_size: 100, availability: "all", ordering: "featured" }, { auth: false, cart: false }),
     ])
       .then(([categoryData, productData]) => {
         if (ignore) return;
@@ -49,7 +53,9 @@ export function ShopByCategory() {
     const ordered = sortCategories(categories);
     const grouped = ordered.map((category) => ({
       category,
-      products: products.filter((product) => categorySlug(product) === category.slug),
+      products: products
+        .filter((product) => categorySlug(product) === category.slug)
+        .sort((a, b) => shelfOrder(a) - shelfOrder(b) || a.name.localeCompare(b.name)),
     }));
     const known = new Set(ordered.map((c) => c.slug));
     const leftover = products.filter((product) => {

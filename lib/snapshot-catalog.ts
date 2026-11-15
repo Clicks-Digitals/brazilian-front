@@ -102,11 +102,11 @@ function filterProducts(searchParams: URLSearchParams): Product[] {
   else if (ordering === "-price") sorted.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
   else if (ordering === "-created_at") sorted.sort((a, b) => Number(b.is_new) - Number(a.is_new));
   else {
-    sorted.sort(
-      (a, b) =>
-        Number(b.is_featured) - Number(a.is_featured) ||
-        String(a.name || "").localeCompare(String(b.name || "")),
-    );
+    sorted.sort((a, b) => {
+      const left = a.display_order && a.display_order > 0 ? a.display_order : 9999;
+      const right = b.display_order && b.display_order > 0 ? b.display_order : 9999;
+      return left - right || String(a.name || "").localeCompare(String(b.name || ""));
+    });
   }
   return sorted;
 }

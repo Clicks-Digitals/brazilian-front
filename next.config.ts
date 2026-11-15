@@ -9,6 +9,12 @@ const nextConfig: NextConfig = {
       { source: "/journal/:slug", destination: "/articles/:slug", permanent: false },
     ];
   },
+  async rewrites() {
+    const media = (process.env.NEXT_PUBLIC_MEDIA_BASE_URL || "http://localhost:8000").replace(/\/$/, "");
+    return {
+      fallback: [{ source: "/media/:path*", destination: `${media}/media/:path*` }],
+    };
+  },
   images: {
     unoptimized: true,
     remotePatterns: [

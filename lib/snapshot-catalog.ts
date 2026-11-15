@@ -12,6 +12,7 @@ type Product = Record<string, unknown> & {
   is_new?: boolean;
   in_stock?: boolean;
   on_sale?: boolean;
+  display_order?: number;
   category?: { slug?: string } | number | null;
 };
 
@@ -103,8 +104,8 @@ function filterProducts(searchParams: URLSearchParams): Product[] {
   else if (ordering === "-created_at") sorted.sort((a, b) => Number(b.is_new) - Number(a.is_new));
   else {
     sorted.sort((a, b) => {
-      const left = a.display_order && a.display_order > 0 ? a.display_order : 9999;
-      const right = b.display_order && b.display_order > 0 ? b.display_order : 9999;
+      const left = Number(a.display_order) > 0 ? Number(a.display_order) : 9999;
+      const right = Number(b.display_order) > 0 ? Number(b.display_order) : 9999;
       return left - right || String(a.name || "").localeCompare(String(b.name || ""));
     });
   }

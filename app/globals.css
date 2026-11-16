@@ -777,7 +777,9 @@ html[dir="rtl"] .link-arrow {
   text-transform: uppercase;
   color: var(--cream);
   white-space: nowrap;
-  text-shadow: 0 1px 10px rgb(15 44 34 / 0.9);
+  text-shadow:
+    0 1px 2px rgb(8 16 28 / 0.95),
+    0 2px 12px rgb(8 16 28 / 0.85);
 }
 
 @media (max-width: 1023px) {

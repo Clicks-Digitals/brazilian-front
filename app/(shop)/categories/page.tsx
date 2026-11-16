@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BackButton } from "@/components/layout/back-button";
 import { EmptyState, ErrorState } from "@/components/ui/states";
 import { CategoryCards } from "@/features/storefront/category-cards";
 import { errorMessage } from "@/lib/http";
@@ -22,6 +23,7 @@ export default async function CategoriesPage() {
     return (
       <div className="bg-forest pb-20">
         <header className="mx-auto max-w-7xl px-6 pb-10 pt-12 md:pb-12 md:pt-16" data-reveal>
+          <BackButton fallback="/" className="mb-6" />
           <p className="eyebrow text-gold">{t(locale, "shop")}</p>
           <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t(locale, "categories")}</h1>
           <p className="font-subtitle mt-4 max-w-xl text-cream">

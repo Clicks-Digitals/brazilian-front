@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { BackButton } from "@/components/layout/back-button";
 import { EmptyState, ErrorState, ProductCardSkeleton } from "@/components/ui/states";
 import { Pagination } from "@/components/ui/pagination";
 import { ProductGrid } from "@/features/shop/product-card";
@@ -135,12 +136,15 @@ export function ShopView({
     <div className="mx-auto max-w-7xl px-6 pb-24">
       {title ? (
         <header className="max-w-2xl pb-10 pt-12 md:pt-16" data-reveal>
+          <BackButton fallback={lockedCategory ? "/shop" : "/"} className="mb-6" />
           {eyebrow ? <p className="eyebrow text-gold">{eyebrow}</p> : null}
           <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{title}</h1>
           {description ? <p className="font-subtitle mt-4 max-w-xl text-cream">{description}</p> : null}
         </header>
       ) : (
-        <div className="pt-8" />
+        <div className="flex items-center pt-8">
+          <BackButton fallback="/" />
+        </div>
       )}
 
       {!lockedCategory ? (

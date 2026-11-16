@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { BackButton } from "@/components/layout/back-button";
 import { Button } from "@/components/ui/button";
 import { Quantity } from "@/components/ui/quantity";
 import { SmartImage } from "@/components/ui/smart-image";
@@ -78,23 +79,32 @@ export function ProductDetail({ product, hidePrice = false }: { product: Product
     }
   }
 
+  const backFallback = hidePrice
+    ? "/export"
+    : categorySlug(product)
+      ? `/shop/${categorySlug(product)}`
+      : "/shop";
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-12" data-reveal>
-      <p className="text-sm text-cream">
-        {hidePrice ? (
-          <Link href="/export">{t("export")}</Link>
-        ) : (
-          <Link href="/shop">{t("shop")}</Link>
-        )}
-        {categorySlug(product) ? (
-          <>
-            {" / "}
-            <Link href={hidePrice ? "/export" : `/shop/${categorySlug(product)}`}>
-              {localizedName(locale, category) || categorySlug(product)}
-            </Link>
-          </>
-        ) : null}
-      </p>
+      <div className="flex items-center gap-3">
+        <BackButton fallback={backFallback} />
+        <p className="text-sm text-cream">
+          {hidePrice ? (
+            <Link href="/export">{t("export")}</Link>
+          ) : (
+            <Link href="/shop">{t("shop")}</Link>
+          )}
+          {categorySlug(product) ? (
+            <>
+              {" / "}
+              <Link href={hidePrice ? "/export" : `/shop/${categorySlug(product)}`}>
+                {localizedName(locale, category) || categorySlug(product)}
+              </Link>
+            </>
+          ) : null}
+        </p>
+      </div>
       <div className="mt-8 grid gap-12 lg:grid-cols-2">
         <div>
           <SmartImage src={images[gallery]} alt={displayName} className="aspect-[4/5] w-full border border-ink/8 bg-white" />

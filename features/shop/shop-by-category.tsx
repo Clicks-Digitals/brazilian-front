@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { BackButton } from "@/components/layout/back-button";
 import { EmptyState, ErrorState, ProductCardSkeleton } from "@/components/ui/states";
 import { ProductGrid } from "@/features/shop/product-card";
 import { api } from "@/lib/api";
@@ -80,6 +81,7 @@ export function ShopByCategory() {
     <div className="bg-forest pb-24">
       <header className="bg-forest">
         <div className="mx-auto max-w-7xl px-6 py-12 md:py-16" data-reveal>
+          <BackButton fallback="/" className="mb-6" />
           <p className="eyebrow text-gold">{t("collection")}</p>
           <h1 className="font-display mt-3 text-4xl tracking-tight text-cream md:text-5xl">{t("shopCoffee")}</h1>
           <p className="font-subtitle mt-4 max-w-xl text-cream">

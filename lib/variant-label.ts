@@ -21,6 +21,12 @@ const SIZE_KEYS: Record<string, MessageKey> = {
   "1000غ": "size1000",
   "1kg": "size1000",
   "1كغ": "size1000",
+  "250kg": "size250kg",
+  "500kg": "size500kg",
+  "1000kg": "size1000kg",
+  "250كغ": "size250kg",
+  "500كغ": "size500kg",
+  "1000كغ": "size1000kg",
 };
 
 function normalize(value?: string) {

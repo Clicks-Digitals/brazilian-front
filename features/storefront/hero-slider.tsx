@@ -38,10 +38,10 @@ export function HeroSlider({ banners: _banners }: { banners: Banner[] }) {
 
           <h1 className="relative z-0 mt-[1.5vh] select-none text-center font-display font-bold leading-[0.88] tracking-[-0.045em] text-cream">
             {locale === "ar" ? (
-              <>
+              <span className="flex flex-col items-center gap-[0.55em] leading-none tracking-normal">
                 <span className="block text-[10vw] md:text-[8vw] lg:text-[7vw]">بيت البن</span>
                 <span className="block text-[8vw] md:text-[6.5vw] lg:text-[5.5vw]">البرازيلي</span>
-              </>
+              </span>
             ) : (
               <>
                 <span className="block text-[12vw] md:text-[10vw] lg:text-[9vw]">Brazilian</span>

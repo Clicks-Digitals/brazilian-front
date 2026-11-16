@@ -10,7 +10,7 @@ const FALLBACK: Record<string, string> = {
   terms:
     "Orders placed on this site are fulfilled by Brazilian Coffee House in Jordan. Prices are in JOD. Cash on delivery is currently the only checkout method. Stock and promotions are confirmed at dispatch.",
   shipping:
-    "We deliver across Amman and selected cities in Jordan. Delivery fees are calculated at checkout from store settings. Branch pickup details are listed on Contact. Call 06 222 3330 for large orders.",
+    "We deliver across Amman and selected cities in Jordan. Delivery fees are calculated at checkout from store settings. Branch pickup details are listed on Contact. Call 0798444453 for large orders.",
   returns:
     "Unopened retail packs in original condition may be returned according to store policy. Perishable opened coffee is generally not returnable. Write to nermen.k@bch-coffee.com or visit a branch with your receipt.",
 };

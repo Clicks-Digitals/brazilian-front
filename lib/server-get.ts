@@ -19,8 +19,13 @@ function fromSnapshot<T>(path: string, query?: Query): T {
 }
 
 export async function serverGet<T>(path: string, query?: Query, revalidate = 30): Promise<T> {
-  if (usesStorefrontSnapshot()) {
-    return fromSnapshot<T>(path, query);
+  const snapshot = readSnapshot(path, snapshotQuery(query));
+  const preferSnapshot =
+    process.env.USE_STOREFRONT_SNAPSHOT === "1" ||
+    (process.env.USE_STOREFRONT_SNAPSHOT !== "0" &&
+      (usesStorefrontSnapshot() || process.env.NODE_ENV === "production"));
+  if (preferSnapshot && snapshot != null) {
+    return snapshot as T;
   }
   try {
     const url = withQuery(path, query);
@@ -33,7 +38,8 @@ export async function serverGet<T>(path: string, query?: Query, revalidate = 30)
       throw parseError(data, res.status, "Unable to load this page right now.");
     }
     return data as T;
-  } catch {
-    return fromSnapshot<T>(path, query);
+  } catch (error) {
+    if (snapshot != null) return snapshot as T;
+    throw error;
   }
 }

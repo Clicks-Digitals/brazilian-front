@@ -16,7 +16,7 @@ export function AboutView() {
         <img
           src="/assets/editorial/storefront.jpg"
           alt={houseName}
-          className="absolute inset-0 h-full w-full object-cover object-[center_42%]"
+          className="absolute inset-0 h-full w-full object-cover object-[center_28%]"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0f2c22]/92 via-[#0f2c22]/35 to-transparent" />
         <div className="relative z-10 mx-auto flex min-h-[88svh] max-w-7xl flex-col justify-end px-6 pb-16 pt-28 md:pb-24">
@@ -44,7 +44,7 @@ export function AboutView() {
           <div className="relative pb-10 md:pb-14" data-reveal>
             <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-[#eff5f1] md:aspect-[5/6]">
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/assets/editorial/mill.jpg" alt="" className="h-full w-full object-cover" />
+              <img src="/assets/editorial/mill.jpg" alt="" className="h-full w-full object-cover object-center" />
               <span className="absolute start-4 top-4 rounded-full bg-white/95 px-3.5 py-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-forest">
                 {t("estYear", { year: BRAND.established })}
               </span>

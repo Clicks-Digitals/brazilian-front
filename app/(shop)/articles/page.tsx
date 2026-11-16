@@ -13,7 +13,7 @@ import type { Article } from "@/types/api";
 
 export const metadata: Metadata = {
   title: "Articles",
-  description: "Stories from Brazilian Coffee House — roast, origin, and house notes.",
+  description: "Stories Behind Every Cup. Explore our heritage since 1955, the world of coffee, and the passion behind every roast.",
 };
 
 export default async function ArticlesPage() {

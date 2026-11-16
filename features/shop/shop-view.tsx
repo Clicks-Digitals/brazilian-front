@@ -172,7 +172,14 @@ export function ShopView({
             description={t("tryBroaderFilters")}
           />
         ) : null}
-        {!loading && !error && products.length > 0 ? <ProductGrid products={products} /> : null}
+        {!loading && !error && products.length > 0 ? (
+          <ProductGrid
+            products={products}
+            className={
+              (lockedCategory || query.category) === "filter-coffee" ? "md:grid-cols-2" : undefined
+            }
+          />
+        ) : null}
       </div>
     </div>
     </div>

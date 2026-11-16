@@ -137,7 +137,10 @@ export function ShopByCategory() {
                 ) : null}
               </div>
               <div className="mt-10">
-                <ProductGrid products={section.products} />
+                <ProductGrid
+                  products={section.products}
+                  className={section.category.slug === "filter-coffee" ? "md:grid-cols-2" : undefined}
+                />
               </div>
             </div>
           </section>

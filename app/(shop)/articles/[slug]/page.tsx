@@ -18,7 +18,7 @@ type Props = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   try {
-    const article = await serverGet<Article>(`/articles/${slug}/`);
+    const article = await serverGet<Article>(`/articles/${slug}`);
     return {
       title: article.seo_title || article.title,
       description: article.seo_description || article.excerpt,
@@ -32,7 +32,7 @@ export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
   const locale = await getLocale();
   try {
-    const article = await serverGet<Article>(`/articles/${slug}/`);
+    const article = await serverGet<Article>(`/articles/${slug}`);
     const html = article.content
       ? isProbablyHtml(article.content)
         ? sanitizeHtml(article.content)

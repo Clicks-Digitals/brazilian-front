@@ -1,4 +1,4 @@
-import { parseError, readBody, usesStorefrontSnapshot, withQuery, type Query } from "@/lib/http";
+import { joinCatalogApi, parseError, readBody, usesStorefrontSnapshot, withQuery, type Query } from "@/lib/http";
 import { readSnapshot } from "@/lib/snapshot-catalog";
 
 function snapshotQuery(query?: Query) {
@@ -18,7 +18,7 @@ function fromSnapshot<T>(path: string, query?: Query): T {
   return payload as T;
 }
 
-export async function serverGet<T>(path: string, query?: Query, revalidate = 30): Promise<T> {
+export async function serverGet<T>(path: string, query?: Query, revalidate = 0): Promise<T> {
   const snapshot = readSnapshot(path, snapshotQuery(query));
   const preferSnapshot =
     process.env.USE_STOREFRONT_SNAPSHOT === "1" ||
@@ -28,9 +28,10 @@ export async function serverGet<T>(path: string, query?: Query, revalidate = 30)
     return snapshot as T;
   }
   try {
-    const url = withQuery(path, query);
+    const url = withQuery(joinCatalogApi(path, "GET"), query);
     const res = await fetch(url, {
       headers: { Accept: "application/json" },
+      cache: "no-store",
       next: { revalidate },
     });
     const data = await readBody(res);

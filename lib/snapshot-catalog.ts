@@ -29,7 +29,9 @@ type Snapshot = {
 
 function rewriteLocalMedia(value: unknown): unknown {
   if (typeof value === "string") {
-    return value.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, "");
+    return value
+      .replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, "")
+      .replace(/^https?:\/\/[^/]+(?=\/media\/)/i, "");
   }
   if (Array.isArray(value)) return value.map(rewriteLocalMedia);
   if (value && typeof value === "object") {

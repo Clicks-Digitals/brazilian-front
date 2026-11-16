@@ -55,8 +55,8 @@ export function ProductDetail({ product, hidePrice = false }: { product: Product
   );
 
   const images = [
-    ...(product.images || []).map((img) => img.image || img.url),
     pickImage(product),
+    ...(product.images || []).map((img) => img.url || img.image),
     selected?.image,
   ].filter((value, index, arr): value is string => Boolean(value) && arr.indexOf(value) === index);
 
@@ -107,7 +107,12 @@ export function ProductDetail({ product, hidePrice = false }: { product: Product
       </div>
       <div className="mt-8 grid gap-12 lg:grid-cols-2">
         <div>
-          <SmartImage src={images[gallery]} alt={displayName} className="aspect-[4/5] w-full border border-ink/8 bg-white" />
+          <SmartImage
+            src={images[gallery]}
+            alt={displayName}
+            className="aspect-square w-full border border-ink/8 bg-white"
+            imgClassName="p-6 md:p-10"
+          />
           {images.length > 1 ? (
             <div className="mt-3 grid grid-cols-5 gap-2">
               {images.map((src, i) => (

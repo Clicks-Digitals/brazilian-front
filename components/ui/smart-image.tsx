@@ -39,6 +39,7 @@ export function SmartImage({
       <img
         src={url}
         alt={alt}
+        referrerPolicy="no-referrer"
         className={cn(
           "absolute inset-0 h-full w-full object-center",
           fit === "cover" ? "object-cover" : "object-contain",

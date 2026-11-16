@@ -1,11 +1,5 @@
-import { parseError, readBody, withQuery, type Query } from "@/lib/http";
+import { parseError, readBody, usesStorefrontSnapshot, withQuery, type Query } from "@/lib/http";
 import { readSnapshot } from "@/lib/snapshot-catalog";
-
-function shouldUseSnapshot(): boolean {
-  if (process.env.USE_STOREFRONT_SNAPSHOT === "0") return false;
-  if (process.env.USE_STOREFRONT_SNAPSHOT === "1") return true;
-  return Boolean(process.env.VERCEL);
-}
 
 function snapshotQuery(query?: Query) {
   const params = new URLSearchParams();
@@ -25,7 +19,7 @@ function fromSnapshot<T>(path: string, query?: Query): T {
 }
 
 export async function serverGet<T>(path: string, query?: Query, revalidate = 30): Promise<T> {
-  if (shouldUseSnapshot()) {
+  if (usesStorefrontSnapshot()) {
     return fromSnapshot<T>(path, query);
   }
   try {

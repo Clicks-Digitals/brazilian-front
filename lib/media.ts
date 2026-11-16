@@ -28,12 +28,13 @@ export function mediaUrl(
   path?: string | null,
 ): string | null {
   if (!path) return null;
+  if (path.startsWith("data:")) return path;
+  const mediaIndex = path.search(/\/media\//i);
+  if (mediaIndex >= 0) return path.slice(mediaIndex);
   const stripped = path.replace(/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?/i, "");
-  if (stripped.startsWith("http://") || stripped.startsWith("https://") || stripped.startsWith("data:")) {
-    return stripped;
-  }
+  if (stripped.startsWith("http://") || stripped.startsWith("https://")) return stripped;
   const normalized = stripped.startsWith("/") ? stripped : `/${stripped}`;
-  if (normalized.startsWith("/assets/") || normalized.startsWith("/media/")) return normalized;
+  if (normalized.startsWith("/assets/")) return normalized;
   return `${mediaOrigin()}${normalized}`;
 }
 

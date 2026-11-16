@@ -32,7 +32,7 @@ export function ShopByCategory() {
     setLoading(true);
     Promise.all([
       api.get("/categories/", undefined, { auth: false, cart: false }),
-      api.get("/products/", { page_size: 100, availability: "all", ordering: "featured" }, { auth: false, cart: false }),
+      api.get("/products/", { page_size: 200, availability: "all", ordering: "featured" }, { auth: false, cart: false }),
     ])
       .then(([categoryData, productData]) => {
         if (ignore) return;

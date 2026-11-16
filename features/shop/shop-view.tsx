@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { BackButton } from "@/components/layout/back-button";
 import { EmptyState, ErrorState, ProductCardSkeleton } from "@/components/ui/states";
-import { Pagination } from "@/components/ui/pagination";
 import { ProductGrid } from "@/features/shop/product-card";
 import { CategoryChips, ShopToolbar, type ShopQuery } from "@/features/shop/filters";
 import { useLocale } from "@/features/i18n/locale-provider";
@@ -86,7 +85,6 @@ export function ShopView({
     let ignore = false;
     setLoading(true);
     setError(null);
-    const page = Number(query.page || 1);
     api
       .get(
         "/products/",
@@ -99,8 +97,8 @@ export function ShopView({
           availability: query.availability,
           on_sale: query.on_sale === "true" ? true : undefined,
           ordering: query.ordering,
-          page,
-          page_size: 24,
+          page: 1,
+          page_size: 200,
           ...extraQuery,
         },
         { auth: false, cart: false },
@@ -175,12 +173,6 @@ export function ShopView({
           />
         ) : null}
         {!loading && !error && products.length > 0 ? <ProductGrid products={products} /> : null}
-        <Pagination
-          page={Number(query.page || 1)}
-          pageSize={24}
-          count={count}
-          onPage={(page) => write({ ...query, page: String(page) })}
-        />
       </div>
     </div>
     </div>

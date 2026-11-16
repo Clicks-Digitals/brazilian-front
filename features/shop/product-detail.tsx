@@ -26,7 +26,20 @@ const ROAST_KEYS = {
 
 export function ProductDetail({ product, hidePrice = false }: { product: Product; hidePrice?: boolean }) {
   const { locale, t } = useLocale();
-  const variants = (product.variants || []).filter((item) => item.is_active !== false);
+  const variants = useMemo(() => {
+    const grams = (variant: ProductVariant) => {
+      const raw = `${variant.weight_label || ""} ${variant.name || ""}`.toLowerCase().replace(/\s+/g, "");
+      const kg = raw.match(/(\d+(?:\.\d+)?)kg/);
+      if (kg) return Number(kg[1]) * 1000;
+      const gramsMatch = raw.match(/(\d+(?:\.\d+)?)g/);
+      if (gramsMatch) return Number(gramsMatch[1]);
+      return Number.POSITIVE_INFINITY;
+    };
+    return (product.variants || [])
+      .filter((item) => item.is_active !== false)
+      .slice()
+      .sort((a, b) => grams(a) - grams(b));
+  }, [product.variants]);
   const displayName = localizedName(locale, product);
   const category =
     product.category && typeof product.category === "object" ? product.category : null;

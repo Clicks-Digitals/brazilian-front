@@ -211,36 +211,37 @@ export function ProductForm({ productId }: { productId?: string }) {
               size="sm"
               onClick={() => {
                 const base = variants[0];
-                const price = base?.price || "";
+                const price = Number(base?.price || 0);
                 const stock = base?.stock_quantity || "0";
-                const sku = base?.sku || "";
+                const sku = (base?.sku || "").replace(/-250$/i, "");
+                const money = (value: number) => (Number.isFinite(value) ? value.toFixed(3) : "");
                 setVariants([
                   {
                     id: base?.id,
-                    name: "Small",
+                    name: "250g",
                     sku: sku ? `${sku}-250` : "",
-                    price,
+                    price: money(price || Number(base?.price || 0)),
                     compare_at_price: base?.compare_at_price || "",
                     stock_quantity: stock,
                     weight_label: "250g",
                     is_active: true,
                   },
                   {
-                    name: "Medium",
+                    name: "500g",
                     sku: sku ? `${sku}-500` : "",
-                    price,
+                    price: money(price * 2),
                     compare_at_price: "",
                     stock_quantity: stock,
                     weight_label: "500g",
                     is_active: true,
                   },
                   {
-                    name: "Large",
+                    name: "1kg",
                     sku: sku ? `${sku}-1000` : "",
-                    price,
+                    price: money(price * 4),
                     compare_at_price: "",
                     stock_quantity: stock,
-                    weight_label: "1000g",
+                    weight_label: "1kg",
                     is_active: true,
                   },
                 ]);

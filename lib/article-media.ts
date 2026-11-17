@@ -1,5 +1,5 @@
 const ARTICLE_SCENES: Record<string, string> = {
-  "coffee-culture-in-amman": "/assets/editorial/cafe.jpg",
+  "coffee-culture-in-amman": "/assets/editorial/world-map.jpg",
   "how-we-make-turkish-coffee": "/assets/editorial/tray.jpg",
   "from-the-mill-to-jordan": "/assets/editorial/beans.jpg",
 };

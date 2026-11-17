@@ -46,6 +46,9 @@ export default async function ExportPage() {
             <p className="font-subtitle mt-4 max-w-xl text-cream">
               {t(locale, "exportBlurb")}
             </p>
+            <p className="font-subtitle mt-3 max-w-xl text-cream">
+              {t(locale, "exportPrivateLabel")}
+            </p>
           </div>
         </header>
 

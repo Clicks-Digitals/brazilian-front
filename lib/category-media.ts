@@ -4,7 +4,7 @@ const CATEGORY_COVERS: Record<string, string> = {
   "turkish-coffee": "/assets/categories/turkish-coffee.jpg",
   "filter-coffee": "/assets/categories/filter-coffee.png",
   "drip-coffee": "/assets/categories/drip-coffee.jpg",
-  espresso: "/assets/categories/espresso.png",
+  espresso: "/assets/categories/espresso.jpg",
   "arabic-coffee": "/assets/categories/arabic-coffee.png",
   "rio-house": "/assets/categories/rio-house.png",
   "caffitaly-machines": "/assets/categories/caffitaly-machines.png",

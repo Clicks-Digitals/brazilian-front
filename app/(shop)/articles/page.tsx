@@ -52,7 +52,7 @@ export default async function ArticlesPage() {
                 <p className="mt-4 text-[11px] uppercase tracking-[0.16em] text-cream">
                   {formatDate(article.published_at)}
                 </p>
-                <h2 className="font-display mt-2 text-2xl group-hover:text-forest">{article.title}</h2>
+                <h2 className="font-display mt-2 text-2xl text-cream transition group-hover:text-gold">{article.title}</h2>
                 {article.excerpt ? (
                   <p className="font-subtitle mt-2 line-clamp-3 text-sm leading-relaxed text-cream">{article.excerpt}</p>
                 ) : null}

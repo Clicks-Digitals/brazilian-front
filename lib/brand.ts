@@ -7,7 +7,7 @@ export const BRAND = {
   phoneHref: "tel:+962798444453",
   whatsapp: "0798444453",
   whatsappHref: "https://wa.me/962798444453",
-  email: "nermen.k@bch-coffee.com",
+  email: "info@braziliancoffeehouse.com",
   website: "https://braziliancoffeehouse.com",
   instagram: "https://www.instagram.com/brazilian_coffee_house/",
   logo: "/assets/brand/logo.png",
